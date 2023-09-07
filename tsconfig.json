@@ -1,17 +1,35 @@
 {
     "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "target": "ES2020",
-        "sourceMap": true,
-        "outDir": "dist",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "preserveValueImports": false,
-        "importsNotUsedAsValues": "remove",
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
         "resolveJsonModule": true,
-        "esModuleInterop": true
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
+        "verbatimModuleSyntax": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
+        "paths": {
+            "@/*": ["./src/*"]
+        }
     },
-    "extends": "@tsconfig/node18-strictest/tsconfig.json",
-    "include": ["src/**/*", "environment.d.ts"]
+    "include": [
+        "src/**/*",
+        "environment.d.ts",
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts"
+    ],
+    "exclude": ["node_modules"]
 }
