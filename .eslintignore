@@ -2,3 +2,6 @@ node_modules
 dist
 .next
 out
+
+# generated files
+**/__generated__
