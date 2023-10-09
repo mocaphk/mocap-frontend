@@ -5,7 +5,7 @@ import { addBook, getAllBooks, getBookById } from "./queries";
 import { Suspense, useCallback } from "react";
 import { useMutation } from "@apollo/client";
 
-const DummyQueries = () => {
+function DummyQueries() {
     const { data: data1, client: client1 } = useSuspenseQuery(getBookById, {
         variables: { bookId: "book-1" },
     });
@@ -49,7 +49,7 @@ const DummyQueries = () => {
             )}
         </div>
     );
-};
+}
 
 export default function Dummy() {
     return (

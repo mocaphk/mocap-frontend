@@ -10,8 +10,8 @@
         "start": "next start",
         "lint": "next lint",
         "lint-and-fix": "next lint --fix",
-        "check-format": "prettier --check --ignore-path .gitignore .",
-        "format": "prettier --write --ignore-path .gitignore .",
+        "check-format": "prettier --check .",
+        "format": "prettier --write .",
         "compile": "graphql-codegen",
         "watch": "graphql-codegen -w"
     },
