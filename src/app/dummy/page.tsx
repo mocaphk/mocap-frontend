@@ -1,30 +1,35 @@
 "use client";
 
-import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
-import { addBook, getAllBooks, getBookById } from "./queries";
+// import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import {
+    useAddBookMutation,
+    useGetAllBooksQuery,
+    useGetBookByIdQuery,
+    GetAllBooksDocument,
+} from "./queries.graphql";
 import { Suspense, useCallback } from "react";
-import { useMutation } from "@apollo/client";
+// import { useMutation } from "@apollo/client";
 
 function DummyQueries() {
-    const { data: data1, client: client1 } = useSuspenseQuery(getBookById, {
+    const { data: data1, client: client1 } = useGetBookByIdQuery({
         variables: { bookId: "book-1" },
     });
     console.log("data1: ");
     console.log(client1);
 
-    const { data: data2 } = useSuspenseQuery(getAllBooks);
+    const { data: data2 } = useGetAllBooksQuery();
     console.log("data2: ");
     console.log(data2);
 
-    const [addBookFunc, { data: data3 }] = useMutation(addBook, {
+    const [addBookFunc, { data: data3 }] = useAddBookMutation({
         variables: {
             bkInput: {
-                name: "nani",
+                name: "Dummy name",
                 pageCount: 123,
-                author: { firstName: "It's me mario" },
+                author: { firstName: "Dummy first name" },
             },
         },
-        refetchQueries: [{ query: getAllBooks }],
+        refetchQueries: [{ query: GetAllBooksDocument }],
         awaitRefetchQueries: true,
     });
 

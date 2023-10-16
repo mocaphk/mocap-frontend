@@ -1,0 +1,38 @@
+mutation AddBook($bkInput: BookInput!) {
+    addBook(bookInput: $bkInput) {
+        id
+        name
+        pageCount
+        author {
+            id
+            firstName
+            lastName
+        }
+    }
+}
+
+query GetAllBooks {
+    allBooks {
+        id
+        name
+        pageCount
+        author {
+            id
+            firstName
+            lastName
+        }
+    }
+}
+
+query GetBookById($bookId: ID!) {
+    book(id: $bookId) {
+        id
+        name
+        pageCount
+        author {
+            id
+            firstName
+            lastName
+        }
+    }
+}
