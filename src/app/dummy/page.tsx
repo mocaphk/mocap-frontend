@@ -1,6 +1,5 @@
 "use client";
 
-// import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import {
     useAddBookMutation,
     useGetAllBooksQuery,
@@ -8,7 +7,6 @@ import {
     GetAllBooksDocument,
 } from "./queries.graphql";
 import { Suspense, useCallback } from "react";
-// import { useMutation } from "@apollo/client";
 
 function DummyQueries() {
     const { data: data1, client: client1 } = useGetBookByIdQuery({

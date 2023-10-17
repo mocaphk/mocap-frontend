@@ -12,15 +12,25 @@
 
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { setVerbosity } from "ts-invariant";
+
+if (process.env.NODE_ENV === "development") {
+    setVerbosity("debug");
+    loadDevMessages();
+    loadErrorMessages();
+}
 
 export const { getClient } = registerApolloClient(() => {
+    const httpLink = new HttpLink({
+        uri: process.env.NEXT_PUBLIC_API_URL,
+        credentials: "include",
+        // TODO: properly handle cache
+        fetchOptions: { cache: "no-store" },
+    });
+
     return new ApolloClient({
         cache: new InMemoryCache(),
-        link: new HttpLink({
-            uri: process.env.NEXT_PUBLIC_API_URL,
-            credentials: "include",
-            // TODO: properly handle cache
-            fetchOptions: { cache: "no-store" },
-        }),
+        link: httpLink,
     });
 });
