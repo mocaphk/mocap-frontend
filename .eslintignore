@@ -2,3 +2,8 @@ node_modules
 dist
 .next
 out
+
+# generated files
+*.graphql.d.ts
+*.graphqls.d.ts
+.cache
