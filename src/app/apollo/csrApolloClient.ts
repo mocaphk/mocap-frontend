@@ -1,5 +1,3 @@
-"use client";
-
 // Client Components (with server side rendering)
 // https://www.apollographql.com/blog/announcement/frontend/using-apollo-client-with-next-js-13-releasing-an-official-library-to-support-the-app-router/
 
@@ -14,29 +12,32 @@
 
 import { ApolloLink, HttpLink } from "@apollo/client";
 import {
-    ApolloNextAppProvider,
     NextSSRApolloClient,
     NextSSRInMemoryCache,
     SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-import { setVerbosity } from "ts-invariant";
+import type { Session } from "next-auth";
 
-if (process.env.NODE_ENV === "development") {
-    setVerbosity("debug");
-    loadDevMessages();
-    loadErrorMessages();
-}
-
-function makeClient() {
+export default function makeClient(
+    accessTokenType?: Session["accessTokenType"],
+    accessToken?: Session["accessToken"]
+) {
     const httpLink = new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_URL,
         credentials: "include",
         // TODO: properly handle cache
         fetchOptions: { cache: "no-store" },
+        headers: {
+            authorization:
+                accessTokenType && accessToken
+                    ? `${accessTokenType} ${accessToken}`
+                    : "",
+        },
     });
 
     return new NextSSRApolloClient({
+        ssrMode: true,
+
         cache: new NextSSRInMemoryCache(),
         link:
             typeof window === "undefined"
@@ -48,12 +49,4 @@ function makeClient() {
                   ])
                 : httpLink,
     });
-}
-
-export function ApolloWrapper({ children }: React.PropsWithChildren) {
-    return (
-        <ApolloNextAppProvider makeClient={makeClient}>
-            {children}
-        </ApolloNextAppProvider>
-    );
 }

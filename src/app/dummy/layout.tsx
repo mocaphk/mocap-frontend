@@ -1,9 +1,9 @@
-import { ApolloWrapper } from "../api/apollo-wrapper";
+import ApolloProvider from "../providers/ApolloProvider";
 
 export default function DummyLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return <ApolloWrapper>{children}</ApolloWrapper>;
+    return <ApolloProvider>{children}</ApolloProvider>;
 }

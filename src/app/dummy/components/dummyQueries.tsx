@@ -9,15 +9,11 @@ import {
 import { useCallback } from "react";
 
 export default function DummyQueries() {
-    const { data: data1, client: client1 } = useGetBookByIdQuery({
+    const { data: data1 } = useGetBookByIdQuery({
         variables: { bookId: "book-1" },
     });
-    console.log("data1: ");
-    console.log(client1);
 
     const { data: data2 } = useGetAllBooksQuery();
-    console.log("data2: ");
-    console.log(data2);
 
     const [addBookFunc, { data: data3 }] = useAddBookMutation({
         variables: {
@@ -33,20 +29,28 @@ export default function DummyQueries() {
 
     const handleClick = useCallback(async () => {
         await addBookFunc();
-        console.log("data3: ");
-        console.log(data3);
     }, [addBookFunc]);
 
     return (
         <div>
-            <h1>getBookById: Book name = {data1?.book?.name}</h1>
-            <h1>getAllBooks:</h1>
+            <h1>
+                getBookById (Only user with admin or lecturer role can get this
+                data): Book name =
+            </h1>
+            <p style={{ color: "red" }}>{data1?.book?.name}</p>
+            <h1>
+                getAllBooks (Only user with lecturer role can get this data):
+            </h1>
             <ul>
                 {data2?.allBooks?.map((book) => (
-                    <li key={book?.id}>{book?.name}</li>
+                    <li key={book?.id} style={{ color: "red" }}>
+                        {book?.name}
+                    </li>
                 ))}
             </ul>
-            <button onClick={handleClick}>Add Book</button>
+            <button onClick={handleClick}>
+                Add Book (Can be click by any user (no role restriction))
+            </button>
             {data3?.addBook && (
                 <h1>addBook: Book name = {data3.addBook.name}</h1>
             )}
