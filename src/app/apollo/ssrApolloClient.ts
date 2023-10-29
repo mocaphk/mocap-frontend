@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") {
     loadErrorMessages();
 }
 
-export const { getClient } = registerApolloClient(() => {
+export default registerApolloClient(() => {
     const httpLink = new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_URL,
         credentials: "include",
