@@ -46,7 +46,7 @@ async function doFinalSignoutHandshake(jwt: JWT) {
         } catch (err) {
             console.error(
                 "Unable to perform post-logout handshake",
-                (err as AxiosError)?.code || err
+                (err as AxiosError)?.code ?? err
             );
         }
     }
@@ -68,22 +68,14 @@ export const authOptions: AuthOptions = {
         async jwt({ token, account }) {
             // Save the access token and refresh token in the JWT on the initial login
             if (account) {
-                let roles: string[] = [];
+                const jwt = jwt_decode<KeycloakAccessTokenPayload>(
+                    account.access_token ?? ""
+                );
 
-                if (account.access_token) {
-                    const jwt = jwt_decode<KeycloakAccessTokenPayload>(
-                        account.access_token
-                    );
-                    if (
-                        jwt.resource_access &&
-                        jwt.resource_access[process.env.KEYCLOAK_CLIENT_ID]
-                    ) {
-                        roles =
-                            jwt.resource_access[process.env.KEYCLOAK_CLIENT_ID][
-                                "roles"
-                            ];
-                    }
-                }
+                const roles: string[] =
+                    jwt?.resource_access?.[process.env.KEYCLOAK_CLIENT_ID]?.[
+                        "roles"
+                    ] ?? [];
 
                 return {
                     ...token,

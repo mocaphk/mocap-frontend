@@ -1,4 +1,4 @@
-import DummyQueries from "./components/dummyQueries";
+import DummyQueries from "./components/DummyQueries";
 import { Suspense } from "react";
 
 export default function Dummy() {
