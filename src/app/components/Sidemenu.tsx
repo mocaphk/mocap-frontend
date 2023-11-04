@@ -53,7 +53,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
     alignItems: "center",
     justifyContent: "flex-start",
     padding: theme.spacing(0, 1.5),
-    // necessary for content to be below app bar
+    // necessary for header to have the same height as the topbar
     ...theme.mixins.toolbar,
 }));
 
@@ -86,10 +86,10 @@ interface MenuItem {
 function MenuListItem({
     open,
     menuItem,
-}: {
+}: Readonly<{
     open: boolean;
     menuItem: MenuItem;
-}) {
+}>) {
     return (
         <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
@@ -176,7 +176,7 @@ export default function SideMenu() {
                     height={40}
                     priority
                 />
-                {open && <Typography sx={{ ml: "0.5rem", fontWeight: 'bold' }} color="secondary">MOCAPHK</Typography>}
+                {open && <Typography sx={{ ml: "14px", fontWeight: 'bold' }} color="secondary">MOCAPHK</Typography>}
             </DrawerHeader>
             <Divider />
             <List>

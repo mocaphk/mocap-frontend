@@ -59,7 +59,7 @@ function TopBarAuthHandler() {
     );
 }
 
-function AuthedTopBar({ username }: { username: string | null | undefined }) {
+function AuthedTopBar({ username }: Readonly<{ username: string | null | undefined }>) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
