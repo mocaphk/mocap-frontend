@@ -18,6 +18,9 @@ const theme: Theme = createTheme({
             dark: "#6fb3b8",            // lighter dark green
             contrastText: "#ffffff",    // white
         },
+        info: {
+            main: "#666680",    // gray
+        },
     },
 });
 

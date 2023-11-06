@@ -23,7 +23,9 @@ export default async function RootLayout({
                 <SessionProvider session={session}>
                     <AuthProvider>
                         <ThemeRegistry options={{ key: "mui" }}>
-                            {children}
+                            <div style={{backgroundColor: "#f1f1f4"}}>
+                                {children}
+                            </div> 
                         </ThemeRegistry>
                     </AuthProvider>
                 </SessionProvider>
