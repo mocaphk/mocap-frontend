@@ -6,12 +6,7 @@ import Typography from "@mui/material/Typography";
 import CardColoredBar from "./CardColoredBar";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 
-interface CourseCardProps {
-    courseTitle: string;
-    courseShortDescription: string;
-    createdBy: string;
-    barColor: string;
-}
+import type { CourseCardProps } from "../types/CourseCard";
 
 export default function CourseCard({
     courseTitle,
@@ -20,7 +15,7 @@ export default function CourseCard({
     barColor,
 }: Readonly<CourseCardProps>) {
     return (
-        <Card sx={{ width: 230, height: 230, padding: 2, borderRadius: 3 }}>
+        <Card sx={{ width: 230, height: 230, padding: 2, borderRadius: 3, borderColor: "lightgray", borderWidth: 1 }}>
             <Box className="flex flex-row h-full">
                 <CardColoredBar barColor={barColor} />
                 <Box className="flex flex-col w-full">
