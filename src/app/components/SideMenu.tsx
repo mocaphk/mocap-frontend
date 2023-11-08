@@ -21,10 +21,54 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import type SvgIcon from "@mui/material/SvgIcon";
 import { Typography } from "@mui/material";
+import type { SxProps } from "@mui/material/styles";
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@mui/material/styles";
+interface MenuItem {
+    text: string;
+    icon: typeof SvgIcon;
+    redirectPath?: string;
+    onClick?: () => void;
+}
 
 const drawerWidth = 240;
+
+const mainMenuItems: Array<MenuItem> = [
+    {
+        text: "Home",
+        icon: HomeIcon,
+        redirectPath: "/home",
+    },
+    {
+        text: "Workspace",
+        icon: ComputerIcon,
+        redirectPath: "/workspace",
+    },
+    {
+        text: "Courses",
+        icon: MenuBookIcon,
+        redirectPath: "/courses",
+    },
+    {
+        text: "Calendar",
+        icon: CalendarMonthIcon,
+        redirectPath: "/calendar",
+    },
+    {
+        text: "Question Bank",
+        icon: AccountBalanceIcon,
+        redirectPath: "/question_bank",
+    },
+];
+
+const otherMenuItems: Array<MenuItem> = [
+    {
+        text: "Dashboard",
+        icon: DashboardIcon,
+        redirectPath: "/dashboard",
+    },
+];
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -77,12 +121,6 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-interface MenuItem {
-    text: string;
-    icon: typeof SvgIcon;
-    onClick: () => void;
-}
-
 function MenuListItem({
     open,
     menuItem,
@@ -90,15 +128,41 @@ function MenuListItem({
     open: boolean;
     menuItem: MenuItem;
 }>) {
+    const { replace } = useRouter();
+    const pathname = usePathname();
+    const theme = useTheme();
+
+    const onPath: boolean = menuItem.redirectPath
+        ? pathname.includes(menuItem.redirectPath)
+        : false;
+
+    const handleClick = () => {
+        if (menuItem.onClick) {
+            menuItem.onClick();
+        } else if (menuItem.redirectPath) {
+            replace(menuItem.redirectPath);
+        }
+    };
+
+    const defaultSx: SxProps<Theme> = {
+        display: "block",
+    };
+
+    const activeMenuSx: SxProps<Theme> = {
+        ...defaultSx,
+        backgroundColor: theme.palette.secondary.light,
+        color: theme.palette.secondary.main,
+    };
+
     return (
-        <ListItem disablePadding sx={{ display: "block" }}>
+        <ListItem disablePadding sx={onPath ? activeMenuSx : defaultSx}>
             <ListItemButton
                 sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
                 }}
-                onClick={menuItem.onClick}
+                onClick={handleClick}
             >
                 <ListItemIcon
                     sx={{
@@ -107,7 +171,7 @@ function MenuListItem({
                         justifyContent: "center",
                     }}
                 >
-                    <menuItem.icon />
+                    <menuItem.icon color={onPath ? "secondary" : "inherit"} />
                 </ListItemIcon>
                 <ListItemText
                     primary={menuItem.text}
@@ -119,52 +183,11 @@ function MenuListItem({
 }
 
 export default function SideMenu() {
-    const [open, setOpen] = React.useState(false);
-    const { replace } = useRouter();
+    const [open, setOpen] = React.useState(true);
 
     const toggleDrawer = () => {
         setOpen(!open);
     };
-
-    // client side redirects require a useRouter hook, the const menu item thus placed in the function
-    const mainMenuItems: Array<MenuItem> = [
-        {
-            text: "Home",
-            icon: HomeIcon,
-            onClick: () => {
-                console.log("home btn clicked");
-                replace("/home");
-            },
-        },
-        {
-            text: "Workspace",
-            icon: ComputerIcon,
-            onClick: () => {},
-        },
-        {
-            text: "Courses",
-            icon: MenuBookIcon,
-            onClick: () => {},
-        },
-        {
-            text: "Calendar",
-            icon: CalendarMonthIcon,
-            onClick: () => {},
-        },
-        {
-            text: "Question Bank",
-            icon: AccountBalanceIcon,
-            onClick: () => {},
-        },
-    ];
-    
-    const otherMenuItems: Array<MenuItem> = [
-        {
-            text: "Dashboard",
-            icon: DashboardIcon,
-            onClick: () => {},
-        },
-    ];
 
     return (
         <Drawer variant="permanent" open={open}>
@@ -176,7 +199,14 @@ export default function SideMenu() {
                     height={40}
                     priority
                 />
-                {open && <Typography sx={{ ml: "14px", fontWeight: 'bold' }} color="secondary">MOCAPHK</Typography>}
+                {open && (
+                    <Typography
+                        sx={{ ml: "14px", fontWeight: "bold" }}
+                        color="secondary"
+                    >
+                        MOCAPHK
+                    </Typography>
+                )}
             </DrawerHeader>
             <Divider />
             <List>

@@ -26,10 +26,7 @@ export default function CourseList() {
         <ComponentWrapper Icon={MenuBookIcon} title="Courses">
             <Box className="flex flex-row space-x-12">
                 {courseList.map((course) => (
-                    <CourseCard
-                        key={course.courseTitle}
-                        {...course}
-                    />
+                    <CourseCard key={course.courseTitle} {...course} />
                 ))}
             </Box>
         </ComponentWrapper>
