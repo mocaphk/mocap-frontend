@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import SessionProvider from "./providers/SessionProvider";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import AuthProvider from "./providers/AuthProvider";
+import "../../fonts/inter.css"
 
 import ThemeRegistry from "./theme/ThemeRegistry";
 

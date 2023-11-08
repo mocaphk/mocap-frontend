@@ -18,9 +18,17 @@ export default function ComponentWrapper({
     return (
         <Card sx={{ padding: "1.2rem 1.8rem", borderRadius: 6 }}>
             <Box className="flex flex-col w-full">
-                <Box className="flex flex-row h-full items-center mb-3" >
-                    <Icon sx={{height: "1.5rem", width: "1.5rem"}} color="info"/>
-                    <Typography marginLeft={1} fontSize="1.3rem" fontWeight="bold" color="info.main">
+                <Box className="flex flex-row h-full items-center mb-3">
+                    <Icon
+                        sx={{ height: "1.5rem", width: "1.5rem" }}
+                        color="info"
+                    />
+                    <Typography
+                        marginLeft={1}
+                        fontSize="1.3rem"
+                        fontWeight="medium"
+                        color="info.main"
+                    >
                         {title}
                     </Typography>
                 </Box>

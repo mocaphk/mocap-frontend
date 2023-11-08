@@ -8,7 +8,7 @@ const theme: Theme = createTheme({
         primary: {
             main: "#ffffff",            // white
             // main: "#f6f6f2",         // white / gray
-            light: "#badfe7",           // lighter green
+            light: "#6fb3b8",           // lighter green
             dark: "#388087",            // dark green
             contrastText: "#a8a8bd",    // gray
         },
@@ -22,6 +22,10 @@ const theme: Theme = createTheme({
             main: "#666680",    // gray
         },
     },
+    typography: {
+        fontFamily: "Inter",
+        fontWeightRegular: 500,
+    }
 });
 
 export default theme;

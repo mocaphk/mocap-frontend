@@ -3,7 +3,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CourseCard from "./CourseCard";
 import Box from "@mui/material/Box";
 
-import type { CourseCardProps } from "../types/CourseCard";
+import type { CourseCardProps } from "../types/CourseCardProps";
 
 export default function CourseList() {
     // prob fetch course list here
@@ -28,10 +28,7 @@ export default function CourseList() {
                 {courseList.map((course) => (
                     <CourseCard
                         key={course.courseTitle}
-                        courseTitle={course.courseTitle}
-                        courseShortDescription={course.courseShortDescription}
-                        createdBy={course.createdBy}
-                        barColor={course.barColor}
+                        {...course}
                     />
                 ))}
             </Box>
