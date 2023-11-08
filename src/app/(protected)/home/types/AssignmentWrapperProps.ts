@@ -1,6 +1,6 @@
-import type { AssignmentCardProps } from "./AssignmentCardProps"
+import type { AssignmentCardProps } from "./AssignmentCardProps";
 
 export interface AssignmentWrapperProps {
-    dueDate: string
-    assignemnts: Array<AssignmentCardProps>
+    dueDate: string;
+    assignemnts: Array<AssignmentCardProps>;
 }

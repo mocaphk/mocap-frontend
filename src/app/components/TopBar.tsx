@@ -21,7 +21,11 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 function TopBar() {
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed" elevation={0} className="border-solid border-b">
+            <AppBar
+                position="fixed"
+                elevation={0}
+                className="border-solid border-b"
+            >
                 <Toolbar>
                     <Box sx={{ flexGrow: 1 }} />
                     <TopBarAuthHandler />
@@ -36,30 +40,30 @@ function TopBarAuthHandler() {
     const pathname = usePathname();
 
     if (session) {
-        return (
-            <AuthedTopBar username={session?.user?.name} />
-        );
+        return <AuthedTopBar username={session?.user?.name} />;
     }
 
     return (
-            <Button
-                onClick={() => {
-                    if (pathname == "/") {
-                        signIn("keycloak", { callbackUrl: "/home" });
-                    } else {
-                        signIn("keycloak");
-                    }
-                }}
-                color="secondary"
-                variant="outlined"
-                startIcon={<AccountCircle />}
-            >
-                Sign in
-            </Button>
+        <Button
+            onClick={() => {
+                if (pathname == "/") {
+                    signIn("keycloak", { callbackUrl: "/home" });
+                } else {
+                    signIn("keycloak");
+                }
+            }}
+            color="secondary"
+            variant="outlined"
+            startIcon={<AccountCircle />}
+        >
+            Sign in
+        </Button>
     );
 }
 
-function AuthedTopBar({ username }: Readonly<{ username: string | null | undefined }>) {
+function AuthedTopBar({
+    username,
+}: Readonly<{ username: string | null | undefined }>) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);

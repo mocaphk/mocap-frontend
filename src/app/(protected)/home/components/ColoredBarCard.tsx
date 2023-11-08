@@ -4,14 +4,14 @@ import Card from "@mui/material/Card";
 import CardColoredBar from "./CardColoredBar";
 
 import type { SxProps } from "@mui/material/styles";
-import type Theme from "@/app/theme/Theme";
+import type { Theme } from "@mui/material/styles";
 
 export default function ColoredBarCard({
     sx,
     barColor,
     children,
 }: Readonly<{
-    sx: SxProps<typeof Theme>;
+    sx: SxProps<Theme>;
     barColor: string;
     children: React.ReactNode;
 }>) {
