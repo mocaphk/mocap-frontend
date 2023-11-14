@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import type { Theme, CSSObject } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+import type { Theme, CSSObject, SxProps } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -20,11 +20,10 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import type SvgIcon from "@mui/material/SvgIcon";
-import { Typography } from "@mui/material";
-import type { SxProps } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useTheme } from "@mui/material/styles";
 interface MenuItem {
     text: string;
     icon: typeof SvgIcon;
@@ -209,36 +208,38 @@ export default function SideMenu() {
                 )}
             </DrawerHeader>
             <Divider />
-            <List>
-                {mainMenuItems.map((menuItem) => (
+            <Box className="overflow-y-scroll" sx={{ scrollbarWidth: "none" }}>
+                <List>
+                    {mainMenuItems.map((menuItem) => (
+                        <MenuListItem
+                            key={menuItem.text}
+                            open={open}
+                            menuItem={menuItem}
+                        />
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    {otherMenuItems.map((menuItem) => (
+                        <MenuListItem
+                            key={menuItem.text}
+                            open={open}
+                            menuItem={menuItem}
+                        />
+                    ))}
+                </List>
+                <Divider />
+                <List>
                     <MenuListItem
-                        key={menuItem.text}
                         open={open}
-                        menuItem={menuItem}
+                        menuItem={{
+                            text: "Collapse",
+                            icon: open ? ChevronLeftIcon : ChevronRightIcon,
+                            onClick: toggleDrawer,
+                        }}
                     />
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {otherMenuItems.map((menuItem) => (
-                    <MenuListItem
-                        key={menuItem.text}
-                        open={open}
-                        menuItem={menuItem}
-                    />
-                ))}
-            </List>
-            <Divider />
-            <List>
-                <MenuListItem
-                    open={open}
-                    menuItem={{
-                        text: "Collapse",
-                        icon: open ? ChevronLeftIcon : ChevronRightIcon,
-                        onClick: toggleDrawer,
-                    }}
-                />
-            </List>
+                </List>
+            </Box>
         </Drawer>
     );
 }

@@ -22,6 +22,7 @@ export default function CourseCard({
                 borderRadius: 3,
                 borderColor: "lightgray",
                 borderWidth: 1,
+                flexShrink: 0,
             }}
             barColor={barColor}
         >
