@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import ComponentWrapper from "./ComponentWrapper";
 import DoneIcon from "@mui/icons-material/Done";
 import { BarChart } from "@mui/x-charts/BarChart";
@@ -48,8 +49,7 @@ export default function TaskCompletion() {
                     theme.palette.secondary.main,
                     theme.palette.secondary.light,
                 ]}
-                width={500}
-                height={295}
+                height={300}
             />
         </ComponentWrapper>
     );

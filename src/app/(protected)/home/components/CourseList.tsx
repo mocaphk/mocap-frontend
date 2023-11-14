@@ -24,7 +24,10 @@ export default function CourseList() {
 
     return (
         <ComponentWrapper Icon={MenuBookIcon} title="Courses">
-            <Box className="flex flex-row space-x-12">
+            <Box
+                className="flex flex-row gap-12 overflow-x-auto pb-2"
+                sx={{ scrollbarWidth: "thin" }}
+            >
                 {courseList.map((course) => (
                     <CourseCard key={course.courseTitle} {...course} />
                 ))}

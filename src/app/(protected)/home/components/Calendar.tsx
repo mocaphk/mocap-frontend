@@ -8,7 +8,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ComponentWrapper from "./ComponentWrapper";
 import WeekPicker from "./WeekPicker";
 import type { AssignmentWrapperProps } from "../types/AssignmentWrapperProps";
-import AssignmentWrapper from "./AssignmentWarpper";
+import AssignmentWrapper from "./AssignmentWrapper";
 
 export default function Calendar() {
     const [hoveredDay, setHoveredDay] = React.useState<Dayjs | null>(null);
@@ -49,7 +49,7 @@ export default function Calendar() {
 
     return (
         <ComponentWrapper Icon={CalendarMonthIcon} title="Calendar">
-            <Box className="flex flex-row space-x-12">
+            <Box className="flex flex-row gap-12">
                 <WeekPicker
                     value={value}
                     setValue={setValue}
@@ -60,7 +60,11 @@ export default function Calendar() {
                         marginBottom: "-35px",
                     }}
                 />
-                <Box className="flex flex-col space-y-4">
+                <Box
+                    // 10px right padding for the scrollbar
+                    className="flex flex-col gap-4 max-h-[290px] overflow-y-auto pr-[10px] pb-2"
+                    sx={{ scrollbarWidth: "thin" }}
+                >
                     {assignments.map((assignment) => (
                         <AssignmentWrapper
                             key={assignment.dueDate}
