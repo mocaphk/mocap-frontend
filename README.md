@@ -8,9 +8,9 @@
 
 Please follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) when you commit!
 
-Please install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [Prettier ESLint](https://marketplace.visualstudio.com/items?itemName=rvest.vs-code-prettier-eslint) extensions in VSCode to see warning and errors.
+Please install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), [Prettier ESLint](https://marketplace.visualstudio.com/items?itemName=rvest.vs-code-prettier-eslint), [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) VSCode extensions.
 
-Please add these to your `settings.json` in VSCode:
+For ESLint, please add these to your `settings.json` in VSCode:
 
 ```json
     "[javascript]": {
@@ -37,5 +37,16 @@ Please add these to your `settings.json` in VSCode:
             "source.fixAll.eslint": true
         }
     },
-    "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+    "eslint.validate": ["javascript", "typescript", "typescriptreact"]
+```
+
+For Tailwind CSS IntelliSense, please add these to your `settings.json` in VSCode:
+
+```json
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+    "strings": "on"
+    }
 ```

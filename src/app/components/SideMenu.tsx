@@ -208,7 +208,10 @@ export default function SideMenu() {
                 )}
             </DrawerHeader>
             <Divider />
-            <Box className="overflow-y-scroll" sx={{ scrollbarWidth: "none" }}>
+            <Box
+                className="overflow-y-auto overflow-x-hidden"
+                sx={{ scrollbarWidth: "none" }}
+            >
                 <List>
                     {mainMenuItems.map((menuItem) => (
                         <MenuListItem
