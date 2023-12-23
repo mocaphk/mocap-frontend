@@ -1,21 +1,22 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+"use client";
+
 import Box from "@mui/material/Box";
 
 import SideMenu from "../components/SideMenu";
 import TopBar from "../components/TopBar";
 import TopBarPadding from "../components/TopBarPadding";
+import { useSession, signIn } from "next-auth/react";
 
-export default async function ProtectedLayout({
+export default function ProtectedLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const session = await getServerSession(authOptions);
+    const { data: session } = useSession();
 
     if (!session) {
-        redirect("/api/auth/signin");
+        signIn("keycloak");
+        return <></>;
     }
 
     return (
