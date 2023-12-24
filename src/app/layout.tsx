@@ -7,6 +7,7 @@ import AuthProvider from "./providers/AuthProvider";
 import "../../fonts/inter.css";
 
 import ThemeRegistry from "./theme/ThemeRegistry";
+import { Box } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,15 +19,15 @@ export default async function RootLayout({
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en">
-            <body className={inter.className}>
+        <html className={`${inter.className} h-full w-full`} lang="en">
+            <body className="h-full w-full">
                 {/* Provide session for client component */}
                 <SessionProvider session={session}>
                     <AuthProvider>
                         <ThemeRegistry options={{ key: "mui" }}>
-                            <div style={{ backgroundColor: "#f1f1f4" }}>
+                            <Box className="bg-background w-full h-full">
                                 {children}
-                            </div>
+                            </Box>
                         </ThemeRegistry>
                     </AuthProvider>
                 </SessionProvider>
