@@ -10,7 +10,7 @@ import { useCallback } from "react";
 
 export default function DummyQueries() {
     const { data: data1 } = useGetBookByIdQuery({
-        variables: { bookId: "book-1" },
+        variables: { bookId: "1" },
     });
 
     const { data: data2 } = useGetAllBooksQuery();
