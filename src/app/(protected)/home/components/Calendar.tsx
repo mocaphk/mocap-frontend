@@ -49,7 +49,8 @@ export default function Calendar() {
 
     return (
         <ComponentWrapper Icon={CalendarMonthIcon} title="Calendar">
-            <Box className="flex flex-row gap-12">
+            {/* min height following fixed size of calendar */}
+            <Box className="flex flex-row flex-wrap gap-12 min-h-[280px]">
                 <WeekPicker
                     value={value}
                     setValue={setValue}
@@ -57,10 +58,11 @@ export default function Calendar() {
                     setHoveredDay={setHoveredDay}
                     sx={{
                         marginTop: "-10px",
-                        marginBottom: "-35px",
+                        marginBottom: "-80px",
                     }}
                 />
                 <Box
+                    // set max height for scrolling
                     // 10px right padding for the scrollbar
                     className="flex flex-col gap-4 max-h-[290px] overflow-y-auto pr-[10px] pb-2"
                     sx={{ scrollbarWidth: "thin" }}
