@@ -19,13 +19,13 @@ export default async function RootLayout({
     const session = await getServerSession(authOptions);
 
     return (
-        <html className={`${inter.className} h-full w-full`} lang="en">
-            <body className="h-full w-full">
+        <html className={`${inter.className} bg-background`} lang="en">
+            <body>
                 {/* Provide session for client component */}
                 <SessionProvider session={session}>
                     <AuthProvider>
                         <ThemeRegistry options={{ key: "mui" }}>
-                            <Box className="bg-background w-full h-full">
+                            <Box className="bg-background min-h-screen">
                                 {children}
                             </Box>
                         </ThemeRegistry>
