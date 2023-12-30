@@ -1,0 +1,3 @@
+[submodule "src/schemas/mocap-schema"]
+	path = src/schemas/mocap-schema
+	url = git@github.com:mocaphk/mocap-schema.git
