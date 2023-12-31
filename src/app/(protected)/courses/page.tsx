@@ -5,8 +5,8 @@ import { Status, Type } from "./types/AssignmentCardProps";
 import ComponentWrapper from "./components/ComponentWrapper";
 
 import LinkIcon from "@mui/icons-material/Link";
-import CampaignIcon from '@mui/icons-material/Campaign';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import CampaignIcon from "@mui/icons-material/Campaign";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 export default async function CoursesPage() {
     // need to add logic for no course selected and return, a course selection page?
@@ -42,6 +42,13 @@ export default async function CoursesPage() {
         ],
         assignments: [
             {
+                id: "12349",
+                title: "Tutorial 3",
+                dueDate: "2023-4-20 11:59pm",
+                status: Status.Completed,
+                type: Type.Assignment,
+            },
+            {
                 id: "12345",
                 title: "Assignment 3",
                 dueDate: "2023-4-20 11:59pm",
@@ -58,6 +65,13 @@ export default async function CoursesPage() {
             {
                 id: "12347",
                 title: "Assignment 1",
+                dueDate: "2023-4-20 11:59pm",
+                status: Status.Completed,
+                type: Type.Assignment,
+            },
+            {
+                id: "12348",
+                title: "Tutorial 1",
                 dueDate: "2023-4-20 11:59pm",
                 status: Status.Completed,
                 type: Type.Assignment,
@@ -95,6 +109,7 @@ export default async function CoursesPage() {
                                 link: link.link,
                             })
                         )}
+                        displayAmount={3}
                     />
                 )}
 
@@ -112,6 +127,7 @@ export default async function CoursesPage() {
                                 path: `announcements/${annoucement.id}`,
                             })
                         )}
+                        displayAmount={2}
                     />
                 )}
 
@@ -129,6 +145,7 @@ export default async function CoursesPage() {
                                 path: `workspace/${assignment.id}`,
                             })
                         )}
+                        displayAmount={3}
                     />
                 )}
             </Box>
