@@ -1,8 +1,32 @@
-# mocap frontend
+# mocap-frontend
 
 [![Build Badge](https://github.com/mocaphk/mocap-frontend/actions/workflows/build.yaml/badge.svg)](https://github.com/mocaphk/mocap-frontend/actions/workflows/build.yaml)
 [![Eslint Badge](https://github.com/mocaphk/mocap-frontend/actions/workflows/eslint.yaml/badge.svg)](https://github.com/mocaphk/mocap-frontend/actions/workflows/eslint.yaml)
 [![Format Badge](https://github.com/mocaphk/mocap-frontend/actions/workflows/format.yaml/badge.svg)](https://github.com/mocaphk/mocap-frontend/actions/workflows/format.yaml)
+
+## How to start
+
+1. Build the docker image.
+
+```bash
+docker-compose build
+```
+
+2. Create a docker network `mocap` if you haven't already.
+
+```bash
+docker network create mocap
+```
+
+3. Create a copy of `.env.production` and rename it as `.env.production.local`.
+
+4. Fill in all required environment variables.
+
+5. Start the container.
+
+```bash
+docker-compose up
+```
 
 ## Contributing
 
