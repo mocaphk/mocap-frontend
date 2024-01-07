@@ -23,16 +23,16 @@ export default function ComponentWrapper({
     linkButtonsProps: Array<LinkButtonProps>;
     displayAmount: number;
 }>) {
-    const [isExpanded, setExpanded] = React.useState(false);
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
     const toggleExpanded = () => {
-        setExpanded(!isExpanded);
+        setIsExpanded(!isExpanded);
     };
 
     const collapseButton = (val: LinkButtonProps) => (
         <Collapse key={val.title}>
             <Link
-                href={val.link || val.path || "/home"}
+                href={val.link ?? val.path ?? "/home"}
                 className="w-full rounded-2xl"
             >
                 <LinkButton {...val} />

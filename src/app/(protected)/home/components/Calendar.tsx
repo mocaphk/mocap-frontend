@@ -5,10 +5,10 @@ import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import Box from "@mui/material/Box";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import ComponentWrapper from "./ComponentWrapper";
 import WeekPicker from "./WeekPicker";
 import type { AssignmentWrapperProps } from "../types/AssignmentWrapperProps";
 import AssignmentWrapper from "./AssignmentWrapper";
+import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 export default function Calendar() {
     const [hoveredDay, setHoveredDay] = React.useState<Dayjs | null>(null);
