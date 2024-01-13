@@ -17,6 +17,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import Image from "next/image";
+import { Typography } from "@mui/material";
 
 function TopBar() {
     return (
@@ -27,7 +29,6 @@ function TopBar() {
                 className="border-solid border-b"
             >
                 <Toolbar>
-                    <Box sx={{ flexGrow: 1 }} />
                     <TopBarAuthHandler />
                 </Toolbar>
             </AppBar>
@@ -40,24 +41,44 @@ function TopBarAuthHandler() {
     const pathname = usePathname();
 
     if (session) {
-        return <AuthedTopBar username={session?.user?.name} />;
+        return (
+            <>
+                <Box className="flex-grow" />
+                <AuthedTopBar username={session?.user?.name} />
+            </>
+        );
     }
 
     return (
-        <Button
-            onClick={() => {
-                if (pathname == "/") {
-                    signIn("keycloak", { callbackUrl: "/home" });
-                } else {
-                    signIn("keycloak");
-                }
-            }}
-            color="secondary"
-            variant="outlined"
-            startIcon={<AccountCircle />}
-        >
-            Sign in
-        </Button>
+        <>
+            <Box className="flex flex-grow flex-row items-center gap-2 select-none">
+                <Image
+                    draggable={false}
+                    src="/logo.svg"
+                    alt="MOCAP Logo"
+                    width={52}
+                    height={52}
+                    priority
+                />
+                <Typography variant="h6" color="secondary">
+                    MOCAPHK
+                </Typography>
+            </Box>
+            <Button
+                onClick={() => {
+                    if (pathname == "/") {
+                        signIn("keycloak", { callbackUrl: "/home" });
+                    } else {
+                        signIn("keycloak");
+                    }
+                }}
+                color="secondary"
+                variant="outlined"
+                startIcon={<AccountCircle />}
+            >
+                Sign in
+            </Button>
+        </>
     );
 }
 
