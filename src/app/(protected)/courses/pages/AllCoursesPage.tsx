@@ -1,12 +1,11 @@
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import CourseCard from "./CourseCard";
-import Box from "@mui/material/Box";
-
 import type { CourseCardProps } from "../types/CourseCardProps";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
+import { Box } from "@mui/material";
+import CourseCard from "../components/CourseCard";
 
-export default function CourseList() {
-    // prob fetch course list here
+export default function AllCoursesPage() {
+    // fetch all courses of the user here
     const courseList: Array<CourseCardProps> = [
         {
             year: 2024,
@@ -14,7 +13,6 @@ export default function CourseList() {
             courseTitle: "ENGG1330 Computer Programming I",
             courseShortDescription: "Python Introductory Course",
             createdBy: "Schnieders Dirk",
-            barColor: "red",
         },
         {
             year: 2024,
@@ -22,16 +20,12 @@ export default function CourseList() {
             courseTitle: "ENGG1340 Computer Programming II",
             courseShortDescription: "C/C++ Introductory Course",
             createdBy: "Luo Ruibang",
-            barColor: "lime",
         },
     ];
 
     return (
         <ComponentWrapper Icon={MenuBookIcon} title="Courses">
-            <Box
-                className="flex flex-row gap-12 overflow-x-auto pb-2"
-                sx={{ scrollbarWidth: "thin" }}
-            >
+            <Box className="flex flex-col gap-5 mt-2">
                 {courseList.map((course) => (
                     <CourseCard
                         key={`${course.courseCode}${course.year}`}

@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import ComponentWrapper from "./ComponentWrapper";
 import DoneIcon from "@mui/icons-material/Done";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useTheme } from "@mui/material/styles";
+import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 export default function TaskCompletion() {
     const theme = useTheme();
