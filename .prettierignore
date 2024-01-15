@@ -7,3 +7,5 @@ out
 *.graphql.d.ts
 *.graphqls.d.ts
 .cache
+
+src/schemas/mocap-schema/**
