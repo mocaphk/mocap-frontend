@@ -124,6 +124,11 @@ export const authOptions: AuthOptions = {
             return session;
         },
     },
+    pages: {
+        signIn: "/login",
+        signOut: "/logout",
+        error: "/auth/error", // Error code passed in query string as ?error=
+    },
 };
 
 export const handler = NextAuth(authOptions);
