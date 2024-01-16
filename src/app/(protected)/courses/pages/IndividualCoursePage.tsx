@@ -1,3 +1,5 @@
+"use client";
+
 import { Typography, Box, Card } from "@mui/material";
 import type { CourseProps } from "../types/CourseProps";
 import type { LinkButtonProps } from "../types/LinkButtonProps";
@@ -6,12 +8,17 @@ import ComponentWrapper from "../components/ComponentWrapper";
 import LinkIcon from "@mui/icons-material/Link";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import React from "react";
 
 export default function IndividualCoursePage({
     course,
 }: Readonly<{
     course: CourseProps;
 }>) {
+    React.useEffect(() => {
+        document.title = course.courseTitle;
+    }, [course]);
+
     return (
         <Card
             sx={{

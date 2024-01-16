@@ -20,6 +20,14 @@ export default async function RootLayout({
 
     return (
         <html className={`${inter.className} bg-background`} lang="en">
+            <head>
+                <title>Mocap</title>
+                <meta
+                    name="description"
+                    content="MOCAP offers a pre-configured coding environment accessible through the web platform, eliminating the need for individual local machine configurations."
+                ></meta>
+                <meta name="author" content="mocap"></meta>
+            </head>
             <body>
                 {/* Provide session for client component */}
                 <SessionProvider session={session}>
