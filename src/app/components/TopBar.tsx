@@ -1,7 +1,6 @@
 "use client";
 
-import { signIn, signOut, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -19,6 +18,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import Image from "next/image";
 import { Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 function TopBar() {
     return (
@@ -38,7 +38,6 @@ function TopBar() {
 
 function TopBarAuthHandler() {
     const { data: session } = useSession();
-    const pathname = usePathname();
 
     if (session) {
         return (
@@ -65,13 +64,7 @@ function TopBarAuthHandler() {
                 </Typography>
             </Box>
             <Button
-                onClick={() => {
-                    if (pathname == "/") {
-                        signIn("keycloak", { callbackUrl: "/home" });
-                    } else {
-                        signIn("keycloak");
-                    }
-                }}
+                href="/login"
                 color="secondary"
                 variant="outlined"
                 startIcon={<AccountCircle />}
@@ -85,6 +78,7 @@ function TopBarAuthHandler() {
 function AuthedTopBar({
     username,
 }: Readonly<{ username: string | null | undefined }>) {
+    const { replace } = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -136,7 +130,7 @@ function AuthedTopBar({
             <MenuItem
                 onClick={() => {
                     handleMenuClose();
-                    signOut({ callbackUrl: "/" });
+                    replace("/logout");
                 }}
             >
                 Sign out
