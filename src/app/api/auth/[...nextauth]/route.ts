@@ -20,7 +20,7 @@ async function refreshAccessToken(refreshToken: JWT["refreshToken"]) {
         params.append("refresh_token", refreshToken);
 
         const token = await axios.post(
-            `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`,
+            `${process.env.KEYCLOAK_LOCAL_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`,
             params
         );
 
@@ -39,7 +39,7 @@ async function doFinalSignoutHandshake(jwt: JWT) {
             const params = new URLSearchParams();
             params.append("id_token_hint", idToken ?? "");
             await axios.get(
-                `${process.env.KEYCLOAK_URL}/realms/${
+                `${process.env.KEYCLOAK_LOCAL_URL}/realms/${
                     process.env.KEYCLOAK_REALM
                 }/protocol/openid-connect/logout?${params.toString()}`
             );
@@ -58,7 +58,7 @@ export const authOptions: AuthOptions = {
         KeycloakProvider({
             clientId: process.env.KEYCLOAK_CLIENT_ID,
             clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
-            issuer: `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}`,
+            issuer: `${process.env.KEYCLOAK_LOCAL_URL}/realms/${process.env.KEYCLOAK_REALM}`,
         }),
     ],
     events: {

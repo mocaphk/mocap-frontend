@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 export default async function Register() {
     const url = new URL(
-        `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/registrations`
+        `${process.env.KEYCLOAK_PUBLIC_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/registrations`
     );
     url.searchParams.append("client_id", process.env.KEYCLOAK_CLIENT_ID);
     url.searchParams.append("response_type", "code");
