@@ -1,9 +1,10 @@
 "use client";
 
-import { Typography, Box, Card } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import type { CourseProps } from "../types/CourseProps";
 import type { LinkButtonProps } from "../types/LinkButtonProps";
-import ComponentWrapper from "../components/ComponentWrapper";
+import CardWrapper from "@/app/components/CardWrapper";
+import CollapsibleComponentWrapper from "../components/CollapsibleComponentWrapper";
 
 import LinkIcon from "@mui/icons-material/Link";
 import CampaignIcon from "@mui/icons-material/Campaign";
@@ -20,12 +21,7 @@ export default function IndividualCoursePage({
     }, [course]);
 
     return (
-        <Card
-            sx={{
-                padding: "1.2rem 1.8rem",
-                borderRadius: 6,
-            }}
-        >
+        <CardWrapper>
             <Box className="flex flex-col mb-5">
                 <Typography fontSize="1.3rem" fontWeight="medium">
                     {course.courseTitle}
@@ -37,7 +33,7 @@ export default function IndividualCoursePage({
 
             <Box className="flex flex-col gap-7">
                 {course.schoolSiteLinks && (
-                    <ComponentWrapper
+                    <CollapsibleComponentWrapper
                         Icon={LinkIcon}
                         title="Links"
                         linkButtonsProps={course.schoolSiteLinks?.map<LinkButtonProps>(
@@ -54,7 +50,7 @@ export default function IndividualCoursePage({
                 )}
 
                 {course.annoucements && (
-                    <ComponentWrapper
+                    <CollapsibleComponentWrapper
                         Icon={CampaignIcon}
                         title="Annoucements"
                         linkButtonsProps={course.annoucements?.map<LinkButtonProps>(
@@ -72,7 +68,7 @@ export default function IndividualCoursePage({
                 )}
 
                 {course.assignments && (
-                    <ComponentWrapper
+                    <CollapsibleComponentWrapper
                         Icon={AssignmentIcon}
                         title="Assignments"
                         linkButtonsProps={course.assignments?.map<LinkButtonProps>(
@@ -89,6 +85,6 @@ export default function IndividualCoursePage({
                     />
                 )}
             </Box>
-        </Card>
+        </CardWrapper>
     );
 }

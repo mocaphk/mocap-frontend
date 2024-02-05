@@ -4,6 +4,7 @@ import React from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useTheme } from "@mui/material/styles";
+import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 export default function TaskCompletion() {
@@ -38,19 +39,21 @@ export default function TaskCompletion() {
     ];
 
     return (
-        <ComponentWrapper Icon={DoneIcon} title="Task Completed">
-            <BarChart
-                margin={{ left: 100 }}
-                xAxis={[{ label: "progress (%)" }]}
-                yAxis={[{ scaleType: "band", data: courseCodes }]}
-                series={progress}
-                layout="horizontal"
-                colors={[
-                    theme.palette.secondary.main,
-                    theme.palette.secondary.light,
-                ]}
-                height={300}
-            />
-        </ComponentWrapper>
+        <CardWrapper>
+            <ComponentWrapper Icon={DoneIcon} title="Task Completed">
+                <BarChart
+                    margin={{ left: 100 }}
+                    xAxis={[{ label: "progress (%)" }]}
+                    yAxis={[{ scaleType: "band", data: courseCodes }]}
+                    series={progress}
+                    layout="horizontal"
+                    colors={[
+                        theme.palette.secondary.main,
+                        theme.palette.secondary.light,
+                    ]}
+                    height={300}
+                />
+            </ComponentWrapper>
+        </CardWrapper>
     );
 }

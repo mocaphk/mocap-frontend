@@ -3,6 +3,7 @@ import CourseCard from "./CourseCard";
 import Box from "@mui/material/Box";
 
 import type { CourseCardProps } from "../types/CourseCardProps";
+import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 export default function CourseList() {
@@ -27,18 +28,20 @@ export default function CourseList() {
     ];
 
     return (
-        <ComponentWrapper Icon={MenuBookIcon} title="Courses">
-            <Box
-                className="flex flex-row gap-12 overflow-x-auto pb-2"
-                sx={{ scrollbarWidth: "thin" }}
-            >
-                {courseList.map((course) => (
-                    <CourseCard
-                        key={`${course.courseCode}${course.year}`}
-                        {...course}
-                    />
-                ))}
-            </Box>
-        </ComponentWrapper>
+        <CardWrapper>
+            <ComponentWrapper Icon={MenuBookIcon} title="Courses">
+                <Box
+                    className="flex flex-row gap-12 overflow-x-auto pb-2"
+                    sx={{ scrollbarWidth: "thin" }}
+                >
+                    {courseList.map((course) => (
+                        <CourseCard
+                            key={`${course.courseCode}${course.year}`}
+                            {...course}
+                        />
+                    ))}
+                </Box>
+            </ComponentWrapper>
+        </CardWrapper>
     );
 }

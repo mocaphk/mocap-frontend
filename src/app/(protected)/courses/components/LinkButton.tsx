@@ -16,7 +16,7 @@ export default function LinkButton({
     createdBy,
     assignmentType,
     status,
-}: LinkButtonProps) {
+}: Readonly<LinkButtonProps>) {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ButtonIcon = () => {
         if (Icon) {
