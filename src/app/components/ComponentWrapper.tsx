@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import type SvgIcon from "@mui/material/SvgIcon";
 
@@ -8,17 +7,19 @@ export default function ComponentWrapper({
     // eslint-disable-next-line @typescript-eslint/naming-convention
     Icon,
     title,
+    actionButton,
     children,
 }: Readonly<{
     // eslint-disable-next-line @typescript-eslint/naming-convention
     Icon: typeof SvgIcon;
     title: string;
+    actionButton?: React.ReactNode;
     children: React.ReactNode;
 }>) {
     return (
-        <Card sx={{ padding: "1.2rem 1.8rem", borderRadius: 6 }}>
-            <Box className="flex flex-col w-full">
-                <Box className="flex flex-row h-full items-center mb-3">
+        <Box className="flex flex-col w-full">
+            <Box className="flex flex-row w-full items-center justify-between mb-3">
+                <Box className="flex flex-row h-full items-center">
                     <Icon
                         sx={{ height: "1.5rem", width: "1.5rem" }}
                         color="info"
@@ -32,8 +33,9 @@ export default function ComponentWrapper({
                         {title}
                     </Typography>
                 </Box>
-                {children}
+                {actionButton}
             </Box>
-        </Card>
+            {children}
+        </Box>
     );
 }
