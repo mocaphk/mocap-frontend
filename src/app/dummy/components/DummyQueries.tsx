@@ -5,10 +5,16 @@ import {
     useGetAllBooksQuery,
     useGetBookByIdQuery,
     GetAllBooksDocument,
+    useGetUserQuery,
+    useGetAllUsersQuery,
 } from "../queries.graphql";
 import { useCallback } from "react";
 
 export default function DummyQueries() {
+    const { data: user } = useGetUserQuery();
+
+    const { data: users } = useGetAllUsersQuery();
+
     const { data: data1 } = useGetBookByIdQuery({
         variables: { bookId: "1" },
     });
@@ -33,6 +39,20 @@ export default function DummyQueries() {
 
     return (
         <div>
+            <h1>
+                Hello {user?.user?.username}!
+                <br />
+                Id: {user?.user?.id}
+                <br />
+                First name: {user?.user?.firstName}
+                <br />
+                Last name: {user?.user?.lastName}
+            </h1>
+            <h1>
+                {users?.allUsers?.map((user) => {
+                    return <p key={user?.id}>{user?.username}</p>;
+                })}
+            </h1>
             <h1>
                 getBookById (Only user with admin or lecturer role can get this
                 data): Book name =
