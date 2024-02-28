@@ -18,7 +18,8 @@ export default function AssignmentPage() {
     const assignmentTemplate: AssignmentProps = {
         id: "1",
         title: "Assignment 1",
-        description: "In this assignment, you will have the opportunity to delve into the fundamentals of Java programming. You will explore essential concepts, such as variables, data types, control structures, functions, and object-oriented programming principles. Through practical exercises and examples, you will gain a solid understanding of Java and how to apply its features in real-world scenarios. By the end of the assignment, you will have a strong foundation in Java programming, preparing you to tackle more advanced topics and projects with confidence.",
+        description:
+            "In this assignment, you will have the opportunity to delve into the fundamentals of Java programming. You will explore essential concepts, such as variables, data types, control structures, functions, and object-oriented programming principles. Through practical exercises and examples, you will gain a solid understanding of Java and how to apply its features in real-world scenarios. By the end of the assignment, you will have a strong foundation in Java programming, preparing you to tackle more advanced topics and projects with confidence.",
         dueDate: "2024-3-10",
         courseCode: "COMP2396",
         year: "2024",
@@ -46,15 +47,16 @@ export default function AssignmentPage() {
             {
                 id: "4",
                 title: "Challenge",
-                description: "Optional question: Complete this question for extra marks",
+                description:
+                    "Optional question: Complete this question for extra marks",
                 status: QuestionStatus.Ongoing,
-            }
+            },
         ],
-    }
+    };
 
     if (courseCode && year && assignmentId) {
         // try fetching, if exist return assignment page
-        return <DetailedAssignmentPage {...assignmentTemplate}/>;
+        return <DetailedAssignmentPage {...assignmentTemplate} />;
     }
 
     // fall back to not found page, with a link back to course page, persist courseCode and year param, if any
