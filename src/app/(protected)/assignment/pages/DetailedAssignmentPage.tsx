@@ -1,19 +1,14 @@
 import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
-import LinkButton from "@/app/components/LinkButton";
 import { Box, Typography, Link as MUILink } from "@mui/material";
 
 import { AssignmentTypes } from "@/enums/assignmentTypes";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
-import { QuestionStatus } from "../types/QuestionProps";
 import type { AssignmentProps } from "../types/AssignmentProps";
 
 import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
-import QuizIcon from "@mui/icons-material/Quiz";
-import LiveHelpIcon from "@mui/icons-material/LiveHelp";
-import DoneIcon from "@mui/icons-material/Done";
-import TripOriginIcon from "@mui/icons-material/TripOrigin";
+import QuestionList from "../components/QuestionList";
 
 export default function DetailedAssignmentPage({
     title,
@@ -45,17 +40,6 @@ export default function DetailedAssignmentPage({
         },
     };
 
-    const questionStatusIconMap = {
-        [QuestionStatus.Submitted]: {
-            icon: DoneIcon,
-            color: "lime",
-        },
-        [QuestionStatus.Ongoing]: {
-            icon: TripOriginIcon,
-            color: "#ffcc00",
-        },
-    };
-
     return (
         <CardWrapper>
             <ComponentWrapper Icon={assignmentTypeIconMap[type]} title={title}>
@@ -80,23 +64,8 @@ export default function DetailedAssignmentPage({
                     <Typography>{description}</Typography>
                 </Box>
 
-                <ComponentWrapper Icon={QuizIcon} title="Questions">
-                    <Box className="flex flex-col gap-3">
-                        {questions.map((question) => (
-                            <LinkButton
-                                key={question.id}
-                                Icon={LiveHelpIcon}
-                                title={question.title}
-                                description={question.description}
-                                statusIcon={
-                                    questionStatusIconMap[question.status]
-                                }
-                                link={`/workspace?questionId=${question.id}`}
-                            />
-                        ))}
-                    </Box>
-                </ComponentWrapper>
-                
+                <QuestionList questions={questions} />
+
                 <Box className="mt-7">
                     <MUILink
                         href={`courses?courseCode=${courseCode}&year=${year}`}
