@@ -3,6 +3,8 @@ import type { AssignmentCardProps } from "./AssignmentCardProps";
 import type { SchoolSiteLinkProps } from "./SchoolSiteLinkProps";
 
 export interface CourseProps {
+    year: string;
+    courseCode: string;
     courseTitle: string;
     createdBy: string;
     schoolSiteLinks?: Array<SchoolSiteLinkProps>;
