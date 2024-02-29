@@ -2,7 +2,7 @@
 
 import { Typography, Box } from "@mui/material";
 import type { CourseProps } from "../types/CourseProps";
-import type { LinkButtonProps } from "../types/LinkButtonProps";
+import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
 import CardWrapper from "@/app/components/CardWrapper";
 import CollapsibleComponentWrapper from "../components/CollapsibleComponentWrapper";
 
@@ -11,32 +11,62 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import React from "react";
 
+import { AssignmentTypes } from "@/enums/assignmentTypes";
+import { AssignmentStatus } from "@/enums/assignmentStatus";
+import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
+import SchoolIcon from "@mui/icons-material/School";
+import DoneIcon from "@mui/icons-material/Done";
+import TripOriginIcon from "@mui/icons-material/TripOrigin";
+import CloseIcon from "@mui/icons-material/Close";
+
 export default function IndividualCoursePage({
-    course,
-}: Readonly<{
-    course: CourseProps;
-}>) {
+    year,
+    courseCode,
+    courseTitle,
+    createdBy,
+    schoolSiteLinks,
+    annoucements,
+    assignments,
+}: Readonly<CourseProps>) {
+    const assignmentTypeIconMap = {
+        [AssignmentTypes.Assignment]: DescriptionSharpIcon,
+        [AssignmentTypes.Tutorial]: SchoolIcon,
+    };
+
+    const statusIconMap = {
+        [AssignmentStatus.Completed]: {
+            icon: DoneIcon,
+            color: "lime",
+        },
+        [AssignmentStatus.Ongoing]: {
+            icon: TripOriginIcon,
+            color: "#ffcc00",
+        },
+        [AssignmentStatus.Overdue]: {
+            icon: CloseIcon,
+            color: "red",
+        },
+    };
+
     React.useEffect(() => {
-        document.title = course.courseTitle;
-    }, [course]);
+        document.title = courseTitle;
+    }, [courseTitle]);
 
     return (
         <CardWrapper>
             <Box className="flex flex-col mb-5">
                 <Typography fontSize="1.3rem" fontWeight="medium">
-                    {course.courseTitle}
+                    {courseTitle}
                 </Typography>
-                <Typography color="secondary.main">
-                    {course.createdBy}
-                </Typography>
+                <Typography color="secondary.main">{createdBy}</Typography>
             </Box>
 
             <Box className="flex flex-col gap-7">
-                {course.schoolSiteLinks && (
+                {schoolSiteLinks && (
                     <CollapsibleComponentWrapper
                         Icon={LinkIcon}
                         title="Links"
-                        linkButtonsProps={course.schoolSiteLinks?.map<LinkButtonProps>(
+                        linkButtonsProps={schoolSiteLinks?.map<LinkButtonProps>(
                             (link) => ({
                                 // eslint-disable-next-line @typescript-eslint/naming-convention
                                 Icon: LinkIcon,
@@ -49,36 +79,36 @@ export default function IndividualCoursePage({
                     />
                 )}
 
-                {course.annoucements && (
+                {annoucements && (
                     <CollapsibleComponentWrapper
                         Icon={CampaignIcon}
                         title="Annoucements"
-                        linkButtonsProps={course.annoucements?.map<LinkButtonProps>(
+                        linkButtonsProps={annoucements?.map<LinkButtonProps>(
                             (annoucement) => ({
                                 // eslint-disable-next-line @typescript-eslint/naming-convention
                                 Icon: CampaignIcon,
                                 title: annoucement.title,
                                 description: annoucement.date,
                                 createdBy: annoucement.createdBy,
-                                path: `announcements/${annoucement.id}`,
+                                link: `announcements/${annoucement.id}`,
                             })
                         )}
                         displayAmount={2}
                     />
                 )}
 
-                {course.assignments && (
+                {assignments && (
                     <CollapsibleComponentWrapper
                         Icon={AssignmentIcon}
                         title="Assignments"
-                        linkButtonsProps={course.assignments?.map<LinkButtonProps>(
+                        linkButtonsProps={assignments?.map<LinkButtonProps>(
                             (assignment) => ({
                                 // eslint-disable-next-line @typescript-eslint/naming-convention
+                                Icon: assignmentTypeIconMap[assignment.type],
                                 title: assignment.title,
                                 description: assignment.dueDate,
-                                assignmentType: assignment.type,
-                                status: assignment.status,
-                                path: `workspace/${assignment.id}`,
+                                statusIcon: statusIconMap[assignment.status],
+                                link: `assignment?courseCode=${courseCode}&year=${year}&assignmentId=${assignment.id}`,
                             })
                         )}
                         displayAmount={3}

@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { TransitionGroup } from "react-transition-group";
 import { Button, Collapse } from "@mui/material";
 import type SvgIcon from "@mui/material/SvgIcon";
-import type { LinkButtonProps } from "../types/LinkButtonProps";
-import LinkButton from "./LinkButton";
+import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
+import LinkButton from "@/app/components/LinkButton";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 // ref to mui transitions: https://mui.com/material-ui/transitions/
@@ -34,12 +33,7 @@ export default function CollapsibleComponentWrapper({
 
     const collapseButton = (val: LinkButtonProps) => (
         <Collapse key={val.title}>
-            <Link
-                href={val.link ?? val.path ?? "/home"}
-                className="w-full rounded-2xl"
-            >
-                <LinkButton {...val} />
-            </Link>
+            <LinkButton {...val} />
         </Collapse>
     );
 
