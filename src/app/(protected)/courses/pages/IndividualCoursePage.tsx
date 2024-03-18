@@ -1,23 +1,27 @@
 "use client";
 
-import { Typography, Box } from "@mui/material";
-import type { CourseProps } from "../types/CourseProps";
-import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
+import React from "react";
+import { Typography, Box, Dialog, Button } from "@mui/material";
+
 import CardWrapper from "@/app/components/CardWrapper";
 import CollapsibleComponentWrapper from "../components/CollapsibleComponentWrapper";
+import NewAssignmentForm from "../components/NewAssignmentForm";
+
+import type { CourseProps } from "../types/CourseProps";
+import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
+import type { NewAssignmentProps } from "../types/NewAssignmentProps";
+import { AssignmentTypes } from "@/enums/assignmentTypes";
+import { AssignmentStatus } from "@/enums/assignmentStatus";
 
 import LinkIcon from "@mui/icons-material/Link";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import React from "react";
-
-import { AssignmentTypes } from "@/enums/assignmentTypes";
-import { AssignmentStatus } from "@/enums/assignmentStatus";
 import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
 import DoneIcon from "@mui/icons-material/Done";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function IndividualCoursePage({
     year,
@@ -46,6 +50,26 @@ export default function IndividualCoursePage({
             icon: CloseIcon,
             color: "red",
         },
+    };
+
+    const currentDate = new Date().toLocaleDateString("en-CA");
+    const [openAssignmentPopup, setOpenAssignmentPopup] = React.useState(false);
+    const [newAssignmentInfo, setNewAssignmentInfo] =
+        React.useState<NewAssignmentProps>({
+            courseCode: courseCode,
+            assignmentTitle: "",
+            assignmentShortDescription: "",
+            openDate: currentDate,
+            dueDate: currentDate,
+            closeDate: currentDate,
+        });
+
+    const handleAssignmentFormChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setNewAssignmentInfo((values) => ({ ...values, [name]: value }));
     };
 
     React.useEffect(() => {
@@ -112,9 +136,35 @@ export default function IndividualCoursePage({
                             })
                         )}
                         displayAmount={3}
+                        actionButton={
+                            <Button
+                                color="secondary"
+                                variant="outlined"
+                                sx={{
+                                    borderRadius: 5,
+                                    textTransform: "none",
+                                    fontSize: 16,
+                                }}
+                                startIcon={<AddIcon />}
+                                onClick={() => setOpenAssignmentPopup(true)}
+                            >
+                                New Assignment
+                            </Button>
+                        }
                     />
                 )}
             </Box>
+
+            <Dialog
+                onClose={() => setOpenAssignmentPopup(false)}
+                open={openAssignmentPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <NewAssignmentForm
+                    form={newAssignmentInfo}
+                    handleChange={handleAssignmentFormChange}
+                />
+            </Dialog>
         </CardWrapper>
     );
 }
