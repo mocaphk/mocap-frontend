@@ -114,7 +114,7 @@ export default function IndividualCoursePage({
                                 title: annoucement.title,
                                 description: annoucement.date,
                                 createdBy: annoucement.createdBy,
-                                link: `announcements/${annoucement.id}`,
+                                link: `announcement?courseCode=${courseCode}&year=${year}&announcementId=${annoucement.id}`,
                             })
                         )}
                         displayAmount={2}
