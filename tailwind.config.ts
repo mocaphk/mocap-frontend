@@ -17,6 +17,7 @@ const config: Config = {
             secondary: "#badfe7",
             tertiary: "#6fb3b8",
             background: "#f1f1f4",
+            info: "#666680",
         },
         screens: {
             // Follow mui breakpoints
