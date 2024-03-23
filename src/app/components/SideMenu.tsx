@@ -57,7 +57,7 @@ const mainMenuItems: Array<MenuItem> = [
     {
         text: "Question Bank",
         icon: AccountBalanceIcon,
-        redirectPath: "/question_bank",
+        redirectPath: "/questionBank",
     },
 ];
 

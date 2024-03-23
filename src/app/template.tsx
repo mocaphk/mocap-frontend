@@ -2,7 +2,9 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import React from "react";
-import { capitalizeFirstLetter } from "./utils/string";
+import { capitalizeAllWords, camelToSpace } from "./utils/string";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function Template({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -11,8 +13,14 @@ export default function Template({ children }: { children: React.ReactNode }) {
     React.useEffect(() => {
         const paths = pathname.split("/");
         const firstPath = paths[1];
-        document.title = firstPath ? capitalizeFirstLetter(firstPath) : "Mocap";
+        document.title = firstPath
+            ? capitalizeAllWords(camelToSpace(firstPath))
+            : "Mocap";
     }, [pathname, searchParams]);
 
-    return children;
+    return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {children}
+        </LocalizationProvider>
+    );
 }

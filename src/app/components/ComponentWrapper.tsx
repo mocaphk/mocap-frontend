@@ -8,16 +8,18 @@ export default function ComponentWrapper({
     Icon,
     title,
     actionButton,
+    fullHeight = false,
     children,
 }: Readonly<{
     // eslint-disable-next-line @typescript-eslint/naming-convention
     Icon: typeof SvgIcon;
     title: string;
     actionButton?: React.ReactNode;
+    fullHeight?: boolean;
     children: React.ReactNode;
 }>) {
     return (
-        <Box className="flex flex-col w-full">
+        <Box className={`flex flex-col w-full ${fullHeight ? "h-full" : ""}`}>
             <Box className="flex flex-row w-full items-center justify-between mb-3">
                 <Box className="flex flex-row h-full items-center">
                     <Icon
