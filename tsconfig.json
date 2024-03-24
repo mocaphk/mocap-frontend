@@ -20,7 +20,8 @@
             }
         ],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@schema": ["./.cache/__types__"]
         }
     },
     "include": [

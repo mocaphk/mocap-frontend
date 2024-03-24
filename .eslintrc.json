@@ -4,6 +4,7 @@
     "parserOptions": { "project": ["./tsconfig.json"] },
     "plugins": ["@typescript-eslint", "prettier", "unused-imports"],
     "extends": ["next/core-web-vitals", "prettier"],
+    "ignorePatterns": ["!.*", "dist", "node_modules"],
     "rules": {
         "require-jsdoc": "off",
         "no-unused-vars": "off",
@@ -52,5 +53,15 @@
                 "prefer": "type-imports"
             }
         ]
-    }
+    },
+    "overrides": [
+        {
+            "files": [".cache/**/*.tsx"],
+            "rules": {
+                "unused-imports/no-unused-imports": "off",
+                "unused-imports/no-unused-vars": "off",
+                "@typescript-eslint/naming-convention": "off"
+            }
+        }
+    ]
 }
