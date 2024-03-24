@@ -10,6 +10,8 @@ import {
 } from "../queries.graphql";
 import { useCallback } from "react";
 
+import { BookType } from "@schema";
+
 export default function DummyQueries() {
     const { data: user } = useGetUserQuery();
 
@@ -26,6 +28,7 @@ export default function DummyQueries() {
             bkInput: {
                 name: "Dummy name",
                 pageCount: 123,
+                type: BookType.Comic,
                 author: { firstName: "Dummy first name" },
             },
         },
@@ -48,6 +51,7 @@ export default function DummyQueries() {
                 <br />
                 Last name: {user?.user?.lastName}
             </h1>
+            <br />
             <h1>
                 {users?.allUsers?.map((user) => {
                     return <p key={user?.id}>{user?.username}</p>;
@@ -55,19 +59,22 @@ export default function DummyQueries() {
             </h1>
             <h1>
                 getBookById (Only user with admin or lecturer role can get this
-                data): Book name =
+                data): Book information:
             </h1>
-            <p style={{ color: "red" }}>{data1?.book?.name}</p>
+            <p>Name: {data1?.book?.name}</p>
+            <p>Page Count: {data1?.book?.pageCount}</p>
+            <p>Type: {data1?.book?.type}</p>
+            <p>Author First Name: {data1?.book?.author?.firstName}</p>
+            <br />
             <h1>
                 getAllBooks (Only user with lecturer role can get this data):
             </h1>
             <ul>
                 {data2?.allBooks?.map((book) => (
-                    <li key={book?.id} style={{ color: "red" }}>
-                        {book?.name}
-                    </li>
+                    <li key={book?.id}>{book?.name}</li>
                 ))}
             </ul>
+            <br />
             <button onClick={handleClick}>
                 Add Book (Can be click by any user (no role restriction))
             </button>

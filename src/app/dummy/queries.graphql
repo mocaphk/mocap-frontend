@@ -3,6 +3,7 @@ mutation AddBook($bkInput: BookInput!) {
         id
         name
         pageCount
+        type
         author {
             id
             firstName
@@ -16,6 +17,7 @@ query GetAllBooks {
         id
         name
         pageCount
+        type
         author {
             id
             firstName
@@ -29,6 +31,7 @@ query GetBookById($bookId: ID!) {
         id
         name
         pageCount
+        type
         author {
             id
             firstName
