@@ -11,4 +11,5 @@ export interface LinkButtonProps {
         color: string;
     };
     link?: string;
+    onClick?: React.ComponentProps<"button">["onClick"];
 }
