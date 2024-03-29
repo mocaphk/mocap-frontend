@@ -19,6 +19,10 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import Image from "next/image";
 import { Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import NotificationMenu from "./NotificationMenu";
+import useDebouncedResize from "../utils/resizeHandler";
+import type { NotificationProps } from "../types/NotificationProps";
+import { NotificationTypes } from "@/enums/notificationTypes";
 
 function TopBar() {
     return (
@@ -83,27 +87,134 @@ function AuthedTopBar({
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] =
+        React.useState<boolean>(false);
+    const [isNotiMenuOpen, setIsNotiMenuOpen] = React.useState<boolean>(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] =
+        React.useState<boolean>(false);
+
+    const handleNotiMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+        setIsNotiMenuOpen(true);
+    };
+
+    const handleNotiMenuClose = () => {
+        setAnchorEl(null);
+        setIsNotiMenuOpen(false);
+    };
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
+        setIsProfileMenuOpen(true);
     };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
-    const handleMenuClose = () => {
+    const handleProfileMenuClose = () => {
         setAnchorEl(null);
-        handleMobileMenuClose();
+        setIsProfileMenuOpen(false);
     };
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
+        setIsMobileMenuOpen(true);
     };
 
-    const numOfNotifications = 10; // temp
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+        setIsMobileMenuOpen(false);
+    };
+
+    const handleAllMenuClose = () => {
+        // remove anchor
+        setAnchorEl(null);
+
+        // turn off popup menu
+        setIsProfileMenuOpen(false);
+        setIsNotiMenuOpen(false);
+
+        // off mobile popup menu
+        handleMobileMenuClose();
+    };
+
+    // fetch noti
+    const notiTemplate: Array<NotificationProps> = [
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 6 released",
+            createdAt: "2024-4-5 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 5 released",
+            createdAt: "2024-4-4 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 4 released",
+            createdAt: "2024-4-3 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 3 released",
+            createdAt: "2024-4-2 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 2 released",
+            createdAt: "2024-2-2 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Tutorial,
+            title: "Tutorial 1 released",
+            createdAt: "2024-1-2 10:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+        {
+            type: NotificationTypes.Announcement,
+            title: "Tutorial 1 released",
+            createdAt: "2024-1-2 11:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "announcement",
+        },
+        {
+            type: NotificationTypes.Assignment,
+            title: "Assignment 1 released",
+            createdAt: "2024-1-2 12:30pm",
+            courseCode: "COMP2396",
+            year: "2024",
+            itemId: "1",
+            link: "assignment",
+        },
+    ];
+
+    // close all menu if window resized
+    useDebouncedResize(handleAllMenuClose, 200);
+
+    const numOfNotifications = notiTemplate.length;
 
     const menuId = "primary-search-account-menu";
     const renderMenu = (
@@ -119,17 +230,17 @@ function AuthedTopBar({
                 vertical: "top",
                 horizontal: "right",
             }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
+            open={isProfileMenuOpen}
+            onClose={handleProfileMenuClose}
         >
             <MenuItem disabled divider>
                 {username ?? "ERROR!"}
             </MenuItem>
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleAllMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={handleAllMenuClose}>My account</MenuItem>
             <MenuItem
                 onClick={() => {
-                    handleMenuClose();
+                    handleAllMenuClose();
                     replace("/logout");
                 }}
             >
@@ -167,7 +278,7 @@ function AuthedTopBar({
                 </IconButton>
                 <p>Settings</p>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleNotiMenuOpen}>
                 <IconButton
                     size="large"
                     aria-label={`show ${numOfNotifications} new notifications`}
@@ -206,6 +317,7 @@ function AuthedTopBar({
                 <IconButton
                     size="large"
                     aria-label={`show ${numOfNotifications} new notifications`}
+                    onClick={handleNotiMenuOpen}
                     color="inherit"
                 >
                     <Badge badgeContent={numOfNotifications} color="error">
@@ -238,6 +350,13 @@ function AuthedTopBar({
             </Box>
             {renderMobileMenu}
             {renderMenu}
+            <NotificationMenu
+                anchorEl={anchorEl}
+                open={isNotiMenuOpen}
+                notifications={notiTemplate}
+                handleMenuClose={handleNotiMenuClose}
+                handleAllMenuCLose={handleAllMenuClose}
+            />
         </>
     );
 }
