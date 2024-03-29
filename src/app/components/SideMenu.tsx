@@ -127,7 +127,7 @@ function MenuListItem({
     open: boolean;
     menuItem: MenuItem;
 }>) {
-    const { replace } = useRouter();
+    const { push } = useRouter();
     const pathname = usePathname();
     const theme = useTheme();
 
@@ -139,7 +139,7 @@ function MenuListItem({
         if (menuItem.onClick) {
             menuItem.onClick();
         } else if (menuItem.redirectPath) {
-            replace(menuItem.redirectPath);
+            push(menuItem.redirectPath);
         }
     };
 

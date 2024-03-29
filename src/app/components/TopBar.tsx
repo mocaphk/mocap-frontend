@@ -82,7 +82,7 @@ function TopBarAuthHandler() {
 function AuthedTopBar({
     username,
 }: Readonly<{ username: string | null | undefined }>) {
-    const { replace } = useRouter();
+    const { push } = useRouter();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -241,7 +241,7 @@ function AuthedTopBar({
             <MenuItem
                 onClick={() => {
                     handleAllMenuClose();
-                    replace("/logout");
+                    push("/logout");
                 }}
             >
                 Sign out
