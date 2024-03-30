@@ -1,0 +1,30 @@
+query GetCodingEnvironment($id: ID) {
+    codingEnvironment(id: $id) {
+        name
+        description
+        dockerfile
+    }
+}
+
+mutation CreateCodingEnvironment($input: CreateCodingEnvironmentInput!) {
+    createCodingEnvironment(codingEnvironmentInput: $input) {
+        name
+        description
+        dockerfile
+        isBuilt
+        dockerImageId
+    }
+}
+
+mutation UpdateCodingEnvironment(
+    $id: ID!
+    $input: UpdateCodingEnvironmentInput!
+) {
+    updateCodingEnvironment(id: $id, codingEnvironmentInput: $input) {
+        name
+        description
+        dockerfile
+        isBuilt
+        dockerImageId
+    }
+}

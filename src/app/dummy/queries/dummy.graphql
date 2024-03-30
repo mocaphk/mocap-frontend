@@ -39,33 +39,3 @@ query GetBookById($bookId: ID!) {
         }
     }
 }
-
-query GetUser {
-    user {
-        id
-        firstName
-        lastName
-        email
-        username
-    }
-}
-
-query GetUserById($userId: ID!) {
-    userById(id: $userId) {
-        id
-        firstName
-        lastName
-        email
-        username
-    }
-}
-
-query GetAllUsers {
-    allUsers {
-        id
-        firstName
-        lastName
-        email
-        username
-    }
-}
