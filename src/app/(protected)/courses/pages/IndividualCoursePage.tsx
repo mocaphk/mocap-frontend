@@ -22,6 +22,8 @@ import DoneIcon from "@mui/icons-material/Done";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
+import PeopleIcon from "@mui/icons-material/People";
+import ManageStudentForm from "../components/ManageStudentForm";
 
 export default function IndividualCoursePage({
     year,
@@ -32,6 +34,9 @@ export default function IndividualCoursePage({
     annoucements,
     assignments,
 }: Readonly<CourseProps>) {
+    // fetch admin permission
+    const hadAdminPermission = true;
+
     const assignmentTypeIconMap = {
         [AssignmentTypes.Assignment]: DescriptionSharpIcon,
         [AssignmentTypes.Tutorial]: SchoolIcon,
@@ -52,6 +57,7 @@ export default function IndividualCoursePage({
         },
     };
 
+    // new assignment form
     const currentDate = new Date().toLocaleDateString("en-CA");
     const [openAssignmentPopup, setOpenAssignmentPopup] = React.useState(false);
     const [newAssignmentInfo, setNewAssignmentInfo] =
@@ -72,17 +78,38 @@ export default function IndividualCoursePage({
         setNewAssignmentInfo((values) => ({ ...values, [name]: value }));
     };
 
+    // manage student form
+    const [openManageStudentFormPopup, setOpenManageStudentFormPopup] =
+        React.useState(false);
+
     React.useEffect(() => {
         document.title = courseTitle;
     }, [courseTitle]);
 
     return (
         <CardWrapper>
-            <Box className="flex flex-col mb-5">
-                <Typography fontSize="1.3rem" fontWeight="medium">
-                    {courseTitle}
-                </Typography>
-                <Typography color="secondary.main">{createdBy}</Typography>
+            <Box className="flex flex-row w-full items-start justify-between">
+                <Box className="flex flex-col mb-5">
+                    <Typography fontSize="1.3rem" fontWeight="medium">
+                        {courseTitle}
+                    </Typography>
+                    <Typography color="secondary.main">{createdBy}</Typography>
+                </Box>
+                {hadAdminPermission && (
+                    <Button
+                        color="secondary"
+                        variant="outlined"
+                        sx={{
+                            borderRadius: 5,
+                            textTransform: "none",
+                            fontSize: 16,
+                        }}
+                        startIcon={<PeopleIcon />}
+                        onClick={() => setOpenManageStudentFormPopup(true)}
+                    >
+                        Manage Student
+                    </Button>
+                )}
             </Box>
 
             <Box className="flex flex-col gap-7">
@@ -137,19 +164,21 @@ export default function IndividualCoursePage({
                         )}
                         displayAmount={3}
                         actionButton={
-                            <Button
-                                color="secondary"
-                                variant="outlined"
-                                sx={{
-                                    borderRadius: 5,
-                                    textTransform: "none",
-                                    fontSize: 16,
-                                }}
-                                startIcon={<AddIcon />}
-                                onClick={() => setOpenAssignmentPopup(true)}
-                            >
-                                New Assignment
-                            </Button>
+                            hadAdminPermission && (
+                                <Button
+                                    color="secondary"
+                                    variant="outlined"
+                                    sx={{
+                                        borderRadius: 5,
+                                        textTransform: "none",
+                                        fontSize: 16,
+                                    }}
+                                    startIcon={<AddIcon />}
+                                    onClick={() => setOpenAssignmentPopup(true)}
+                                >
+                                    New Assignment
+                                </Button>
+                            )
                         }
                     />
                 )}
@@ -164,6 +193,14 @@ export default function IndividualCoursePage({
                     form={newAssignmentInfo}
                     handleChange={handleAssignmentFormChange}
                 />
+            </Dialog>
+
+            <Dialog
+                onClose={() => setOpenManageStudentFormPopup(false)}
+                open={openManageStudentFormPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <ManageStudentForm />
             </Dialog>
         </CardWrapper>
     );
