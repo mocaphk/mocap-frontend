@@ -6,7 +6,7 @@ import {
     useUpdateCodingEnvironmentMutation,
     GetCodingEnvironmentDocument,
 } from "../queries/codingEnvironment.graphql";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 export default function DummyQueries() {
     const [name, setName] = useState("");
@@ -23,7 +23,7 @@ export default function DummyQueries() {
     const [updateCodEnvFunc, { data: updateCodEnvData }] =
         useUpdateCodingEnvironmentMutation();
 
-    const handleCreateCodEnvClick = useCallback(async () => {
+    const handleCreateCodEnvClick = async () => {
         await createCodEnvFunc({
             variables: {
                 input: {
@@ -33,9 +33,9 @@ export default function DummyQueries() {
                 },
             },
         });
-    }, [createCodEnvFunc, name, description, dockerfile]);
+    };
 
-    const handleUpdateCodEnvClick = useCallback(async () => {
+    const handleUpdateCodEnvClick = async () => {
         await updateCodEnvFunc({
             variables: {
                 id: "1",
@@ -52,7 +52,7 @@ export default function DummyQueries() {
             ],
             awaitRefetchQueries: true,
         });
-    }, [updateCodEnvFunc, name, description, dockerfile]);
+    };
 
     return (
         <div>

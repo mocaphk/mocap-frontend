@@ -6,7 +6,6 @@ import {
     useGetBookByIdQuery,
     GetAllBooksDocument,
 } from "../queries/dummy.graphql";
-import { useCallback } from "react";
 
 import { BookType } from "@schema";
 
@@ -30,9 +29,9 @@ export default function DummyQueries() {
         awaitRefetchQueries: true,
     });
 
-    const handleClick = useCallback(async () => {
+    const handleClick = async () => {
         await addBookFunc();
-    }, [addBookFunc]);
+    };
 
     return (
         <div>
