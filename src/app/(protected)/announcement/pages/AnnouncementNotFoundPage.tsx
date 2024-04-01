@@ -12,7 +12,7 @@ export default function AnnouncementNotFoundPage({
 }>) {
     const courseLink = () => {
         if (courseCode && year) {
-            return `courses?courseCode=${courseCode}&year=${year}`;
+            return `course?courseCode=${courseCode}&year=${year}`;
         }
         return "courses";
     };

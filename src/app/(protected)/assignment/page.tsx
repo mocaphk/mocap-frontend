@@ -5,8 +5,8 @@ import AssignmentNotFoundPage from "./pages/AssignmentNotFoundPage";
 import DetailedAssignmentPage from "./pages/DetailedAssignmentPage";
 import type { AssignmentProps } from "./types/AssignmentProps";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
-import { AssignmentTypes } from "@/enums/assignmentTypes";
 import { QuestionStatus } from "./types/QuestionProps";
+import { AssignmentType } from "@schema";
 
 export default function AssignmentPage() {
     const searchParams = useSearchParams();
@@ -24,7 +24,7 @@ export default function AssignmentPage() {
         courseCode: "COMP2396",
         year: "2024",
         status: AssignmentStatus.Ongoing,
-        type: AssignmentTypes.Assignment,
+        type: AssignmentType.Assignment,
         questions: [
             {
                 id: "1",

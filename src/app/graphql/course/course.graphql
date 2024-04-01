@@ -1,0 +1,70 @@
+query GetCourse($courseId: ID!) {
+    course(id: $courseId) {
+        id
+        code
+        year
+        name
+        description
+        admins {
+            username
+        }
+        lecturers {
+            username
+        }
+        tutors {
+            username
+        }
+        students {
+            username
+        }
+        externalLinks {
+            title
+            description
+            link
+            createdBy {
+                username
+            }
+        }
+        assignments {
+            id
+            title
+            description
+            type
+            dateDue
+            dateOpen
+            dateClose
+            createdBy {
+                username
+            }
+        }
+        announcements {
+            id
+            title
+            content
+            createdAt
+            createdBy {
+                username
+            }
+        }
+    }
+}
+
+query GetCourses {
+    courses {
+        id
+        code
+        year
+        name
+        description
+        lecturers {
+            username
+        }
+        barColor
+    }
+}
+
+mutation CreateCourse($courseInput: CreateCourseInput!) {
+    createCourse(courseInput: $courseInput) {
+        id
+    }
+}

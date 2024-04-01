@@ -1,7 +1,8 @@
 export interface CourseCardProps {
-    year: number;
-    courseCode: string;
-    courseTitle: string;
-    courseShortDescription: string;
+    id: string;
+    code: string;
+    year: string;
+    name: string;
+    description: string;
     createdBy: string;
 }

@@ -1,94 +1,95 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { AssignmentStatus } from "@/enums/assignmentStatus";
-import { AssignmentTypes } from "@/enums/assignmentTypes";
-import type { CourseProps } from "./types/CourseProps";
-import IndividualCoursePage from "./pages/IndividualCoursePage";
-import AllCoursesPage from "./pages/AllCoursesPage";
+import React from "react";
+import { Box, Button, Dialog } from "@mui/material";
+import CourseCard from "./components/CourseCard";
+import CardWrapper from "@/app/components/CardWrapper";
+import ComponentWrapper from "@/app/components/ComponentWrapper";
+import NewCourseForm from "./components/NewCourseForm";
 
-export default function CoursesPage() {
-    const searchParams = useSearchParams();
+import AddIcon from "@mui/icons-material/Add";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { useGetCoursesQuery } from "@/app/graphql/course/course.graphql";
+import CustomSkeleton from "@/app/components/CustomSkeleton";
+import NoResult from "@/app/errors/noResult";
 
-    const year = searchParams.get("year");
-    const courseCode = searchParams.get("courseCode");
+export default function AllCoursesPage() {
+    const { loading, error, data: coursesData } = useGetCoursesQuery();
 
-    const course: CourseProps = {
-        year: "2024",
-        courseCode: "COMP2396",
-        courseTitle: "COMP2396 Object-oriented Programming and Java",
-        createdBy: "Wong Kenneth",
-        schoolSiteLinks: [
-            {
-                type: "Moodle",
-                description: "HKU Moodle",
-                link: "http://localhost:3000/moodlefake",
-            },
-        ],
-        annoucements: [
-            {
-                id: "12345",
-                title: "Tutorial 2 Released",
-                date: "2023-4-13 4:20pm",
-                createdBy: "Wong Kenneth",
-            },
-            {
-                id: "12346",
-                title: "Tutorial 1 Released",
-                date: "2023-4-13 4:20pm",
-                createdBy: "Wong Kenneth",
-            },
-            {
-                id: "12347",
-                title: "Tutorial 3 Released",
-                date: "2023-4-13 4:20pm",
-                createdBy: "Wong Kenneth",
-            },
-        ],
-        assignments: [
-            {
-                id: "12349",
-                title: "Tutorial 3",
-                dueDate: "2023-4-20 11:59pm",
-                status: AssignmentStatus.Completed,
-                type: AssignmentTypes.Assignment,
-            },
-            {
-                id: "12345",
-                title: "Assignment 3",
-                dueDate: "2023-4-20 11:59pm",
-                status: AssignmentStatus.Ongoing,
-                type: AssignmentTypes.Assignment,
-            },
-            {
-                id: "12346",
-                title: "Tutorial 2",
-                dueDate: "2023-4-20 11:59pm",
-                status: AssignmentStatus.Overdue,
-                type: AssignmentTypes.Tutorial,
-            },
-            {
-                id: "12347",
-                title: "Assignment 1",
-                dueDate: "2023-4-20 11:59pm",
-                status: AssignmentStatus.Completed,
-                type: AssignmentTypes.Assignment,
-            },
-            {
-                id: "12348",
-                title: "Tutorial 1",
-                dueDate: "2023-4-20 11:59pm",
-                status: AssignmentStatus.Completed,
-                type: AssignmentTypes.Assignment,
-            },
-        ],
-    };
+    const courses = coursesData?.courses;
 
-    if (courseCode && year) {
-        // try fetching, if exist return individual course page
-        return <IndividualCoursePage {...course} />;
-    }
+    const showErrorMessage =
+        coursesData === undefined ||
+        error ||
+        courses === undefined ||
+        courses === null ||
+        courses.length === 0;
 
-    // fall back to all course page if not enough params filled or fetch fails
-    return <AllCoursesPage />;
+    const [open, setOpen] = React.useState(false);
+
+    return (
+        <CardWrapper>
+            <ComponentWrapper
+                Icon={MenuBookIcon}
+                title="Courses"
+                actionButton={
+                    <Button
+                        color="secondary"
+                        variant="outlined"
+                        sx={{
+                            borderRadius: 5,
+                            textTransform: "none",
+                            fontSize: 16,
+                        }}
+                        startIcon={<AddIcon />}
+                        onClick={() => setOpen(true)}
+                    >
+                        New Course
+                    </Button>
+                }
+            >
+                {loading ? (
+                    <Box className="flex flex-col gap-5 mt-2">
+                        <CustomSkeleton
+                            variant="rounded"
+                            amount={3}
+                            sx={{
+                                padding: 2,
+                                borderRadius: 3,
+                                minHeight: 150,
+                            }}
+                        />
+                    </Box>
+                ) : showErrorMessage ? (
+                    <NoResult
+                        redirectTo="/home"
+                        redirectToText="Back to home page"
+                    />
+                ) : (
+                    <Box className="flex flex-col gap-5 mt-2">
+                        {courses.map((course) => {
+                            const createdBy = course.lecturers
+                                .map((lecturer) => lecturer.username)
+                                .join(", ");
+                            return (
+                                <CourseCard
+                                    key={`${course.id}`}
+                                    createdBy={createdBy}
+                                    {...course}
+                                />
+                            );
+                        })}
+                    </Box>
+                )}
+            </ComponentWrapper>
+
+            <Dialog
+                onClose={() => setOpen(false)}
+                open={open}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <NewCourseForm />
+            </Dialog>
+        </CardWrapper>
+    );
 }

@@ -1,6 +1,6 @@
 import type { AssignmentStatus } from "@/enums/assignmentStatus";
-import type { AssignmentTypes } from "@/enums/assignmentTypes";
 import type { QuestionProps } from "./QuestionProps";
+import type { AssignmentType } from "@schema";
 
 export interface AssignmentProps {
     id: string;
@@ -10,6 +10,6 @@ export interface AssignmentProps {
     courseCode: string;
     year: string;
     status: AssignmentStatus;
-    type: AssignmentTypes;
+    type: AssignmentType;
     questions: Array<QuestionProps>;
 }

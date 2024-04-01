@@ -6,6 +6,7 @@ import SideMenu from "../components/SideMenu";
 import TopBar from "../components/TopBar";
 import TopBarPadding from "../components/TopBarPadding";
 import { useSession, signIn } from "next-auth/react";
+import ApolloProvider from "../providers/ApolloProvider";
 
 export default function ProtectedLayout({
     children,
@@ -20,7 +21,7 @@ export default function ProtectedLayout({
     }
 
     return (
-        <>
+        <ApolloProvider>
             <TopBar />
             {/* wrap a box so content won't cover by the SideMenu */}
             <Box className="flex min-h-screen">
@@ -35,6 +36,6 @@ export default function ProtectedLayout({
                     {children}
                 </Box>
             </Box>
-        </>
+        </ApolloProvider>
     );
 }

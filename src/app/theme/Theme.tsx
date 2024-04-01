@@ -21,6 +21,7 @@ const theme: Theme = createTheme({
         info: {
             main: "#666680", // gray
         },
+        background: { default: "#f1f1f4" },
     },
     typography: {
         fontFamily: "Inter",

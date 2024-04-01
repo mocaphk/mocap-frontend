@@ -61,7 +61,7 @@ export default function DetailedAnnouncementPage({
 
                 <Box className="mt-7">
                     <MUILink
-                        href={`courses?courseCode=${courseCode}&year=${year}`}
+                        href={`course?courseCode=${courseCode}&year=${year}`}
                         color="secondary"
                         underline="hover"
                     >
