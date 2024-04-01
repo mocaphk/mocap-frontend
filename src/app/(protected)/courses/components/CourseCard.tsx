@@ -36,7 +36,7 @@ export default function CourseCard({
             </Box>
             <Box className="flex flex-col items-end">
                 <Typography
-                    color="secondary"
+                    color="primary"
                     marginBottom="0.4rem"
                     fontSize="1rem"
                 >
@@ -45,7 +45,6 @@ export default function CourseCard({
                 <Link href={`course?id=${id}`}>
                     <Button
                         size="small"
-                        color="secondary"
                         variant="contained"
                         startIcon={<KeyboardReturnIcon />}
                         sx={{ fontSize: "1rem", textTransform: "none" }}

@@ -92,7 +92,6 @@ export default function ManageStudentForm() {
                         name="studentUIDs"
                         className="w-full"
                         label="Student UIDs"
-                        color="secondary"
                         type="text"
                         placeholder="e.g. 3035787084, 3035787011, ..."
                         autoFocus={true}
@@ -130,7 +129,6 @@ export default function ManageStudentForm() {
                             name="name"
                             className="w-full"
                             label="Student Name"
-                            color="secondary"
                             type="text"
                             autoFocus={true}
                             autoComplete="off"
@@ -142,7 +140,6 @@ export default function ManageStudentForm() {
                             name="uid"
                             className="w-full"
                             label="Student UID"
-                            color="secondary"
                             type="text"
                             autoFocus={true}
                             autoComplete="off"

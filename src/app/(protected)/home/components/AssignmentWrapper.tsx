@@ -13,7 +13,7 @@ export default function AssignmentWrapper({
                 <Typography fontSize={18}>
                     {dayjs(dueDate).format("ddd")}
                 </Typography>
-                <Typography color="secondary.main" fontSize={18}>
+                <Typography color="primary.main" fontSize={18}>
                     {dayjs(dueDate).format("D/M")}
                 </Typography>
             </Box>

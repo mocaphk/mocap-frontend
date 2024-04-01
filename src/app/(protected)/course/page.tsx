@@ -110,7 +110,7 @@ export default function CoursePage() {
                                         {course?.code} {course?.name} (
                                         {course?.year})
                                     </Typography>
-                                    <Typography color="secondary.main">
+                                    <Typography color="primary.main">
                                         {course?.lecturers
                                             .map(
                                                 (lecturer) => lecturer.username
@@ -122,7 +122,6 @@ export default function CoursePage() {
                         </Box>
                         {isLecturerOrTutor && (
                             <Button
-                                color="secondary"
                                 variant="outlined"
                                 sx={{
                                     borderRadius: 5,
@@ -192,7 +191,6 @@ export default function CoursePage() {
                             actionButton={
                                 isLecturerOrTutor && (
                                     <Button
-                                        color="secondary"
                                         variant="outlined"
                                         sx={{
                                             borderRadius: 5,

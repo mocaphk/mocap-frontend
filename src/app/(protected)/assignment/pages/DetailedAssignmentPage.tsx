@@ -73,7 +73,6 @@ export default function DetailedAssignmentPage({
                 <Box className="mt-7">
                     <MUILink
                         href={`course?courseCode=${courseCode}&year=${year}`}
-                        color="secondary"
                         underline="hover"
                     >
                         « Back to course page

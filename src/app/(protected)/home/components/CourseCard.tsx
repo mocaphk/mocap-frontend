@@ -41,8 +41,8 @@ export default function CourseCard({
             <Box flexGrow={1} />
             <Box className="flex flex-col items-end">
                 <Typography
-                    color="secondary"
                     marginBottom="0.4rem"
+                    color="primary"
                     fontSize="0.9rem"
                 >
                     {createdBy}
@@ -50,7 +50,6 @@ export default function CourseCard({
                 <Link href={`course?id=${id}`}>
                     <Button
                         size="small"
-                        color="secondary"
                         variant="contained"
                         startIcon={<KeyboardReturnIcon />}
                         sx={{ fontSize: "0.9rem", textTransform: "none" }}

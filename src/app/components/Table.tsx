@@ -26,7 +26,6 @@ function Pagination({
 
     return (
         <MuiPagination
-            color="secondary"
             className={className}
             count={pageCount}
             page={page + 1}
@@ -91,22 +90,9 @@ export default function Table(props: React.ComponentProps<typeof DataGrid>) {
                     };
                 })}
                 slotProps={{
-                    loadingOverlay: { color: "secondary" },
                     cell: {
                         onMouseEnter: handlePopoverOpen,
                         onMouseLeave: handlePopoverClose,
-                    },
-                    columnMenu: {
-                        color: "secondary",
-                    },
-                    baseTextField: {
-                        color: "secondary",
-                    },
-                    baseFormControl: {
-                        color: "secondary",
-                    },
-                    baseSwitch: {
-                        color: "secondary",
                     },
                 }}
                 slots={{

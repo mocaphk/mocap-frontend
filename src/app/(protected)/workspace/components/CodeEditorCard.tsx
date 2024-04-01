@@ -42,19 +42,11 @@ export default function CodeEditorCard({
                     />
                 </Box>
                 <Box className="flex w-full h-fit space-x-6 justify-end">
-                    <Button
-                        className="w-36"
-                        color="secondary"
-                        variant="contained"
-                    >
+                    <Button className="w-36" variant="contained">
                         <PlayCircleOutlineIcon />
                         <Typography className="p-2">Run</Typography>
                     </Button>
-                    <Button
-                        className="w-36"
-                        color="secondary"
-                        variant="contained"
-                    >
+                    <Button className="w-36" variant="contained">
                         <PublishIcon />
                         <Typography className="p-2">Submit</Typography>
                     </Button>

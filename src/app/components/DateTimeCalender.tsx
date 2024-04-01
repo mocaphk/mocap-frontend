@@ -10,40 +10,11 @@ export default function DateTimeCalender(
     return (
         <DateTimePicker
             format="YYYY-MM-DD HH:mm:ss"
-            views={["day", "hours", "minutes", "seconds"]}
+            views={["year", "month", "day", "hours", "minutes", "seconds"]}
             {...props}
             slotProps={{
-                digitalClockSectionItem: {
-                    sx: {
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "&.Mui-selected": {
-                            backgroundColor: "secondary.main",
-                            color: "secondary.contrastText",
-                        },
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "&:hover, &:focus": {
-                            backgroundColor: "secondary.dark",
-                            color: "secondary.contrastText",
-                        },
-                    },
-                },
-                day: {
-                    sx: {
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "&.Mui-selected": {
-                            backgroundColor: "secondary.main",
-                            color: "secondary.contrastText",
-                        },
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "&:hover, &:focus": {
-                            backgroundColor: "secondary.dark",
-                            color: "secondary.contrastText",
-                        },
-                    },
-                },
                 textField: {
                     name: props.name,
-                    color: "secondary",
                     required: props.required,
                 },
                 ...props.slotProps,

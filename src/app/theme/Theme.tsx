@@ -6,17 +6,17 @@ import { createTheme } from "@mui/material/styles";
 const theme: Theme = createTheme({
     palette: {
         primary: {
+            main: "#388087", // dark green
+            light: "#badfe7", // lighter green
+            dark: "#6fb3b8", // lighter dark green
+            contrastText: "#ffffff", // white
+        },
+        secondary: {
             main: "#ffffff", // white
             // main: "#f6f6f2",         // white / gray
             light: "#6fb3b8", // lighter green
             dark: "#388087", // dark green
             contrastText: "#a8a8bd", // gray
-        },
-        secondary: {
-            main: "#388087", // dark green
-            light: "#badfe7", // lighter green
-            dark: "#6fb3b8", // lighter dark green
-            contrastText: "#ffffff", // white
         },
         info: {
             main: "#666680", // gray

@@ -68,7 +68,7 @@ export default function NoResult({
             </Box>
             {redirectTo && redirectToText && (
                 <Box className="justify-start">
-                    <Link href={redirectTo} color="secondary" underline="hover">
+                    <Link href={redirectTo} underline="hover">
                         « {redirectToText}
                     </Link>
                 </Box>

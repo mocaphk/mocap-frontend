@@ -71,7 +71,6 @@ export default function NewCourseForm() {
                             name="code"
                             className="w-full"
                             label="Course Code"
-                            color="secondary"
                             type="text"
                             autoFocus={true}
                             autoComplete="off"
@@ -85,7 +84,6 @@ export default function NewCourseForm() {
                             name="name"
                             className="w-full"
                             label="Course Title"
-                            color="secondary"
                             type="text"
                             autoComplete="off"
                             inputProps={{ maxLength: 255 }}
@@ -98,7 +96,6 @@ export default function NewCourseForm() {
                             name="description"
                             className="w-full"
                             label="Course Short Description"
-                            color="secondary"
                             type="text"
                             autoComplete="off"
                             inputProps={{ maxLength: 255 }}
@@ -111,7 +108,6 @@ export default function NewCourseForm() {
                             name="barColor"
                             className="w-full"
                             label="Course Bar Color"
-                            color="secondary"
                             type="color"
                             autoComplete="off"
                             required
@@ -124,7 +120,6 @@ export default function NewCourseForm() {
                             className="w-full"
                             type="submit"
                             variant="contained"
-                            color="secondary"
                             loading={loading}
                         >
                             <Typography className="p-2">Add</Typography>

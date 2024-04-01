@@ -66,11 +66,7 @@ export default function CollapsibleComponentWrapper({
                                   .map((val) => collapseButton(val))}
                     </TransitionGroup>
                     {linkButtonsProps.length > displayAmount && (
-                        <Button
-                            onClick={toggleExpanded}
-                            color="secondary"
-                            variant="outlined"
-                        >
+                        <Button onClick={toggleExpanded} variant="outlined">
                             {isExpanded ? "Less..." : "More..."}
                         </Button>
                     )}

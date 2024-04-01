@@ -34,7 +34,6 @@ export default function AllCoursesPage() {
                 title="Courses"
                 actionButton={
                     <Button
-                        color="secondary"
                         variant="outlined"
                         sx={{
                             borderRadius: 5,

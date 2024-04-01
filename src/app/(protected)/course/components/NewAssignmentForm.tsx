@@ -73,7 +73,6 @@ export default function NewAssignmentForm({ courseId }: { courseId: string }) {
                             name="title"
                             className="w-full"
                             label="Title"
-                            color="secondary"
                             type="text"
                             autoComplete="off"
                             inputProps={{ maxLength: 255 }}
@@ -86,7 +85,6 @@ export default function NewAssignmentForm({ courseId }: { courseId: string }) {
                             name="description"
                             className="w-full"
                             label="Description"
-                            color="secondary"
                             type="text"
                             autoComplete="off"
                             required
@@ -96,13 +94,11 @@ export default function NewAssignmentForm({ courseId }: { courseId: string }) {
                         <Autocomplete
                             id="type"
                             className="w-full"
-                            color="secondary"
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     id="type"
                                     name="type"
-                                    color="secondary"
                                     label="Type"
                                     required
                                 />
@@ -149,7 +145,6 @@ export default function NewAssignmentForm({ courseId }: { courseId: string }) {
                             className="w-full"
                             type="submit"
                             variant="contained"
-                            color="secondary"
                             loading={loading}
                         >
                             <Typography className="p-2">Add</Typography>

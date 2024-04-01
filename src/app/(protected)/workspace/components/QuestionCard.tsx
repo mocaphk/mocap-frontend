@@ -17,10 +17,10 @@ export default function QuestionCard({
                     {question.title}
                 </Typography>
                 <Typography
+                    color="primary"
                     noWrap={true}
                     variant="body1"
                     fontWeight="medium"
-                    color="secondary"
                 >
                     {question.assignmentId}
                 </Typography>

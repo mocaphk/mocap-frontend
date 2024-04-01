@@ -56,12 +56,10 @@ export default function ConfirmIconButton({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button color="secondary" onClick={handleConfirm} autoFocus>
+                    <Button onClick={handleConfirm} autoFocus>
                         Yes
                     </Button>
-                    <Button color="secondary" onClick={handleClose}>
-                        Cancel
-                    </Button>
+                    <Button onClick={handleClose}>Cancel</Button>
                 </DialogActions>
             </Dialog>
         </>
