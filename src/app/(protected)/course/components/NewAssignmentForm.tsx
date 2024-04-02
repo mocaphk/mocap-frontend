@@ -16,7 +16,9 @@ import React from "react";
 import DateTimeCalender from "@/app/components/DateTimeCalender";
 import { capitalizeFirstLetter } from "@/app/utils/string";
 
-export default function NewAssignmentForm({ courseId }: { courseId: string }) {
+export default function NewAssignmentForm({
+    courseId,
+}: Readonly<{ courseId: string }>) {
     const [createAssignment, { error, loading }] =
         useCreateAssignmentMutation();
     const [fetchError, setFetchError] = React.useState<boolean>(false);

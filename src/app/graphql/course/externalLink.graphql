@@ -1,0 +1,5 @@
+mutation CreateExternalLink($externalLinkInput: CreateExternalLinkInput!) {
+    createExternalLink(externalLinkInput: $externalLinkInput) {
+        id
+    }
+}
