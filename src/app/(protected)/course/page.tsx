@@ -5,6 +5,8 @@ import { Box, Dialog, Button, Typography } from "@mui/material";
 import type { SvgIconTypeMap } from "@mui/material";
 import CardWrapper from "@/app/components/CardWrapper";
 import CollapsibleComponentWrapper from "./components/CollapsibleComponentWrapper";
+import ManageStudentForm from "./components/ManageStudentForm";
+import NewLinkForm from "./components/NewLinkForm";
 import NewAssignmentForm from "./components/NewAssignmentForm";
 
 import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
@@ -16,7 +18,7 @@ import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
-import ManageStudentForm from "./components/ManageStudentForm";
+
 import { useGetCourseQuery } from "@/app/graphql/course/course.graphql";
 import { useSearchParams } from "next/navigation";
 import NoResult from "@/app/errors/noResult";
@@ -75,11 +77,15 @@ export default function CoursePage() {
     //     },
     // };
 
-    const [openAssignmentPopup, setOpenAssignmentPopup] = React.useState(false);
-
     // manage student form
     const [openManageStudentFormPopup, setOpenManageStudentFormPopup] =
         React.useState(false);
+
+    // new link form
+    const [openLinkPopup, setOpenLinkPopup] = React.useState(false);
+
+    // new assignment form
+    const [openAssignmentPopup, setOpenAssignmentPopup] = React.useState(false);
 
     React.useEffect(() => {
         document.title = course?.name ?? "Course";
@@ -152,6 +158,22 @@ export default function CoursePage() {
                                 })
                             )}
                             displayAmount={3}
+                            actionButton={
+                                isLecturerOrTutor && (
+                                    <Button
+                                        variant="outlined"
+                                        sx={{
+                                            borderRadius: 5,
+                                            textTransform: "none",
+                                            fontSize: 16,
+                                        }}
+                                        startIcon={<AddIcon />}
+                                        onClick={() => setOpenLinkPopup(true)}
+                                    >
+                                        New Link
+                                    </Button>
+                                )
+                            }
                             loading={loading}
                         />
 
@@ -211,19 +233,27 @@ export default function CoursePage() {
                     </Box>
 
                     <Dialog
-                        onClose={() => setOpenAssignmentPopup(false)}
-                        open={openAssignmentPopup}
-                        PaperProps={{ sx: { borderRadius: 3 } }}
-                    >
-                        <NewAssignmentForm courseId={id} />
-                    </Dialog>
-
-                    <Dialog
                         onClose={() => setOpenManageStudentFormPopup(false)}
                         open={openManageStudentFormPopup}
                         PaperProps={{ sx: { borderRadius: 3 } }}
                     >
                         <ManageStudentForm />
+                    </Dialog>
+
+                    <Dialog
+                        onClose={() => setOpenLinkPopup(false)}
+                        open={openLinkPopup}
+                        PaperProps={{ sx: { borderRadius: 3 } }}
+                    >
+                        <NewLinkForm courseId={id} />
+                    </Dialog>
+
+                    <Dialog
+                        onClose={() => setOpenAssignmentPopup(false)}
+                        open={openAssignmentPopup}
+                        PaperProps={{ sx: { borderRadius: 3 } }}
+                    >
+                        <NewAssignmentForm courseId={id} />
                     </Dialog>
                 </>
             )}
