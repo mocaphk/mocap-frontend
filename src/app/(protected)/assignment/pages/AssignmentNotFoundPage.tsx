@@ -12,7 +12,7 @@ export default function AssignmentNotFoundPage({
 }>) {
     const courseLink = () => {
         if (courseCode && year) {
-            return `courses?courseCode=${courseCode}&year=${year}`;
+            return `course?courseCode=${courseCode}&year=${year}`;
         }
         return "courses";
     };
@@ -26,11 +26,7 @@ export default function AssignmentNotFoundPage({
                         available.
                     </Typography>
                     <Box>
-                        <Link
-                            href={courseLink()}
-                            color="secondary"
-                            underline="hover"
-                        >
+                        <Link href={courseLink()} underline="hover">
                             « Back to course page
                         </Link>
                     </Box>

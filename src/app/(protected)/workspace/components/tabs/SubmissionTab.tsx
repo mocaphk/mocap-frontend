@@ -109,7 +109,6 @@ export default function SubmissionTab({
                     <Box className="min-h-[200px] h-[200px]">
                         <Slider
                             className="h-full"
-                            color="secondary"
                             max={marks.length - 1}
                             min={0}
                             defaultValue={marks.length - 1}
@@ -120,11 +119,7 @@ export default function SubmissionTab({
                         />
                     </Box>
                     <Box className="flex flex-col h-full justify-end">
-                        <Button
-                            className="h-fit w-36"
-                            color="secondary"
-                            variant="contained"
-                        >
+                        <Button className="h-fit w-36" variant="contained">
                             <HistoryIcon />
                             <Typography className="p-2">Revert</Typography>
                         </Button>

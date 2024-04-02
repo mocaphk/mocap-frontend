@@ -64,12 +64,10 @@ export default function QuestionBankPage() {
                             <Grid item xs={12} sm={12} md={5}>
                                 <Autocomplete
                                     className="w-full"
-                                    color="secondary"
                                     autoFocus={true}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            color="secondary"
                                             label="Course"
                                             required
                                         />
@@ -88,7 +86,6 @@ export default function QuestionBankPage() {
                                         name="keyword"
                                         className="w-full"
                                         label="Keyword"
-                                        color="secondary"
                                         type="text"
                                         autoComplete="off"
                                     />

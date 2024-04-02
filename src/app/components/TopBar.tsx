@@ -30,6 +30,7 @@ function TopBar() {
             <AppBar
                 position="fixed"
                 elevation={0}
+                color="secondary"
                 className="border-solid border-b"
             >
                 <Toolbar>
@@ -63,13 +64,12 @@ function TopBarAuthHandler() {
                     height={52}
                     priority
                 />
-                <Typography variant="h6" color="secondary">
+                <Typography variant="h6" color="primary">
                     MOCAPHK
                 </Typography>
             </Box>
             <Button
                 href="/login"
-                color="secondary"
                 variant="outlined"
                 startIcon={<AccountCircle />}
             >

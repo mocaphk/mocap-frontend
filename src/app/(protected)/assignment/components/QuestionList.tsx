@@ -37,7 +37,6 @@ export default function QuestionList({
             title="Questions"
             actionButton={
                 <Button
-                    color="secondary"
                     variant="outlined"
                     sx={{
                         borderRadius: 5,

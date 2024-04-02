@@ -1,14 +1,15 @@
 import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 import { Box, Typography, Link as MUILink } from "@mui/material";
-
-import { AssignmentTypes } from "@/enums/assignmentTypes";
+import type { SvgIconTypeMap } from "@mui/material";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
 import type { AssignmentProps } from "../types/AssignmentProps";
 
 import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
 import QuestionList from "../components/QuestionList";
+import { AssignmentType } from "@schema";
+import type { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export default function DetailedAssignmentPage({
     title,
@@ -20,9 +21,12 @@ export default function DetailedAssignmentPage({
     type,
     questions,
 }: Readonly<AssignmentProps>) {
-    const assignmentTypeIconMap = {
-        [AssignmentTypes.Assignment]: DescriptionSharpIcon,
-        [AssignmentTypes.Tutorial]: SchoolIcon,
+    const assignmentTypeIconMap: Record<
+        AssignmentType,
+        OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string }
+    > = {
+        [AssignmentType.Assignment]: DescriptionSharpIcon,
+        [AssignmentType.Tutorial]: SchoolIcon,
     };
 
     const statusDisplayMap = {
@@ -68,8 +72,7 @@ export default function DetailedAssignmentPage({
 
                 <Box className="mt-7">
                     <MUILink
-                        href={`courses?courseCode=${courseCode}&year=${year}`}
-                        color="secondary"
+                        href={`course?courseCode=${courseCode}&year=${year}`}
                         underline="hover"
                     >
                         « Back to course page

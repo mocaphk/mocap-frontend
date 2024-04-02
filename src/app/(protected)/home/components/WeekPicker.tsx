@@ -27,18 +27,18 @@ const CustomPickersDay = styled(PickersDay, {
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
     borderRadius: 0,
     ...(isSelected && {
-        backgroundColor: theme.palette.secondary.main,
-        color: theme.palette.secondary.contrastText,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         "&:hover, &:focus": {
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
         },
     }),
     ...(isHovered && {
-        backgroundColor: theme.palette.primary[theme.palette.mode],
+        backgroundColor: theme.palette.secondary[theme.palette.mode],
         // eslint-disable-next-line @typescript-eslint/naming-convention
         "&:hover, &:focus": {
-            backgroundColor: theme.palette.primary[theme.palette.mode],
+            backgroundColor: theme.palette.secondary[theme.palette.mode],
         },
     }),
     ...(day.day() === 0 && {

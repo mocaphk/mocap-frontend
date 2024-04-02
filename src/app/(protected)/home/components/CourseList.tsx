@@ -1,46 +1,67 @@
+"use client";
+
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CourseCard from "./CourseCard";
 import Box from "@mui/material/Box";
 
-import type { CourseCardProps } from "../types/CourseCardProps";
 import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
+import { useGetCoursesQuery } from "@/app/graphql/course/course.graphql";
+import CustomSkeleton from "@/app/components/CustomSkeleton";
+import NoResult from "@/app/errors/noResult";
 
 export default function CourseList() {
-    // prob fetch course list here
-    const courseList: Array<CourseCardProps> = [
-        {
-            year: 2024,
-            courseCode: "ENGG1330",
-            courseTitle: "ENGG1330 Computer Programming I",
-            courseShortDescription: "Python Introductory Course",
-            createdBy: "Schnieders Dirk",
-            barColor: "red",
-        },
-        {
-            year: 2024,
-            courseCode: "ENGG1340",
-            courseTitle: "ENGG1340 Computer Programming II",
-            courseShortDescription: "C/C++ Introductory Course",
-            createdBy: "Luo Ruibang",
-            barColor: "lime",
-        },
-    ];
+    const { loading, error, data: coursesData } = useGetCoursesQuery();
+
+    const courses = coursesData?.courses;
+
+    const showErrorMessage =
+        coursesData === undefined ||
+        error ||
+        courses === undefined ||
+        courses === null ||
+        courses.length === 0;
 
     return (
         <CardWrapper>
             <ComponentWrapper Icon={MenuBookIcon} title="Courses">
-                <Box
-                    className="flex flex-row gap-12 overflow-x-auto pb-2"
-                    sx={{ scrollbarWidth: "thin" }}
-                >
-                    {courseList.map((course) => (
-                        <CourseCard
-                            key={`${course.courseCode}${course.year}`}
-                            {...course}
+                {loading ? (
+                    <Box
+                        className="flex flex-row gap-12 overflow-x-auto pb-2"
+                        sx={{ scrollbarWidth: "thin" }}
+                    >
+                        <CustomSkeleton
+                            variant="rounded"
+                            amount={4}
+                            sx={{
+                                padding: 2,
+                                borderRadius: 3,
+                                minWidth: 230,
+                                minHeight: 230,
+                            }}
                         />
-                    ))}
-                </Box>
+                    </Box>
+                ) : showErrorMessage ? (
+                    <NoResult />
+                ) : (
+                    <Box
+                        className="flex flex-row gap-12 overflow-x-auto pb-2"
+                        sx={{ scrollbarWidth: "thin" }}
+                    >
+                        {courses.map((course) => {
+                            const createdBy = course.lecturers
+                                .map((lecturer) => lecturer.username)
+                                .join(", ");
+                            return (
+                                <CourseCard
+                                    key={`${course.id}`}
+                                    createdBy={createdBy}
+                                    {...course}
+                                />
+                            );
+                        })}
+                    </Box>
+                )}
             </ComponentWrapper>
         </CardWrapper>
     );

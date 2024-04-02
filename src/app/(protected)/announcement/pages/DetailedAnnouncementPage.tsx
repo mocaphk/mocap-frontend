@@ -27,7 +27,7 @@ export default function DetailedAnnouncementPage({
                 <Typography fontSize="1.3rem" fontWeight="medium">
                     {courseTitle}
                 </Typography>
-                <Typography color="secondary.main">{createdBy}</Typography>
+                <Typography color="primary.main">{createdBy}</Typography>
             </Box>
 
             <ComponentWrapper Icon={CampaignIcon} title={title}>
@@ -47,7 +47,7 @@ export default function DetailedAnnouncementPage({
                             <Typography
                                 fontSize="0.9rem"
                                 fontWeight="medium"
-                                color="secondary.main"
+                                color="primary.main"
                             >
                                 Edited
                             </Typography>
@@ -61,8 +61,7 @@ export default function DetailedAnnouncementPage({
 
                 <Box className="mt-7">
                     <MUILink
-                        href={`courses?courseCode=${courseCode}&year=${year}`}
-                        color="secondary"
+                        href={`course?courseCode=${courseCode}&year=${year}`}
                         underline="hover"
                     >
                         « Back to course page

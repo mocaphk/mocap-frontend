@@ -24,8 +24,8 @@ function MainContent() {
                 <Box className="max-w-xl px-6 space-y-4">
                     <FadedInTypography
                         variant="h3"
+                        color="primary"
                         className="text-center font-medium"
-                        color="secondary"
                         duration={1000}
                     >
                         A Web Platform For Code Assessment
@@ -49,7 +49,6 @@ function MainContent() {
                             name="signin"
                             className="p-12"
                             variant="contained"
-                            color="secondary"
                             href="/login"
                             duration={1000}
                             delay={500}
@@ -60,7 +59,6 @@ function MainContent() {
                             name="register"
                             className="p-12"
                             variant="contained"
-                            color="secondary"
                             href="/register"
                             duration={1000}
                             delay={500}

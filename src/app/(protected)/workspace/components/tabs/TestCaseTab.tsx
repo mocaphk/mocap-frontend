@@ -106,7 +106,7 @@ export default function TestCaseTab() {
                         label={`Test Case ${i + 1}`}
                         color={
                             selectedTestCase?.id === testCase.id
-                                ? "secondary"
+                                ? "primary"
                                 : "default"
                         }
                         onClick={() => handleChipClick(testCase.id)}
@@ -122,7 +122,7 @@ export default function TestCaseTab() {
                         }
                     />
                 ))}
-                <IconButton color="secondary" onClick={handleAddTestCase}>
+                <IconButton onClick={handleAddTestCase}>
                     <AddIcon />
                 </IconButton>
             </Box>
@@ -139,7 +139,6 @@ export default function TestCaseTab() {
                                         id={`${selectedTestCase.id}_${key}`}
                                         key={`${selectedTestCase.id}_${key}`}
                                         className="w-full"
-                                        color="secondary"
                                         type="text"
                                         defaultValue={value}
                                         onBlur={(e) => {
@@ -157,19 +156,11 @@ export default function TestCaseTab() {
                     )}
             </Box>
             <Box className="flex w-full h-fit space-x-6 justify-end">
-                <Button
-                    className="h-fit w-36"
-                    color="secondary"
-                    variant="contained"
-                >
+                <Button className="h-fit w-36" variant="contained">
                     <PlayCircleOutlineIcon />
                     <Typography className="p-2">Run</Typography>
                 </Button>
-                <Button
-                    className="h-fit w-36"
-                    color="secondary"
-                    variant="contained"
-                >
+                <Button className="h-fit w-36" variant="contained">
                     <DirectionsRunIcon />
                     <Typography className="p-2">Run All</Typography>
                 </Button>

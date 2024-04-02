@@ -29,7 +29,7 @@ export default function ActionCard({
                 <TabContext value={activeTab}>
                     <TabList
                         onChange={handleTabChange}
-                        textColor="secondary"
+                        textColor="primary"
                         TabIndicatorProps={{
                             style: {
                                 backgroundColor: theme.palette.primary.dark,

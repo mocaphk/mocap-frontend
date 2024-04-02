@@ -35,7 +35,7 @@ export default function AssignmentCard({
                 <Typography fontSize={16} lineHeight="1.3rem">
                     {title}
                 </Typography>
-                <Typography color="text.secondary" fontSize={12}>
+                <Typography color="text.primary" fontSize={12}>
                     {courseCode} · {dueTime}
                 </Typography>
             </Box>

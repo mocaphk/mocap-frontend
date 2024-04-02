@@ -9,10 +9,11 @@ import ColoredBarCard from "./ColoredBarCard";
 import Link from "next/link";
 
 export default function CourseCard({
+    id,
+    code,
+    name,
     year,
-    courseCode,
-    courseTitle,
-    courseShortDescription,
+    description = "",
     createdBy,
     barColor,
 }: Readonly<CourseCardProps>) {
@@ -31,25 +32,24 @@ export default function CourseCard({
         >
             <Box className="flex flex-col w-full mt-1">
                 <Typography fontSize="1.1rem" lineHeight="1.3rem">
-                    {courseTitle}
+                    {code} {name} ({year})
                 </Typography>
                 <Typography color="text.secondary" fontSize="0.8rem">
-                    {courseShortDescription}
+                    {description}
                 </Typography>
             </Box>
             <Box flexGrow={1} />
             <Box className="flex flex-col items-end">
                 <Typography
-                    color="secondary"
                     marginBottom="0.4rem"
+                    color="primary"
                     fontSize="0.9rem"
                 >
                     {createdBy}
                 </Typography>
-                <Link href={`courses?courseCode=${courseCode}&year=${year}`}>
+                <Link href={`course?id=${id}`}>
                     <Button
                         size="small"
-                        color="secondary"
                         variant="contained"
                         startIcon={<KeyboardReturnIcon />}
                         sx={{ fontSize: "0.9rem", textTransform: "none" }}

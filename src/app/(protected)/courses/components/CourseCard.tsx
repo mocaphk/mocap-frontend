@@ -6,10 +6,11 @@ import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import Link from "next/link";
 
 export default function CourseCard({
+    id,
+    code,
+    name,
     year,
-    courseCode,
-    courseTitle,
-    courseShortDescription,
+    description = "",
     createdBy,
 }: Readonly<CourseCardProps>) {
     return (
@@ -23,28 +24,27 @@ export default function CourseCard({
         >
             <Box className="flex flex-col w-full mt-1">
                 <Typography fontSize="1.2rem" lineHeight="1.3rem">
-                    {courseTitle}
+                    {code} {name} ({year})
                 </Typography>
                 <Typography
                     color="text.secondary"
                     fontSize="1rem"
                     lineHeight="2rem"
                 >
-                    {courseShortDescription}
+                    {description}
                 </Typography>
             </Box>
             <Box className="flex flex-col items-end">
                 <Typography
-                    color="secondary"
+                    color="primary"
                     marginBottom="0.4rem"
                     fontSize="1rem"
                 >
                     {createdBy}
                 </Typography>
-                <Link href={`courses?courseCode=${courseCode}&year=${year}`}>
+                <Link href={`course?id=${id}`}>
                     <Button
                         size="small"
-                        color="secondary"
                         variant="contained"
                         startIcon={<KeyboardReturnIcon />}
                         sx={{ fontSize: "1rem", textTransform: "none" }}

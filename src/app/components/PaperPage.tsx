@@ -21,9 +21,7 @@ export default function PaperPage({
                     height={52}
                     priority
                 />
-                <Typography variant="h5" color="secondary">
-                    MOCAPHK
-                </Typography>
+                <Typography variant="h5">MOCAPHK</Typography>
             </Box>
             <Paper
                 className="w-[500px] min-w-[400px] m-10 h-fit p-5"
@@ -37,7 +35,7 @@ export default function PaperPage({
                     <Link href="/">
                         <Typography
                             className="py-2 text-start cursor-pointer"
-                            color="secondary"
+                            color="primary"
                         >
                             {"< Back to Home"}
                         </Typography>

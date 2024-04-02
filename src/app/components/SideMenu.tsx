@@ -149,8 +149,8 @@ function MenuListItem({
 
     const activeMenuSx: SxProps<Theme> = {
         ...defaultSx,
-        backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.light,
+        color: theme.palette.primary.main,
     };
 
     return (
@@ -170,7 +170,7 @@ function MenuListItem({
                         justifyContent: "center",
                     }}
                 >
-                    <menuItem.icon color={onPath ? "secondary" : "inherit"} />
+                    <menuItem.icon color={onPath ? "primary" : "inherit"} />
                 </ListItemIcon>
                 <ListItemText
                     primary={menuItem.text}
@@ -201,7 +201,7 @@ export default function SideMenu() {
                 {open && (
                     <Typography
                         sx={{ ml: "14px", fontWeight: "bold" }}
-                        color="secondary"
+                        color="primary"
                     >
                         MOCAPHK
                     </Typography>

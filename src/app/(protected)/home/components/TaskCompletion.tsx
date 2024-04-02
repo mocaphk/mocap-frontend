@@ -48,8 +48,8 @@ export default function TaskCompletion() {
                     series={progress}
                     layout="horizontal"
                     colors={[
-                        theme.palette.secondary.main,
-                        theme.palette.secondary.light,
+                        theme.palette.primary.main,
+                        theme.palette.primary.light,
                     ]}
                     height={300}
                 />
