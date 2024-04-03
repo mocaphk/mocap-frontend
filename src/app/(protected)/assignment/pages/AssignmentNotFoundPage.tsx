@@ -4,15 +4,13 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import { Box, Link, Typography } from "@mui/material";
 
 export default function AssignmentNotFoundPage({
-    year,
-    courseCode,
+    courseId,
 }: Readonly<{
-    year: string | null;
-    courseCode: string | null;
+    courseId?: string;
 }>) {
     const courseLink = () => {
-        if (courseCode && year) {
-            return `course?courseCode=${courseCode}&year=${year}`;
+        if (courseId) {
+            return `course?id=${courseId}`;
         }
         return "courses";
     };

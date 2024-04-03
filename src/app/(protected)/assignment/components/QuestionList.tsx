@@ -3,7 +3,6 @@ import ComponentWrapper from "@/app/components/ComponentWrapper";
 import LinkButton from "@/app/components/LinkButton";
 import { Box, Button, Dialog, DialogTitle, Grid } from "@mui/material";
 import { QuestionStatus } from "../types/QuestionProps";
-import type { QuestionProps } from "../types/QuestionProps";
 
 import QuizIcon from "@mui/icons-material/Quiz";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
@@ -12,11 +11,12 @@ import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import AddIcon from "@mui/icons-material/Add";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import type { GetAssignmentQuery } from "@/app/graphql/course/assignment.graphql";
 
 export default function QuestionList({
     questions,
 }: Readonly<{
-    questions: Array<QuestionProps>;
+    questions: NonNullable<GetAssignmentQuery["assignment"]>["questions"];
 }>) {
     const [open, setOpen] = React.useState(false);
 
@@ -51,16 +51,24 @@ export default function QuestionList({
             }
         >
             <Box className="flex flex-col gap-3">
-                {questions.map((question) => (
-                    <LinkButton
-                        key={question.id}
-                        Icon={LiveHelpIcon}
-                        title={question.title}
-                        description={question.description}
-                        statusIcon={questionStatusIconMap[question.status]}
-                        link={`/workspace?questionId=${question.id}`}
-                    />
-                ))}
+                {questions.map((question) => {
+                    const isSubmitted = question.attempts.some(
+                        (attempt) => attempt.isSubmitted
+                    );
+                    const status: QuestionStatus = isSubmitted
+                        ? QuestionStatus.Submitted
+                        : QuestionStatus.Ongoing;
+                    return (
+                        <LinkButton
+                            key={question.id}
+                            Icon={LiveHelpIcon}
+                            title={question.title}
+                            description={question.description}
+                            statusIcon={questionStatusIconMap[status]}
+                            link={`/workspace?questionId=${question.id}`}
+                        />
+                    );
+                })}
             </Box>
 
             <Dialog
