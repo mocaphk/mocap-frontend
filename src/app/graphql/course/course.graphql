@@ -36,6 +36,11 @@ query GetCourse($courseId: ID!) {
             createdBy {
                 username
             }
+            questions {
+                attempts {
+                    isSubmitted
+                }
+            }
         }
         announcements {
             id

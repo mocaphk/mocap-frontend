@@ -18,6 +18,9 @@ import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
 import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
+import DoneIcon from "@mui/icons-material/Done";
+import TripOriginIcon from "@mui/icons-material/TripOrigin";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useGetCourseQuery } from "@/app/graphql/course/course.graphql";
 import { useSearchParams } from "next/navigation";
@@ -25,6 +28,8 @@ import NoResult from "@/app/errors/noResult";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
 import { AssignmentType } from "@schema";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
+import { AssignmentStatus } from "@/enums/assignmentStatus";
+import dayjs from "dayjs";
 
 export default function CoursePage() {
     // fetch admin permission
@@ -62,20 +67,20 @@ export default function CoursePage() {
     };
 
     // TODO: Add status
-    // const statusIconMap = {
-    //     [AssignmentStatus.Completed]: {
-    //         icon: DoneIcon,
-    //         color: "lime",
-    //     },
-    //     [AssignmentStatus.Ongoing]: {
-    //         icon: TripOriginIcon,
-    //         color: "#ffcc00",
-    //     },
-    //     [AssignmentStatus.Overdue]: {
-    //         icon: CloseIcon,
-    //         color: "red",
-    //     },
-    // };
+    const statusIconMap = {
+        [AssignmentStatus.Completed]: {
+            icon: DoneIcon,
+            color: "lime",
+        },
+        [AssignmentStatus.Ongoing]: {
+            icon: TripOriginIcon,
+            color: "#ffcc00",
+        },
+        [AssignmentStatus.Overdue]: {
+            icon: CloseIcon,
+            color: "red",
+        },
+    };
 
     // manage student form
     const [openManageStudentFormPopup, setOpenManageStudentFormPopup] =
@@ -198,16 +203,30 @@ export default function CoursePage() {
                             Icon={AssignmentIcon}
                             title="Assignments"
                             linkButtonsProps={course?.assignments?.map<LinkButtonProps>(
-                                (assignment) => ({
-                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                    Icon: assignmentTypeIconMap[
-                                        assignment.type
-                                    ],
-                                    title: assignment.title,
-                                    description: assignment.dateDue,
-                                    // statusIcon: statusIconMap[assignment.status],
-                                    link: `assignment?id=${assignment.id}`,
-                                })
+                                (assignment) => {
+                                    const { questions, dateDue } = assignment;
+                                    const isCompleted = questions.every(
+                                        (question) =>
+                                            question.attempts.some(
+                                                (attempt) => attempt.isSubmitted
+                                            )
+                                    );
+                                    const status: AssignmentStatus = isCompleted
+                                        ? AssignmentStatus.Completed
+                                        : dayjs().isAfter(dayjs(dateDue))
+                                        ? AssignmentStatus.Overdue
+                                        : AssignmentStatus.Ongoing;
+                                    return {
+                                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                                        Icon: assignmentTypeIconMap[
+                                            assignment.type
+                                        ],
+                                        title: assignment.title,
+                                        description: assignment.dateDue,
+                                        statusIcon: statusIconMap[status],
+                                        link: `assignment?id=${assignment.id}`,
+                                    };
+                                }
                             )}
                             displayAmount={3}
                             actionButton={
