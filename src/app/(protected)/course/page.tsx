@@ -5,7 +5,7 @@ import { Box, Dialog, Button, Typography } from "@mui/material";
 import type { SvgIconTypeMap } from "@mui/material";
 import CardWrapper from "@/app/components/CardWrapper";
 import CollapsibleComponentWrapper from "./components/CollapsibleComponentWrapper";
-import ManageStudentForm from "./components/ManageStudentForm";
+import ManageUserForm from "./components/ManageUserForm";
 import NewLinkForm from "./components/NewLinkForm";
 import NewAssignmentForm from "./components/NewAssignmentForm";
 
@@ -22,11 +22,14 @@ import DoneIcon from "@mui/icons-material/Done";
 import TripOriginIcon from "@mui/icons-material/TripOrigin";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { useGetCourseQuery } from "@/app/graphql/course/course.graphql";
+import {
+    useGetCourseQuery,
+    useGetCourseUserRolesQuery,
+} from "@/app/graphql/course/course.graphql";
 import { useSearchParams } from "next/navigation";
 import NoResult from "@/app/errors/noResult";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
-import { AssignmentType } from "@schema";
+import { AssignmentType, UserRole } from "@schema";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
 import dayjs from "dayjs";
@@ -34,7 +37,6 @@ import dayjs from "dayjs";
 export default function CoursePage() {
     // fetch admin permission
     // TODO: Check permission
-    const isLecturerOrTutor = true;
 
     const searchParams = useSearchParams();
 
@@ -49,7 +51,17 @@ export default function CoursePage() {
         variables: { courseId: id },
     });
 
+    const { data: rolesData } = useGetCourseUserRolesQuery({
+        skip: !id,
+        variables: { courseId: id },
+    });
+
+    const roles = rolesData?.getCourseUserRoles;
     const course = courseData?.course;
+
+    const isAdmin = roles?.includes(UserRole.Admin) ?? false;
+    const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
+    const isTutor = roles?.includes(UserRole.Tutor) ?? false;
 
     const showErrorMessage =
         !loading &&
@@ -83,7 +95,7 @@ export default function CoursePage() {
     };
 
     // manage student form
-    const [openManageStudentFormPopup, setOpenManageStudentFormPopup] =
+    const [openManageUserFormPopup, setOpenManageUserFormPopup] =
         React.useState(false);
 
     // new link form
@@ -131,7 +143,7 @@ export default function CoursePage() {
                                 </>
                             )}
                         </Box>
-                        {isLecturerOrTutor && (
+                        {isAdmin && (
                             <Button
                                 variant="outlined"
                                 sx={{
@@ -140,9 +152,7 @@ export default function CoursePage() {
                                     fontSize: 16,
                                 }}
                                 startIcon={<PeopleIcon />}
-                                onClick={() =>
-                                    setOpenManageStudentFormPopup(true)
-                                }
+                                onClick={() => setOpenManageUserFormPopup(true)}
                             >
                                 Manage Student
                             </Button>
@@ -164,7 +174,7 @@ export default function CoursePage() {
                             )}
                             displayAmount={3}
                             actionButton={
-                                isLecturerOrTutor && (
+                                (isAdmin || isLecturer || isTutor) && (
                                     <Button
                                         variant="outlined"
                                         sx={{
@@ -230,7 +240,7 @@ export default function CoursePage() {
                             )}
                             displayAmount={3}
                             actionButton={
-                                isLecturerOrTutor && (
+                                (isAdmin || isLecturer || isTutor) && (
                                     <Button
                                         variant="outlined"
                                         sx={{
@@ -252,11 +262,11 @@ export default function CoursePage() {
                     </Box>
 
                     <Dialog
-                        onClose={() => setOpenManageStudentFormPopup(false)}
-                        open={openManageStudentFormPopup}
+                        onClose={() => setOpenManageUserFormPopup(false)}
+                        open={openManageUserFormPopup}
                         PaperProps={{ sx: { borderRadius: 3 } }}
                     >
-                        <ManageStudentForm />
+                        <ManageUserForm courseId={id} />
                     </Dialog>
 
                     <Dialog
