@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import type { StudentEntryProps } from "../types/StudentEntryProps";
-import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmIconButton from "@/app/components/ConfirmIconButton";
 
 export function StudentEntry({
     name,
@@ -21,7 +22,9 @@ export function StudentEntry({
                 </Grid>
             </Grid>
             {showDeleteButton && (
-                <ConfirmDeleteButton
+                <ConfirmIconButton
+                    Icon={DeleteIcon}
+                    color="error"
                     onClick={deleteFunction}
                     confirmBoxContent={deleteConfirmBoxContent}
                     requireConfirm={deleteRequireConfirm}

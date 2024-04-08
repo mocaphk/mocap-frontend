@@ -5,19 +5,23 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    IconButton,
 } from "@mui/material";
 import type { ConfirmIconButtonProps } from "../types/ConfirmIconButtonProps";
 import React from "react";
+import LoadingIconButton from "./LoadingIconButton";
 
-export default function ConfirmIconButton({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    Icon,
-    color,
-    requireConfirm = true,
-    confirmBoxContent,
-    onClick,
-}: Readonly<ConfirmIconButtonProps>) {
+export default function ConfirmIconButton(
+    props: React.ComponentProps<typeof LoadingIconButton> &
+        ConfirmIconButtonProps
+) {
+    const {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Icon,
+        requireConfirm = true,
+        confirmBoxContent,
+        onClick,
+        ...otherProps
+    } = props;
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -37,13 +41,14 @@ export default function ConfirmIconButton({
 
     return (
         <>
-            <IconButton
-                color={color}
-                sx={{ m: 1 }}
+            <LoadingIconButton
+                type="button"
+                className="w-fit h-fit"
                 onClick={requireConfirm ? handleClickOpen : onClick}
+                {...otherProps}
             >
                 <Icon />
-            </IconButton>
+            </LoadingIconButton>
             <Dialog
                 open={open}
                 onClose={handleClose}

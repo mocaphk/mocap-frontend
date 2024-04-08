@@ -1,8 +1,12 @@
 export interface AnnouncementProps {
+    isNew: boolean;
+    isLecturerOrTutor: boolean;
     id: string;
+    courseId: string;
     courseCode: string;
-    courseTitle: string;
-    year: string;
+    courseName: string;
+    courseYear: string;
+    courseCreatedBy: Array<string>;
     title: string;
     content: string;
     createdBy: string;
