@@ -1,3 +1,6 @@
+import type { GetAnnouncementQuery } from "@/app/graphql/course/announcement.graphql";
+import type { QueryResult } from "@apollo/client";
+
 export interface AnnouncementProps {
     isNew: boolean;
     isLecturerOrTutor: boolean;
@@ -12,4 +15,5 @@ export interface AnnouncementProps {
     createdBy: string;
     date: string;
     lastEdit: string;
+    refetch: QueryResult<GetAnnouncementQuery>["refetch"];
 }

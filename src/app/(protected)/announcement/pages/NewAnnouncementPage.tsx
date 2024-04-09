@@ -12,6 +12,7 @@ export default function NewAnnouncementPage({
         loading,
         error,
         data: courseData,
+        refetch,
     } = useGetCourseTitleQuery({
         skip: !courseId,
         variables: { courseId: courseId },
@@ -48,6 +49,7 @@ export default function NewAnnouncementPage({
                 createdBy={""}
                 date={""}
                 lastEdit={""}
+                refetch={refetch}
             />
         );
     }

@@ -23,6 +23,7 @@ export default function EditableAnnouncement({
     title,
     content,
     setIsEditing,
+    refetch,
 }: Readonly<EditableAnnouncementProps>) {
     const confirmLeaveMsg = "Are you sure you want to discard your changes?";
     const confirmDeleteMsg =
@@ -111,7 +112,8 @@ export default function EditableAnnouncement({
         }
 
         // refresh
-        window.location.reload();
+        refetch();
+        setIsEditing(false);
     };
 
     const handleCancel = () => {
@@ -145,17 +147,13 @@ export default function EditableAnnouncement({
             return;
         }
 
-        console.log(courseId);
-
         // return back to course page
         redirectToCoursePage();
     };
 
     const redirectToCoursePage = () => {
-        console.log(`redirect to ${courseId}`);
         replace(`/course?id=${courseId}`);
     };
-    console.log(`see id as ${courseId}`);
 
     return (
         <Box

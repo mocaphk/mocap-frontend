@@ -22,6 +22,7 @@ export default function AnnouncementPage() {
         loading,
         error,
         data: announcementData,
+        refetch,
     } = useGetAnnouncementQuery({
         skip: !id,
         variables: { id: id },
@@ -39,8 +40,6 @@ export default function AnnouncementPage() {
     if (loading) {
         return <LoadingAnnouncementPage />;
     }
-
-    console.log(showErrorMessage, announcement);
 
     // announcement exist
     if (!showErrorMessage) {
@@ -61,6 +60,7 @@ export default function AnnouncementPage() {
                 createdBy={announcement?.createdBy.username ?? ""}
                 date={announcement?.createdAt ?? ""}
                 lastEdit={announcement?.updatedAt ?? ""}
+                refetch={refetch}
             />
         );
     }

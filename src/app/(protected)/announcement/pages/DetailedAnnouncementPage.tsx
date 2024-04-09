@@ -21,6 +21,7 @@ export default function DetailedAnnouncementPage({
     createdBy,
     date,
     lastEdit,
+    refetch,
 }: Readonly<AnnouncementProps>) {
     const [isEditing, setIsEditing] = React.useState(isNew);
 
@@ -28,7 +29,6 @@ export default function DetailedAnnouncementPage({
         document.title = title;
     }, [title]);
 
-    console.log(`see id as ${courseId} in detail`);
     return (
         <CardWrapper>
             <Box className="flex flex-col mb-5">
@@ -48,6 +48,7 @@ export default function DetailedAnnouncementPage({
                     title={title}
                     content={content}
                     setIsEditing={setIsEditing}
+                    refetch={refetch}
                 />
             ) : (
                 <ReadOnlyAnnouncement
