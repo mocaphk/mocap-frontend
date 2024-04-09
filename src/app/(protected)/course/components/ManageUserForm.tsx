@@ -28,7 +28,9 @@ import type {
 import { capitalizeFirstLetter } from "@/app/utils/string";
 import { useSession } from "next-auth/react";
 
-export default function ManageUserForm({ courseId }: { courseId: string }) {
+export default function ManageUserForm({
+    courseId,
+}: Readonly<{ courseId: string }>) {
     const [username, setUsername] = React.useState<string>("");
     const [selectedRoles, setSelectedRoles] = React.useState<UserRole[]>([]);
     const [createUserError, setCreateUserError] =
@@ -162,7 +164,7 @@ export default function ManageUserForm({ courseId }: { courseId: string }) {
                         />
                     </>
                 ) : (
-                    <Box className="flex flex-row w-full">
+                    <Box className="flex flex-row w-full items-center gap-2">
                         <Box className="flex flex-col w-full gap-3">
                             {createUserError && (
                                 <Alert className="w-full" severity="error">
@@ -233,8 +235,8 @@ export default function ManageUserForm({ courseId }: { courseId: string }) {
                         </Box>
 
                         <IconButton
+                            className="w-fit h-fit"
                             color="info"
-                            sx={{ m: 1 }}
                             aria-label="add users"
                             type="submit"
                         >
@@ -250,7 +252,7 @@ export default function ManageUserForm({ courseId }: { courseId: string }) {
                 id="filter-users-form"
                 component="form"
                 onSubmit={onSearchSubmit}
-                className="w-full flex flex-col px-4 my-2"
+                className="w-full flex flex-col px-4"
             >
                 {loadingCourseUsers ? (
                     <CustomSkeleton sx={{ minWidth: 500, minHeight: 100 }} />
@@ -261,24 +263,21 @@ export default function ManageUserForm({ courseId }: { courseId: string }) {
                                 Failed to delete user. Please try again.
                             </Alert>
                         )}
-                        <Box className="flex flex-row w-full">
-                            <Box className="flex flex-row gap-3">
-                                <TextField
-                                    id="username"
-                                    name="username"
-                                    className="w-full"
-                                    sx={{
-                                        minWidth: 500,
-                                    }}
-                                    label="Username"
-                                    type="text"
-                                    autoFocus={true}
-                                    autoComplete="off"
-                                />
-                            </Box>
+                        <Box className="flex flex-row w-full items-center gap-2">
+                            <TextField
+                                id="username"
+                                name="username"
+                                className="w-full"
+                                sx={{
+                                    minWidth: 500,
+                                }}
+                                label="Username"
+                                type="text"
+                                autoComplete="off"
+                            />
                             <IconButton
+                                className="w-fit h-fit"
                                 color="info"
-                                sx={{ m: 1 }}
                                 aria-label="filter students"
                                 type="submit"
                             >

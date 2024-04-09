@@ -13,7 +13,7 @@ export function UserEntry({
 }: Readonly<UserEntryProps>) {
     return (
         <Box className="flex flex-row w-full items-center rounded-2xl px-6 bg-[#f8fafc]">
-            <Grid container spacing={0}>
+            <Grid container spacing={0} alignItems="center">
                 <Grid item xs={6} sm={4}>
                     <Typography color="info.main">{name}</Typography>
                 </Grid>
