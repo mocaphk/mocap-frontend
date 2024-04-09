@@ -89,6 +89,7 @@ export default function NewAssignmentForm({
                             label="Description"
                             type="text"
                             autoComplete="off"
+                            multiline
                             required
                         />
                     </Grid>

@@ -1,3 +1,31 @@
+query GetAssignment($assignmentId: ID!) {
+    assignment(id: $assignmentId) {
+        id
+        title
+        description
+        type
+        dateDue
+        dateOpen
+        dateClose
+        course {
+            id
+            code
+            year
+        }
+        createdBy {
+            username
+        }
+        questions {
+            id
+            title
+            description
+            attempts {
+                isSubmitted
+            }
+        }
+    }
+}
+
 mutation CreateAssignment($assignmentInput: CreateAssignmentInput!) {
     createAssignment(assignmentInput: $assignmentInput) {
         id
