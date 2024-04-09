@@ -54,6 +54,18 @@ query GetCourse($courseId: ID!) {
     }
 }
 
+query GetCourseTitle($courseId: ID!) {
+    course(id: $courseId) {
+        id
+        code
+        year
+        name
+        lecturers {
+            username
+        }
+    }
+}
+
 query GetCourses {
     courses {
         id

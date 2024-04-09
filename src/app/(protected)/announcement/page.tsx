@@ -3,33 +3,73 @@
 import { useSearchParams } from "next/navigation";
 import AnnouncementNotFoundPage from "./pages/AnnouncementNotFoundPage";
 import DetailedAnnouncementPage from "./pages/DetailedAnnouncementPage";
-import type { AnnouncementProps } from "./types/AnnouncementProps";
+import NewAnnouncementPage from "./pages/NewAnnouncementPage";
+import LoadingAnnouncementPage from "./pages/LoadingAnnouncementPage";
+import { useGetAnnouncementQuery } from "@/app/graphql/course/announcement.graphql";
 
 export default function AnnouncementPage() {
     const searchParams = useSearchParams();
 
-    const year = searchParams.get("year");
-    const courseCode = searchParams.get("courseCode");
-    const announcementId = searchParams.get("announcementId");
+    const id = searchParams.get("id") ?? "";
+    const courseId = searchParams.get("courseId") ?? "";
+    const isNew = searchParams.has("new");
 
-    const announcementTemplate: AnnouncementProps = {
-        id: "1",
-        courseCode: "COMP2396",
-        courseTitle: "COMP2396 Object-oriented Programming and Java",
-        year: "2024",
-        title: "Introduction",
-        content:
-            "Welcome to the exciting world of Java programming! In this course, you will dive into the fundamentals of Java, a versatile and powerful programming language used in a wide range of applications. From basic syntax to advanced concepts, you will learn how to design and develop robust software solutions. Get ready to explore object-oriented programming, data structures, algorithms, and more. Whether you are a beginner or looking to enhance your skills, this course will equip you with the knowledge and tools to succeed in the dynamic field of software development. Let's embark on this journey together and unleash your potential in Java programming!",
-        createdBy: "Wong Kenneth",
-        date: "Friday, 14 October 2022, 1:22 PM",
-        lastEdit: "Friday, 14 October 2022, 2:22 PM",
-    };
+    // fetch admin permission
+    // TODO: Check permission
+    const isLecturerOrTutor = true;
 
-    if (courseCode && year && announcementId) {
-        // try fetching, if exist return announcement page
-        return <DetailedAnnouncementPage {...announcementTemplate} />;
+    const {
+        loading,
+        error,
+        data: announcementData,
+        refetch,
+    } = useGetAnnouncementQuery({
+        skip: !id,
+        variables: { id: id },
+    });
+
+    const announcement = announcementData?.announcement;
+
+    const showErrorMessage =
+        !loading &&
+        (announcementData === undefined ||
+            error ||
+            announcement === undefined ||
+            announcement === null);
+
+    if (loading) {
+        return <LoadingAnnouncementPage />;
     }
 
-    // fall back to not found page, with a link back to course page, persist courseCode and year param, if any
-    return <AnnouncementNotFoundPage year={year} courseCode={courseCode} />;
+    // announcement exist
+    if (!showErrorMessage) {
+        return (
+            <DetailedAnnouncementPage
+                isNew={false}
+                isLecturerOrTutor={isLecturerOrTutor}
+                id={id}
+                courseId={announcement?.course?.id ?? ""}
+                courseCode={announcement?.course?.code ?? ""}
+                courseName={announcement?.course?.name ?? ""}
+                courseYear={announcement?.course?.year ?? ""}
+                courseCreatedBy={(announcement?.course?.lecturers ?? []).map(
+                    (lecturer: { username: string }) => lecturer.username
+                )}
+                title={announcement?.title ?? ""}
+                content={announcement?.content ?? ""}
+                createdBy={announcement?.createdBy.username ?? ""}
+                date={announcement?.createdAt ?? ""}
+                lastEdit={announcement?.updatedAt ?? ""}
+                refetch={refetch}
+            />
+        );
+    }
+
+    // new announcement
+    if (isNew && isLecturerOrTutor) {
+        return <NewAnnouncementPage courseId={courseId} />;
+    }
+
+    // fall back to not found page, with a link back to course page, persist courseId param, if any
+    return <AnnouncementNotFoundPage courseId={courseId} />;
 }

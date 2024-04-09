@@ -1,0 +1,41 @@
+query GetAnnouncement($id: ID!) {
+    announcement(id: $id) {
+        course {
+            id
+            code
+            year
+            name
+            lecturers {
+                username
+            }
+        }
+        title
+        content
+        createdAt
+        updatedAt
+        createdBy {
+            username
+        }
+    }
+}
+
+mutation CreateAnnouncement($announcementInput: CreateAnnouncementInput!) {
+    createAnnouncement(announcementInput: $announcementInput) {
+        id
+    }
+}
+
+mutation UpdateAnnouncement(
+    $id: ID!
+    $announcementInput: UpdateAnnouncementInput!
+) {
+    updateAnnouncement(id: $id, announcementInput: $announcementInput) {
+        id
+    }
+}
+
+mutation DeleteAnnouncement($id: ID!) {
+    deleteAnnouncement(id: $id) {
+        id
+    }
+}

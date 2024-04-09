@@ -1,19 +1,12 @@
 import type { GetAnnouncementQuery } from "@/app/graphql/course/announcement.graphql";
 import type { QueryResult } from "@apollo/client";
 
-export interface AnnouncementProps {
+export interface EditableAnnouncementProps {
     isNew: boolean;
-    isLecturerOrTutor: boolean;
     id: string;
     courseId: string;
-    courseCode: string;
-    courseName: string;
-    courseYear: string;
-    courseCreatedBy: Array<string>;
     title: string;
     content: string;
-    createdBy: string;
-    date: string;
-    lastEdit: string;
+    setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
     refetch: QueryResult<GetAnnouncementQuery>["refetch"];
 }

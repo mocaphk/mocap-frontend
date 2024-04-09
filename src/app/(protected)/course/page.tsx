@@ -31,6 +31,7 @@ import NoResult from "@/app/errors/noResult";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
 import { AssignmentType, UserRole } from "@schema";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
+import Link from "next/link";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
 import dayjs from "dayjs";
 
@@ -202,10 +203,30 @@ export default function CoursePage() {
                                     title: announcement.title,
                                     description: announcement.createdAt,
                                     createdBy: announcement.createdBy.username,
-                                    link: `announcement?id=${announcement.id}`,
+                                    link: `announcement?id=${announcement.id}&courseId=${id}`,
                                 })
                             )}
                             displayAmount={2}
+                            actionButton={
+                                (isAdmin || isLecturer || isTutor) && (
+                                    <Link
+                                        href={`announcement?id=&courseId=${id}&new`}
+                                        className="rounded-2xl"
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            sx={{
+                                                borderRadius: 5,
+                                                textTransform: "none",
+                                                fontSize: 16,
+                                            }}
+                                            startIcon={<AddIcon />}
+                                        >
+                                            New Announcement
+                                        </Button>
+                                    </Link>
+                                )
+                            }
                             loading={loading}
                         />
 
