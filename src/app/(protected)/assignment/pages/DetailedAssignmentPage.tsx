@@ -3,24 +3,31 @@ import ComponentWrapper from "@/app/components/ComponentWrapper";
 import { Box, Typography, Link as MUILink } from "@mui/material";
 import type { SvgIconTypeMap } from "@mui/material";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
-import type { AssignmentProps } from "../types/AssignmentProps";
 
 import DescriptionSharpIcon from "@mui/icons-material/DescriptionSharp";
 import SchoolIcon from "@mui/icons-material/School";
 import QuestionList from "../components/QuestionList";
 import { AssignmentType } from "@schema";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
+import type { GetAssignmentQuery } from "@/app/graphql/course/assignment.graphql";
+import dayjs from "dayjs";
 
 export default function DetailedAssignmentPage({
-    title,
-    description,
-    dueDate,
-    courseCode,
-    year,
-    status,
-    type,
-    questions,
-}: Readonly<AssignmentProps>) {
+    assignment,
+}: Readonly<{
+    assignment: NonNullable<GetAssignmentQuery["assignment"]>;
+}>) {
+    const { title, description, type, dateClose, dateDue, course, questions } =
+        assignment;
+    const { id, code } = course;
+    const isCompleted = questions.every((question) =>
+        question.attempts.some((attempt) => attempt.isSubmitted)
+    );
+    const status: AssignmentStatus = isCompleted
+        ? AssignmentStatus.Completed
+        : dayjs().isAfter(dayjs(dateDue))
+        ? AssignmentStatus.Overdue
+        : AssignmentStatus.Ongoing;
     const assignmentTypeIconMap: Record<
         AssignmentType,
         OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string }
@@ -53,7 +60,7 @@ export default function DetailedAssignmentPage({
                         fontWeight="medium"
                         color="info.light"
                     >
-                        From {courseCode} · Due on {dueDate}
+                        From {code} · Due on {dateDue} · Close on {dateClose}
                     </Typography>
                     <Typography
                         fontSize="0.9rem"
@@ -71,10 +78,7 @@ export default function DetailedAssignmentPage({
                 <QuestionList questions={questions} />
 
                 <Box className="mt-7">
-                    <MUILink
-                        href={`course?courseCode=${courseCode}&year=${year}`}
-                        underline="hover"
-                    >
+                    <MUILink href={`course?id=${id}`} underline="hover">
                         « Back to course page
                     </MUILink>
                 </Box>

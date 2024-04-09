@@ -1,6 +1,8 @@
-export interface StudentEntryProps {
+import type { UserRole } from "@schema";
+
+export interface UserEntryProps {
     name: string;
-    uid: string;
+    roles: UserRole[];
     showDeleteButton: boolean;
     deleteFunction?: React.ComponentProps<"button">["onClick"];
     deleteConfirmBoxContent?: string;

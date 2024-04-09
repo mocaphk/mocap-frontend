@@ -36,6 +36,11 @@ query GetCourse($courseId: ID!) {
             createdBy {
                 username
             }
+            questions {
+                attempts {
+                    isSubmitted
+                }
+            }
         }
         announcements {
             id
@@ -60,6 +65,41 @@ query GetCourses {
             username
         }
         barColor
+    }
+}
+
+query GetUsersNotInCourse($courseId: ID!) {
+    usersNotInCourse(id: $courseId) {
+        id
+        username
+    }
+}
+
+query GetCourseUserRoles($courseId: ID!) {
+    getCourseUserRoles(courseId: $courseId)
+}
+
+query SearchCourseUsersByUsername(
+    $searchCourseUsersByUsernameInput: SearchCourseUsersByUsernameInput!
+) {
+    searchCourseUsersByUsername(
+        searchCourseUsersByUsernameInput: $searchCourseUsersByUsernameInput
+    ) {
+        id
+        username
+        roles
+    }
+}
+
+mutation DeleteCourseUser($courseId: ID!, $userId: ID!) {
+    deleteCourseUser(courseId: $courseId, userId: $userId)
+}
+
+mutation CreateCourseUser($courseUserInput: CreateCourseUserInput!) {
+    createCourseUser(courseUserInput: $courseUserInput) {
+        id
+        username
+        roles
     }
 }
 
