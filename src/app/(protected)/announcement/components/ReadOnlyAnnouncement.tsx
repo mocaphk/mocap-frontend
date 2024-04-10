@@ -11,7 +11,7 @@ export default function ReadOnlyAnnouncement({
     createdBy,
     date,
     lastEdit,
-    isLecturerOrTutor,
+    allowEdit,
     setIsEditing,
 }: Readonly<ReadOnlyAnnouncementProps>) {
     return (
@@ -19,7 +19,7 @@ export default function ReadOnlyAnnouncement({
             Icon={CampaignIcon}
             title={title}
             actionButton={
-                isLecturerOrTutor && (
+                allowEdit && (
                     <IconButton
                         type="button"
                         className="w-fit h-fit"

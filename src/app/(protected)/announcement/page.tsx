@@ -14,10 +14,6 @@ export default function AnnouncementPage() {
     const courseId = searchParams.get("courseId") ?? "";
     const isNew = searchParams.has("new");
 
-    // fetch admin permission
-    // TODO: Check permission
-    const isLecturerOrTutor = true;
-
     const {
         loading,
         error,
@@ -46,7 +42,6 @@ export default function AnnouncementPage() {
         return (
             <DetailedAnnouncementPage
                 isNew={false}
-                isLecturerOrTutor={isLecturerOrTutor}
                 id={id}
                 courseId={announcement?.course?.id ?? ""}
                 courseCode={announcement?.course?.code ?? ""}
@@ -66,20 +61,8 @@ export default function AnnouncementPage() {
     }
 
     // new announcement
-    if (isNew && isLecturerOrTutor) {
+    if (isNew) {
         return <NewAnnouncementPage courseId={courseId} />;
-    }
-
-    if (isNew && !isLecturerOrTutor) {
-        // if new, should check permission in new announcement page since that fetch course info, keep here for now
-        return (
-            <ErrorPage
-                title="No permission"
-                message="It appears that you do not have the necessary permissions to create an announcement for this course."
-                returnMessage="Back to course page"
-                returnLink="courses"
-            />
-        );
     }
 
     // fall back to not found page, with a link back to course page, persist courseId param, if any

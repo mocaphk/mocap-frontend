@@ -3,7 +3,6 @@ import type { QueryResult } from "@apollo/client";
 
 export interface AnnouncementProps {
     isNew: boolean;
-    isLecturerOrTutor: boolean;
     id: string;
     courseId: string;
     courseCode: string;

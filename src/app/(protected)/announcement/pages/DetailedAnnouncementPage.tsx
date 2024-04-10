@@ -6,10 +6,12 @@ import type { AnnouncementProps } from "../types/AnnouncementProps";
 
 import ReadOnlyAnnouncement from "../components/ReadOnlyAnnouncement";
 import EditableAnnouncement from "../components/EditableAnnouncement";
+import { useGetCourseUserRolesQuery } from "@/app/graphql/course/course.graphql";
+import { UserRole } from "@schema";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function DetailedAnnouncementPage({
     isNew,
-    isLecturerOrTutor,
     id,
     courseId,
     courseCode,
@@ -23,11 +25,37 @@ export default function DetailedAnnouncementPage({
     lastEdit,
     refetch,
 }: Readonly<AnnouncementProps>) {
+    // check permission
+    const { data: rolesData } = useGetCourseUserRolesQuery({
+        skip: !courseId,
+        variables: { courseId: courseId },
+    });
+
+    const roles = rolesData?.getCourseUserRoles;
+
+    const isAdmin = roles?.includes(UserRole.Admin) ?? false;
+    const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
+    const isTutor = roles?.includes(UserRole.Tutor) ?? false;
+
+    const allowCreate = isAdmin || isLecturer || isTutor;
+    const allowEdit = isAdmin || isLecturer || isTutor;
+
     const [isEditing, setIsEditing] = React.useState(isNew);
 
     React.useEffect(() => {
         document.title = title;
     }, [title]);
+
+    if (isNew && !allowCreate) {
+        return (
+            <ErrorPage
+                title="No permission"
+                message="It appears that you do not have the necessary permissions to create an announcement for this course."
+                returnMessage="Back to course page"
+                returnLink={`course?id=${courseId}`}
+            />
+        );
+    }
 
     return (
         <CardWrapper>
@@ -57,7 +85,7 @@ export default function DetailedAnnouncementPage({
                     createdBy={createdBy}
                     date={date}
                     lastEdit={lastEdit}
-                    isLecturerOrTutor={isLecturerOrTutor}
+                    allowEdit={allowEdit}
                     setIsEditing={setIsEditing}
                 />
             )}

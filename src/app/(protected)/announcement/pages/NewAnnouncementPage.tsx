@@ -35,7 +35,6 @@ export default function NewAnnouncementPage({
         return (
             <DetailedAnnouncementPage
                 isNew={true}
-                isLecturerOrTutor={true}
                 id={""}
                 courseId={course?.id ?? ""}
                 courseCode={course?.code ?? ""}
