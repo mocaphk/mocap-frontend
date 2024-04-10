@@ -47,6 +47,7 @@ export default function CoursePage() {
         loading,
         error,
         data: courseData,
+        refetch,
     } = useGetCourseQuery({
         skip: !id,
         variables: { courseId: id },
@@ -295,7 +296,11 @@ export default function CoursePage() {
                         open={openLinkPopup}
                         PaperProps={{ sx: { borderRadius: 3 } }}
                     >
-                        <NewLinkForm courseId={id} />
+                        <NewLinkForm
+                            courseId={id}
+                            refetch={refetch}
+                            closeForm={() => setOpenLinkPopup(false)}
+                        />
                     </Dialog>
 
                     <Dialog

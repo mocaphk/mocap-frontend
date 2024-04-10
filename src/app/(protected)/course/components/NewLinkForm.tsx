@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Alert,
     Box,
@@ -6,14 +7,21 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { useCreateExternalLinkMutation } from "@/app/graphql/course/externalLink.graphql";
 import { LoadingButton } from "@mui/lab";
-import React from "react";
 import type { CreateExternalLinkInput } from "@schema";
+import type { QueryResult } from "@apollo/client";
+import type { GetCourseQuery } from "@/app/graphql/course/course.graphql";
+import { useCreateExternalLinkMutation } from "@/app/graphql/course/externalLink.graphql";
 
 export default function NewLinkForm({
     courseId,
-}: Readonly<{ courseId: string }>) {
+    refetch,
+    closeForm,
+}: Readonly<{
+    courseId: string;
+    refetch: QueryResult<GetCourseQuery>["refetch"];
+    closeForm: () => void;
+}>) {
     const [createExternalLink, { error, loading }] =
         useCreateExternalLinkMutation();
     const [fetchError, setFetchError] = React.useState<boolean>(false);
@@ -46,8 +54,9 @@ export default function NewLinkForm({
             return;
         }
 
-        // refresh, next/router .reload() didn't work
-        window.location.reload();
+        // refetch links, close the form
+        refetch();
+        closeForm();
     };
 
     return (
