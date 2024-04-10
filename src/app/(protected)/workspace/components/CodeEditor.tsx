@@ -1,58 +1,85 @@
-import Editor from "@monaco-editor/react";
+import React from "react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { registerPythonLanguage } from "../autocomplete/python";
-import type { Attempt } from "../types/Attempt";
+import { ProgrammingLanguage } from "../../../../../.cache/__types__";
 
 export default function CodeEditor({
-    template,
     language,
-    attempt,
+    codeOnEditor,
     updateCode,
+    readOnly,
 }: {
-    template: string;
-    language: string;
-    attempt: Attempt;
+    language: ProgrammingLanguage;
+    codeOnEditor: string;
     updateCode: Function | null;
+    readOnly: boolean;
 } & React.ComponentProps<typeof Editor>) {
+    const monaco = useMonaco();
+
     function handleEditorChange(value: string | undefined) {
-        attempt.code = value ?? "";
         if (updateCode) {
-            updateCode(attempt.code);
+            updateCode(value);
         }
     }
-    function handleEditorDidMount() {
-        const monaco = (window as any).monaco;
 
-        function registerLanguageIfNeeded() {
-            if (language === "python") {
-                if (!isLanguageRegistered("mocap_" + language)) {
-                    registerPythonLanguage(monaco);
-                }
-            } else if (language === "javascript") {
-                if (!isLanguageRegistered("mocap_" + language)) {
-                    console.log("register js language");
+    const getLanguageString = (language: ProgrammingLanguage): string => {
+        switch (language) {
+            case ProgrammingLanguage.C:
+                return "c";
+            case ProgrammingLanguage.Cpp:
+                return "cpp";
+            case ProgrammingLanguage.Python:
+                return "python";
+        }
+    };
+
+    const regLan = React.useCallback(
+        (monaco: any) => {
+            function registerLanguageIfNeeded() {
+                if (language === ProgrammingLanguage.Python) {
+                    if (
+                        !isLanguageRegistered(
+                            "mocap_" + getLanguageString(language)
+                        )
+                    ) {
+                        registerPythonLanguage(monaco);
+                        console.log("register python language");
+                    }
+                } else if (language === ProgrammingLanguage.C) {
+                    if (
+                        !isLanguageRegistered(
+                            "mocap_" + getLanguageString(language)
+                        )
+                    ) {
+                        console.log("register c language");
+                    }
                 }
             }
-        }
 
-        function isLanguageRegistered(languageId: string) {
-            const encodedLanguageId =
-                monaco.languages.getEncodedLanguageId(languageId);
-            return encodedLanguageId !== 0;
-        }
+            function isLanguageRegistered(languageId: string) {
+                const encodedLanguageId =
+                    monaco?.languages.getEncodedLanguageId(languageId);
+                return encodedLanguageId !== 0;
+            }
 
-        registerLanguageIfNeeded();
-    }
+            registerLanguageIfNeeded();
+        },
+        [language]
+    );
+
+    React.useEffect(() => {
+        if (monaco) {
+            regLan(monaco);
+        }
+    }, [monaco, regLan]);
 
     return (
         <Editor
             theme="vs-dark"
-            // defaultLanguage={props.language}
-            defaultValue={template}
             onChange={handleEditorChange}
-            value={attempt.code}
-            options={{ minimap: { enabled: false } }}
-            onMount={handleEditorDidMount}
-            language={language}
+            value={codeOnEditor}
+            options={{ minimap: { enabled: false }, readOnly: readOnly }}
+            language={getLanguageString(language)}
         />
     );
 }

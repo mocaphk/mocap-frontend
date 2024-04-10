@@ -1,0 +1,40 @@
+query GetQuestion($questionId: ID) {
+    question(id: $questionId) {
+        id
+        title
+        description
+        language
+        sampleCode
+        checkingMethod
+        codingEnvironment {
+            id
+            name
+        }
+        execCommand
+        timeLimit
+        assignment {
+            id
+        }
+    }
+}
+
+mutation CreateQuestion($questionInput: CreateQuestionInput!) {
+    createQuestion(questionInput: $questionInput) {
+        id
+    }
+}
+
+mutation UpdateQuestion(
+    $questionId: ID!
+    $questionInput: UpdateQuestionInput!
+) {
+    updateQuestion(id: $questionId, questionInput: $questionInput) {
+        id
+    }
+}
+
+mutation DeleteQuestion($questionId: ID!) {
+    deleteQuestion(id: $questionId) {
+        id
+    }
+}

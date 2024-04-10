@@ -1,57 +1,167 @@
 import Button from "@mui/material/Button";
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PublishIcon from "@mui/icons-material/Publish";
+import SaveIcon from "@mui/icons-material/Save";
 import CodeEditor from "./CodeEditor";
-import type { Attempt } from "../types/Attempt";
 import type { Question } from "../types/Question";
 import React from "react";
+import CardWrapper from "@/app/components/CardWrapper";
 
 export default function CodeEditorCard({
     question,
-}: Readonly<{ question: Question }>) {
-    const attempt: Attempt = {
-        id: null,
-        code: 'print("attempt1")',
-        userId: "1",
-        questionId: "1",
-        createdAt: null,
-        updatedAt: null,
-        isSubmitted: false,
+    isEditing,
+    updateSampleCode,
+    codeOnEditor,
+    setCodeOnEditor,
+    createOrUpdateAttempt,
+    runAttemptFunc,
+    submitAttemptFunc,
+    runSampleCodeFunc,
+}: Readonly<{
+    question: Question;
+    isEditing: boolean;
+    updateSampleCode: Function;
+    codeOnEditor: string;
+    setCodeOnEditor: Function;
+    createOrUpdateAttempt: Function;
+    runAttemptFunc: Function;
+    submitAttemptFunc: Function;
+    runSampleCodeFunc: Function;
+}>) {
+    const updateCode = (code: React.SetStateAction<string>) => {
+        setCodeOnEditor(code);
+        if (isEditing) {
+            updateSampleCode(code);
+        }
     };
 
-    // code will be used in submit function, just leave it here.
-    const [code, setCode] = React.useState(attempt.code);
+    const runAttempt = async () => {
+        if (isEditing) {
+            await runSampleCodeFunc({
+                variables: {
+                    questionId: question.id,
+                    code: codeOnEditor,
+                },
+            });
+        } else {
+            const currentAttemptId = await createOrUpdateAttempt(false);
 
-    const updateCode = (code: React.SetStateAction<string>) => {
-        setCode(code);
+            const response = await runAttemptFunc({
+                variables: {
+                    attemptId: currentAttemptId ?? "",
+                },
+            });
+            console.log(
+                "Run attempt result:",
+                response.data?.runAttempt.results
+            );
+        }
+    };
+
+    const submitAttempt = async () => {
+        const currentAttemptId = await createOrUpdateAttempt(true);
+
+        const response = await submitAttemptFunc({
+            variables: {
+                attemptId: currentAttemptId ?? "",
+            },
+        });
+        console.log(
+            "Submit attempt result:",
+            response.data?.submitAttempt.results
+        );
+    };
+
+    const handleSaveClick = async () => {
+        if (codeOnEditor.trim()) {
+            await createOrUpdateAttempt(false);
+        } else {
+            let confirmMSG = confirm(
+                "The code is empty, are you sure to save it?"
+            );
+            if (confirmMSG) {
+                await createOrUpdateAttempt(false);
+            } else {
+                console.log("cancel save");
+            }
+        }
+    };
+
+    const handleRunClick = async () => {
+        if (codeOnEditor.trim()) {
+            await runAttempt();
+        } else {
+            let confirmMSG = confirm(
+                "The code is empty, are you sure to run it?"
+            );
+            if (confirmMSG) {
+                await runAttempt();
+            } else {
+                console.log("cancel run");
+            }
+        }
+    };
+
+    const handleSubmitClick = async () => {
+        if (codeOnEditor.trim()) {
+            await submitAttempt();
+        } else {
+            let confirmMSG = confirm(
+                "The code is empty, are you sure to submit it?"
+            );
+            if (confirmMSG) {
+                await submitAttempt();
+            } else {
+                console.log("cancel submit");
+            }
+        }
     };
 
     return (
-        <Card
-            className="px-[1.8rem] py-[1.2rem] h-full"
-            sx={{ borderRadius: 6 }}
-        >
+        <CardWrapper className="h-full">
             <Box className="flex h-full flex-col gap-4">
                 <Box className="flex-grow">
                     <CodeEditor
-                        attempt={attempt}
+                        codeOnEditor={codeOnEditor}
                         language={question.language}
-                        template={question.sampleCode}
                         updateCode={updateCode}
+                        readOnly={false}
                     />
                 </Box>
                 <Box className="flex w-full h-fit space-x-6 justify-end">
-                    <Button className="w-36" variant="contained">
+                    <Button
+                        className="h-fit w-36"
+                        color="primary"
+                        variant="contained"
+                        onClick={handleSaveClick}
+                    >
+                        <SaveIcon />
+                        <Typography className="p-2">Save</Typography>
+                    </Button>
+                    <Button
+                        className="w-36"
+                        color="primary"
+                        variant="contained"
+                        onClick={handleRunClick}
+                    >
                         <PlayCircleOutlineIcon />
                         <Typography className="p-2">Run</Typography>
                     </Button>
-                    <Button className="w-36" variant="contained">
-                        <PublishIcon />
-                        <Typography className="p-2">Submit</Typography>
-                    </Button>
+
+                    {!isEditing && (
+                        <Button
+                            className="w-36"
+                            color="primary"
+                            variant="contained"
+                            onClick={handleSubmitClick}
+                        >
+                            <PublishIcon />
+                            <Typography className="p-2">Submit</Typography>
+                        </Button>
+                    )}
                 </Box>
             </Box>
-        </Card>
+        </CardWrapper>
     );
 }

@@ -1,0 +1,75 @@
+query GetTestcases($questionId: ID!) {
+    testcases(questionId: $questionId) {
+        id
+        input {
+            name
+            value
+        }
+        expectedOutput
+        isHidden
+    }
+}
+
+query GetCustomTestcases($questionId: ID!) {
+    customTestcases(questionId: $questionId) {
+        id
+        input {
+            name
+            value
+        }
+    }
+}
+
+mutation CreateTestcases(
+    $questionId: ID!
+    $testcaseInput: [CreateTestcaseInput!]!
+) {
+    createTestcases(questionId: $questionId, testcaseInput: $testcaseInput) {
+        id
+    }
+}
+
+mutation CreateCustomTestcases(
+    $questionId: ID!
+    $testcaseInput: [CreateCustomTestcaseInput!]!
+) {
+    createCustomTestcases(
+        questionId: $questionId
+        testcaseInput: $testcaseInput
+    ) {
+        id
+    }
+}
+
+mutation UpdateTestcase(
+    $testcaseId: ID!
+    $testcaseInput: UpdateTestcaseInput!
+) {
+    updateTestcase(testcaseId: $testcaseId, testcaseInput: $testcaseInput) {
+        id
+    }
+}
+
+mutation UpdateCustomTestcase(
+    $testcaseId: ID!
+    $testcaseInput: UpdateCustomTestcaseInput!
+) {
+    updateCustomTestcase(
+        testcaseId: $testcaseId
+        testcaseInput: $testcaseInput
+    ) {
+        id
+    }
+}
+
+mutation DeleteTestcase($testcaseId: ID!) {
+    deleteTestcase(testcaseId: $testcaseId) {
+        id
+    }
+}
+
+mutation DeleteCustomTestcase($testcaseId: ID!) {
+    deleteCustomTestcase(testcaseId: $testcaseId) {
+        id
+    }
+}

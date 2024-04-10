@@ -1,21 +1,25 @@
 import CodeEditor from "./CodeEditor";
 import type { Attempt } from "../types/Attempt";
 import { Box, Modal } from "@mui/material";
+import type { ProgrammingLanguage } from "../../../../../.cache/__types__";
 
 export default function SubmissionModal({
     language,
     selectedAttempt,
-    setSelectedAttempt,
+    preview,
+    setPreview,
 }: Readonly<{
-    language: string;
+    language: ProgrammingLanguage;
     selectedAttempt: Attempt;
     setSelectedAttempt: React.Dispatch<React.SetStateAction<Attempt | null>>;
+    preview: boolean;
+    setPreview: Function;
 }>) {
     return (
         <Modal
             className="flex justify-center items-center h-full w-full p-4"
-            open={selectedAttempt != null}
-            onClose={() => setSelectedAttempt(null)}
+            open={preview}
+            onClose={() => setPreview(false)}
         >
             <Box
                 className="bg-background p-4 h-full w-[50%]"
@@ -24,9 +28,9 @@ export default function SubmissionModal({
                 <CodeEditor
                     updateCode={null}
                     language={language}
-                    template="no template is needed"
-                    attempt={selectedAttempt}
                     options={{ readOnly: true }}
+                    codeOnEditor={selectedAttempt.code}
+                    readOnly={true}
                 />
             </Box>
         </Modal>

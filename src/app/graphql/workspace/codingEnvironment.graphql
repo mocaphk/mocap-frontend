@@ -1,0 +1,6 @@
+query getCodingEnvironmentByAssignmentId($assignmentId: ID!) {
+    codingEnvironments(assignmentId: $assignmentId) {
+        id
+        name
+    }
+}
