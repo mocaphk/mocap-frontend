@@ -13,7 +13,7 @@ export function UserEntry({
     deleteRequireConfirm,
 }: Readonly<UserEntryProps>) {
     return (
-        <Box className="flex flex-row w-full items-center rounded-2xl px-6 bg-[#f8fafc]">
+        <Box className="flex flex-row w-full items-center rounded-2xl px-6 py-1 bg-[#f8fafc]">
             <Grid container spacing={0} alignItems="center">
                 <Grid item xs={6} sm={4}>
                     <Typography color="info.main">{name}</Typography>
@@ -37,7 +37,7 @@ export function UserEntry({
                     requireConfirm={deleteRequireConfirm}
                 />
             ) : (
-                <Box className="w-14 h-14"></Box>
+                <Box className="w-10 h-10"></Box>
             )}
         </Box>
     );
