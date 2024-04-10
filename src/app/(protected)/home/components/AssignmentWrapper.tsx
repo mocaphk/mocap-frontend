@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 export default function AssignmentWrapper({
     dueDate,
-    assignemnts,
+    assignments,
 }: Readonly<AssignmentWrapperProps>) {
     return (
         <Box className="flex flex-col space-y-2">
@@ -18,7 +18,7 @@ export default function AssignmentWrapper({
                 </Typography>
             </Box>
             <Box className="flex flex-col space-y-2">
-                {assignemnts.map((assignment) => (
+                {assignments.map((assignment) => (
                     <AssignmentCard key={assignment.title} {...assignment} />
                 ))}
             </Box>

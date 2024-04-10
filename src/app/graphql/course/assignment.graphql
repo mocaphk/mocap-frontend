@@ -26,6 +26,18 @@ query GetAssignment($assignmentId: ID!) {
     }
 }
 
+query GetAssignmentBetween($startDate: String!, $endDate: String!) {
+    assignmentsBetween(startDate: $startDate, endDate: $endDate) {
+        id
+        title
+        dateDue
+        course {
+            code
+        }
+        completion
+    }
+}
+
 mutation CreateAssignment($assignmentInput: CreateAssignmentInput!) {
     createAssignment(assignmentInput: $assignmentInput) {
         id
