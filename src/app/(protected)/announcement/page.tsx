@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import AnnouncementNotFoundPage from "./pages/AnnouncementNotFoundPage";
 import DetailedAnnouncementPage from "./pages/DetailedAnnouncementPage";
 import NewAnnouncementPage from "./pages/NewAnnouncementPage";
 import LoadingAnnouncementPage from "./pages/LoadingAnnouncementPage";
 import { useGetAnnouncementQuery } from "@/app/graphql/course/announcement.graphql";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function AnnouncementPage() {
     const searchParams = useSearchParams();
@@ -70,6 +70,25 @@ export default function AnnouncementPage() {
         return <NewAnnouncementPage courseId={courseId} />;
     }
 
+    if (isNew && !isLecturerOrTutor) {
+        // if new, should check permission in new announcement page since that fetch course info, keep here for now
+        return (
+            <ErrorPage
+                title="No permission"
+                message="It appears that you do not have the necessary permissions to create an announcement for this course."
+                returnMessage="Back to course page"
+                returnLink="courses"
+            />
+        );
+    }
+
     // fall back to not found page, with a link back to course page, persist courseId param, if any
-    return <AnnouncementNotFoundPage courseId={courseId} />;
+    return (
+        <ErrorPage
+            title="Announcement not found"
+            message="Sorry, but the announcement you are searching for is not available."
+            returnLink={courseId ? `course?id=${courseId}` : "courses"}
+            returnMessage="Back to course page"
+        />
+    );
 }
