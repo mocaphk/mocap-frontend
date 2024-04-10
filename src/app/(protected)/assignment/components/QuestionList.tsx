@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import type { GetAssignmentQuery } from "@/app/graphql/course/assignment.graphql";
+import NoResultAlert from "@/app/errors/noResultAlert";
 
 export default function QuestionList({
     questions,
@@ -50,26 +51,30 @@ export default function QuestionList({
                 </Button>
             }
         >
-            <Box className="flex flex-col gap-3">
-                {questions.map((question) => {
-                    const isSubmitted = question.attempts.some(
-                        (attempt) => attempt.isSubmitted
-                    );
-                    const status: QuestionStatus = isSubmitted
-                        ? QuestionStatus.Submitted
-                        : QuestionStatus.Ongoing;
-                    return (
-                        <LinkButton
-                            key={question.id}
-                            Icon={LiveHelpIcon}
-                            title={question.title}
-                            description={question.description}
-                            statusIcon={questionStatusIconMap[status]}
-                            link={`/workspace?questionId=${question.id}`}
-                        />
-                    );
-                })}
-            </Box>
+            {questions.length === 0 ? (
+                <NoResultAlert />
+            ) : (
+                <Box className="flex flex-col gap-3">
+                    {questions.map((question) => {
+                        const isSubmitted = question.attempts.some(
+                            (attempt) => attempt.isSubmitted
+                        );
+                        const status: QuestionStatus = isSubmitted
+                            ? QuestionStatus.Submitted
+                            : QuestionStatus.Ongoing;
+                        return (
+                            <LinkButton
+                                key={question.id}
+                                Icon={LiveHelpIcon}
+                                title={question.title}
+                                description={question.description}
+                                statusIcon={questionStatusIconMap[status]}
+                                link={`/workspace?questionId=${question.id}`}
+                            />
+                        );
+                    })}
+                </Box>
+            )}
 
             <Dialog
                 onClose={() => setOpen(false)}

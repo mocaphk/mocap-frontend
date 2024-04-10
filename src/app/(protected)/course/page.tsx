@@ -27,18 +27,15 @@ import {
     useGetCourseUserRolesQuery,
 } from "@/app/graphql/course/course.graphql";
 import { useSearchParams } from "next/navigation";
-import NoResult from "@/app/errors/noResult";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
 import { AssignmentType, UserRole } from "@schema";
 import type { OverridableComponent } from "@mui/material/OverridableComponent";
 import Link from "next/link";
 import { AssignmentStatus } from "@/enums/assignmentStatus";
 import dayjs from "dayjs";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function CoursePage() {
-    // fetch admin permission
-    // TODO: Check permission
-
     const searchParams = useSearchParams();
 
     const id = searchParams.get("id") ?? "";
@@ -47,6 +44,7 @@ export default function CoursePage() {
         loading,
         error,
         data: courseData,
+        refetch,
     } = useGetCourseQuery({
         skip: !id,
         variables: { courseId: id },
@@ -109,42 +107,71 @@ export default function CoursePage() {
         document.title = course?.name ?? "Course";
     }, [course?.name]);
 
+    if (showErrorMessage) {
+        return (
+            <ErrorPage
+                title="Course not found"
+                message="Sorry, but the course you are searching for is not available."
+                returnLink="courses"
+                returnMessage="Back to course page"
+            />
+        );
+    }
+
     return (
         <CardWrapper>
-            {showErrorMessage ? (
-                <NoResult
-                    redirectTo="/courses"
-                    redirectToText="Back to courses page"
-                />
-            ) : (
-                <>
-                    <Box className="flex flex-row w-full items-start justify-between">
-                        <Box className="flex flex-col mb-5">
-                            {loading ? (
-                                <>
-                                    <CustomSkeleton width={500} />
-                                    <CustomSkeleton width={200} />
-                                </>
-                            ) : (
-                                <>
-                                    <Typography
-                                        fontSize="1.3rem"
-                                        fontWeight="medium"
-                                    >
-                                        {course?.code} {course?.name} (
-                                        {course?.year})
-                                    </Typography>
-                                    <Typography color="primary.main">
-                                        {course?.lecturers
-                                            .map(
-                                                (lecturer) => lecturer.username
-                                            )
-                                            .join(", ")}
-                                    </Typography>
-                                </>
-                            )}
-                        </Box>
-                        {isAdmin && (
+            <Box className="flex flex-row w-full items-start justify-between">
+                <Box className="flex flex-col mb-5">
+                    {loading ? (
+                        <>
+                            <CustomSkeleton width={500} />
+                            <CustomSkeleton width={200} />
+                        </>
+                    ) : (
+                        <>
+                            <Typography fontSize="1.3rem" fontWeight="medium">
+                                {course?.code} {course?.name} ({course?.year})
+                            </Typography>
+                            <Typography color="primary.main">
+                                {course?.lecturers
+                                    .map((lecturer) => lecturer.username)
+                                    .join(", ")}
+                            </Typography>
+                        </>
+                    )}
+                </Box>
+                {isAdmin && (
+                    <Button
+                        variant="outlined"
+                        sx={{
+                            borderRadius: 5,
+                            textTransform: "none",
+                            fontSize: 16,
+                        }}
+                        startIcon={<PeopleIcon />}
+                        onClick={() => setOpenManageUserFormPopup(true)}
+                    >
+                        Manage Student
+                    </Button>
+                )}
+            </Box>
+
+            <Box className="flex flex-col gap-7">
+                <CollapsibleComponentWrapper
+                    Icon={LinkIcon}
+                    title="Links"
+                    linkButtonsProps={course?.externalLinks.map<LinkButtonProps>(
+                        (link) => ({
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            Icon: LinkIcon,
+                            title: link.title,
+                            description: link.description,
+                            link: link.link,
+                        })
+                    )}
+                    displayAmount={3}
+                    actionButton={
+                        (isAdmin || isLecturer || isTutor) && (
                             <Button
                                 variant="outlined"
                                 sx={{
@@ -152,161 +179,127 @@ export default function CoursePage() {
                                     textTransform: "none",
                                     fontSize: 16,
                                 }}
-                                startIcon={<PeopleIcon />}
-                                onClick={() => setOpenManageUserFormPopup(true)}
+                                startIcon={<AddIcon />}
+                                onClick={() => setOpenLinkPopup(true)}
                             >
-                                Manage Student
+                                New Link
                             </Button>
-                        )}
-                    </Box>
+                        )
+                    }
+                    loading={loading}
+                />
 
-                    <Box className="flex flex-col gap-7">
-                        <CollapsibleComponentWrapper
-                            Icon={LinkIcon}
-                            title="Links"
-                            linkButtonsProps={course?.externalLinks.map<LinkButtonProps>(
-                                (link) => ({
-                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                    Icon: LinkIcon,
-                                    title: link.title,
-                                    description: link.description,
-                                    link: link.link,
-                                })
-                            )}
-                            displayAmount={3}
-                            actionButton={
-                                (isAdmin || isLecturer || isTutor) && (
-                                    <Button
-                                        variant="outlined"
-                                        sx={{
-                                            borderRadius: 5,
-                                            textTransform: "none",
-                                            fontSize: 16,
-                                        }}
-                                        startIcon={<AddIcon />}
-                                        onClick={() => setOpenLinkPopup(true)}
-                                    >
-                                        New Link
-                                    </Button>
+                <CollapsibleComponentWrapper
+                    Icon={CampaignIcon}
+                    title="Announcements"
+                    linkButtonsProps={course?.announcements.map<LinkButtonProps>(
+                        (announcement) => ({
+                            // eslint-disable-next-line @typescript-eslint/naming-convention
+                            Icon: CampaignIcon,
+                            title: announcement.title,
+                            description: announcement.createdAt,
+                            createdBy: announcement.createdBy.username,
+                            link: `announcement?id=${announcement.id}&courseId=${id}`,
+                        })
+                    )}
+                    displayAmount={2}
+                    actionButton={
+                        (isAdmin || isLecturer || isTutor) && (
+                            <Link
+                                href={`announcement?id=&courseId=${id}&new`}
+                                className="rounded-2xl"
+                            >
+                                <Button
+                                    variant="outlined"
+                                    sx={{
+                                        borderRadius: 5,
+                                        textTransform: "none",
+                                        fontSize: 16,
+                                    }}
+                                    startIcon={<AddIcon />}
+                                >
+                                    New Announcement
+                                </Button>
+                            </Link>
+                        )
+                    }
+                    loading={loading}
+                />
+
+                <CollapsibleComponentWrapper
+                    Icon={AssignmentIcon}
+                    title="Assignments"
+                    linkButtonsProps={course?.assignments?.map<LinkButtonProps>(
+                        (assignment) => {
+                            const { questions, dateDue } = assignment;
+                            const isCompleted = questions.every((question) =>
+                                question.attempts.some(
+                                    (attempt) => attempt.isSubmitted
                                 )
-                            }
-                            loading={loading}
-                        />
+                            );
+                            const status: AssignmentStatus = isCompleted
+                                ? AssignmentStatus.Completed
+                                : dayjs().isAfter(dayjs(dateDue))
+                                ? AssignmentStatus.Overdue
+                                : AssignmentStatus.Ongoing;
+                            return {
+                                // eslint-disable-next-line @typescript-eslint/naming-convention
+                                Icon: assignmentTypeIconMap[assignment.type],
+                                title: assignment.title,
+                                description: assignment.dateDue,
+                                statusIcon: statusIconMap[status],
+                                link: `assignment?id=${assignment.id}`,
+                            };
+                        }
+                    )}
+                    displayAmount={3}
+                    actionButton={
+                        (isAdmin || isLecturer || isTutor) && (
+                            <Button
+                                variant="outlined"
+                                sx={{
+                                    borderRadius: 5,
+                                    textTransform: "none",
+                                    fontSize: 16,
+                                }}
+                                startIcon={<AddIcon />}
+                                onClick={() => setOpenAssignmentPopup(true)}
+                            >
+                                New Assignment
+                            </Button>
+                        )
+                    }
+                    loading={loading}
+                />
+            </Box>
 
-                        <CollapsibleComponentWrapper
-                            Icon={CampaignIcon}
-                            title="Announcements"
-                            linkButtonsProps={course?.announcements.map<LinkButtonProps>(
-                                (announcement) => ({
-                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                    Icon: CampaignIcon,
-                                    title: announcement.title,
-                                    description: announcement.createdAt,
-                                    createdBy: announcement.createdBy.username,
-                                    link: `announcement?id=${announcement.id}&courseId=${id}`,
-                                })
-                            )}
-                            displayAmount={2}
-                            actionButton={
-                                (isAdmin || isLecturer || isTutor) && (
-                                    <Link
-                                        href={`announcement?id=&courseId=${id}&new`}
-                                        className="rounded-2xl"
-                                    >
-                                        <Button
-                                            variant="outlined"
-                                            sx={{
-                                                borderRadius: 5,
-                                                textTransform: "none",
-                                                fontSize: 16,
-                                            }}
-                                            startIcon={<AddIcon />}
-                                        >
-                                            New Announcement
-                                        </Button>
-                                    </Link>
-                                )
-                            }
-                            loading={loading}
-                        />
+            <Dialog
+                onClose={() => setOpenManageUserFormPopup(false)}
+                open={openManageUserFormPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <ManageUserForm courseId={id} />
+            </Dialog>
 
-                        <CollapsibleComponentWrapper
-                            Icon={AssignmentIcon}
-                            title="Assignments"
-                            linkButtonsProps={course?.assignments?.map<LinkButtonProps>(
-                                (assignment) => {
-                                    const { questions, dateDue } = assignment;
-                                    const isCompleted = questions.every(
-                                        (question) =>
-                                            question.attempts.some(
-                                                (attempt) => attempt.isSubmitted
-                                            )
-                                    );
-                                    const status: AssignmentStatus = isCompleted
-                                        ? AssignmentStatus.Completed
-                                        : dayjs().isAfter(dayjs(dateDue))
-                                        ? AssignmentStatus.Overdue
-                                        : AssignmentStatus.Ongoing;
-                                    return {
-                                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                                        Icon: assignmentTypeIconMap[
-                                            assignment.type
-                                        ],
-                                        title: assignment.title,
-                                        description: assignment.dateDue,
-                                        statusIcon: statusIconMap[status],
-                                        link: `assignment?id=${assignment.id}`,
-                                    };
-                                }
-                            )}
-                            displayAmount={3}
-                            actionButton={
-                                (isAdmin || isLecturer || isTutor) && (
-                                    <Button
-                                        variant="outlined"
-                                        sx={{
-                                            borderRadius: 5,
-                                            textTransform: "none",
-                                            fontSize: 16,
-                                        }}
-                                        startIcon={<AddIcon />}
-                                        onClick={() =>
-                                            setOpenAssignmentPopup(true)
-                                        }
-                                    >
-                                        New Assignment
-                                    </Button>
-                                )
-                            }
-                            loading={loading}
-                        />
-                    </Box>
+            <Dialog
+                onClose={() => setOpenLinkPopup(false)}
+                open={openLinkPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <NewLinkForm
+                    courseId={id}
+                    refetch={refetch}
+                    closeForm={() => setOpenLinkPopup(false)}
+                />
+            </Dialog>
 
-                    <Dialog
-                        onClose={() => setOpenManageUserFormPopup(false)}
-                        open={openManageUserFormPopup}
-                        PaperProps={{ sx: { borderRadius: 3 } }}
-                    >
-                        <ManageUserForm courseId={id} />
-                    </Dialog>
-
-                    <Dialog
-                        onClose={() => setOpenLinkPopup(false)}
-                        open={openLinkPopup}
-                        PaperProps={{ sx: { borderRadius: 3 } }}
-                    >
-                        <NewLinkForm courseId={id} />
-                    </Dialog>
-
-                    <Dialog
-                        onClose={() => setOpenAssignmentPopup(false)}
-                        open={openAssignmentPopup}
-                        PaperProps={{ sx: { borderRadius: 3 } }}
-                    >
-                        <NewAssignmentForm courseId={id} />
-                    </Dialog>
-                </>
-            )}
+            <Dialog
+                onClose={() => setOpenAssignmentPopup(false)}
+                open={openAssignmentPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <NewAssignmentForm courseId={id} />
+            </Dialog>
         </CardWrapper>
     );
 }

@@ -4,6 +4,6 @@ export interface ReadOnlyAnnouncementProps {
     createdBy: string;
     date: string;
     lastEdit: string;
-    isLecturerOrTutor: boolean;
+    allowEdit: boolean;
     setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }

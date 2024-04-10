@@ -8,6 +8,7 @@ import type { LinkButtonProps } from "@/app/types/LinkButtonProps";
 import LinkButton from "@/app/components/LinkButton";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
+import NoResultAlert from "@/app/errors/noResultAlert";
 
 // ref to mui transitions: https://mui.com/material-ui/transitions/
 
@@ -50,6 +51,8 @@ export default function CollapsibleComponentWrapper({
                         borderRadius: 5,
                     }}
                 />
+            ) : linkButtonsProps.length === 0 ? (
+                <NoResultAlert />
             ) : (
                 <>
                     <TransitionGroup className="flex flex-col gap-3 mb-3">

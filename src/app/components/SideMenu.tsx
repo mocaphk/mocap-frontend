@@ -28,6 +28,7 @@ interface MenuItem {
     text: string;
     icon: typeof SvgIcon;
     redirectPath?: string;
+    highlightForPath?: string;
     onClick?: () => void;
 }
 
@@ -38,26 +39,31 @@ const mainMenuItems: Array<MenuItem> = [
         text: "Home",
         icon: HomeIcon,
         redirectPath: "/home",
+        highlightForPath: "/home",
     },
     {
         text: "Workspace",
         icon: ComputerIcon,
         redirectPath: "/workspace",
+        highlightForPath: "/workspace",
     },
     {
         text: "Courses",
         icon: MenuBookIcon,
         redirectPath: "/courses",
+        highlightForPath: "/course",
     },
     {
         text: "Calendar",
         icon: CalendarMonthIcon,
         redirectPath: "/calendar",
+        highlightForPath: "/calendar",
     },
     {
         text: "Question Bank",
         icon: AccountBalanceIcon,
         redirectPath: "/questionBank",
+        highlightForPath: "/questionBank",
     },
 ];
 
@@ -131,8 +137,8 @@ function MenuListItem({
     const pathname = usePathname();
     const theme = useTheme();
 
-    const onPath: boolean = menuItem.redirectPath
-        ? pathname.includes(menuItem.redirectPath)
+    const highlight: boolean = menuItem.highlightForPath
+        ? pathname.includes(menuItem.highlightForPath)
         : false;
 
     const handleClick = () => {
@@ -154,7 +160,7 @@ function MenuListItem({
     };
 
     return (
-        <ListItem disablePadding sx={onPath ? activeMenuSx : defaultSx}>
+        <ListItem disablePadding sx={highlight ? activeMenuSx : defaultSx}>
             <ListItemButton
                 sx={{
                     minHeight: 48,
@@ -170,7 +176,7 @@ function MenuListItem({
                         justifyContent: "center",
                     }}
                 >
-                    <menuItem.icon color={onPath ? "primary" : "inherit"} />
+                    <menuItem.icon color={highlight ? "primary" : "inherit"} />
                 </ListItemIcon>
                 <ListItemText
                     primary={menuItem.text}

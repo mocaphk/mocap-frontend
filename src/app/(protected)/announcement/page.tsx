@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import AnnouncementNotFoundPage from "./pages/AnnouncementNotFoundPage";
 import DetailedAnnouncementPage from "./pages/DetailedAnnouncementPage";
 import NewAnnouncementPage from "./pages/NewAnnouncementPage";
 import LoadingAnnouncementPage from "./pages/LoadingAnnouncementPage";
 import { useGetAnnouncementQuery } from "@/app/graphql/course/announcement.graphql";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function AnnouncementPage() {
     const searchParams = useSearchParams();
@@ -13,10 +13,6 @@ export default function AnnouncementPage() {
     const id = searchParams.get("id") ?? "";
     const courseId = searchParams.get("courseId") ?? "";
     const isNew = searchParams.has("new");
-
-    // fetch admin permission
-    // TODO: Check permission
-    const isLecturerOrTutor = true;
 
     const {
         loading,
@@ -46,7 +42,6 @@ export default function AnnouncementPage() {
         return (
             <DetailedAnnouncementPage
                 isNew={false}
-                isLecturerOrTutor={isLecturerOrTutor}
                 id={id}
                 courseId={announcement?.course?.id ?? ""}
                 courseCode={announcement?.course?.code ?? ""}
@@ -66,10 +61,17 @@ export default function AnnouncementPage() {
     }
 
     // new announcement
-    if (isNew && isLecturerOrTutor) {
+    if (isNew) {
         return <NewAnnouncementPage courseId={courseId} />;
     }
 
     // fall back to not found page, with a link back to course page, persist courseId param, if any
-    return <AnnouncementNotFoundPage courseId={courseId} />;
+    return (
+        <ErrorPage
+            title="Announcement not found"
+            message="Sorry, but the announcement you are searching for is not available."
+            returnLink={courseId ? `course?id=${courseId}` : "courses"}
+            returnMessage="Back to course page"
+        />
+    );
 }

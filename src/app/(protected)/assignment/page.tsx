@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import AssignmentNotFoundPage from "./pages/AssignmentNotFoundPage";
 import DetailedAssignmentPage from "./pages/DetailedAssignmentPage";
 import { useGetAssignmentQuery } from "@/app/graphql/course/assignment.graphql";
 import LoadingAssignmentPage from "./pages/LoadingAssignmentPage";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function AssignmentPage() {
     const searchParams = useSearchParams();
@@ -36,5 +36,16 @@ export default function AssignmentPage() {
         return <DetailedAssignmentPage assignment={assignment} />;
     }
 
-    return <AssignmentNotFoundPage courseId={assignment?.course.id} />;
+    return (
+        <ErrorPage
+            title="Assignment not found"
+            message="Sorry, but the assignment you are searching for is not available."
+            returnLink={
+                assignment?.course.id
+                    ? `course?id=${assignment?.course.id}`
+                    : "courses"
+            }
+            returnMessage="Back to course page"
+        />
+    );
 }

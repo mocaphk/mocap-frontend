@@ -1,7 +1,7 @@
 import { useGetCourseTitleQuery } from "@/app/graphql/course/course.graphql";
 import DetailedAnnouncementPage from "./DetailedAnnouncementPage";
-import AnnouncementNotFoundPage from "./AnnouncementNotFoundPage";
 import LoadingAnnouncementPage from "./LoadingAnnouncementPage";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function NewAnnouncementPage({
     courseId,
@@ -35,7 +35,6 @@ export default function NewAnnouncementPage({
         return (
             <DetailedAnnouncementPage
                 isNew={true}
-                isLecturerOrTutor={true}
                 id={""}
                 courseId={course?.id ?? ""}
                 courseCode={course?.code ?? ""}
@@ -54,6 +53,12 @@ export default function NewAnnouncementPage({
         );
     }
 
-    // fall back to not found page, with a link back to course page, persist courseId param, if any
-    return <AnnouncementNotFoundPage courseId={courseId} />;
+    return (
+        <ErrorPage
+            title="Course not found"
+            message="It appears that the course you intended to link the announcement to does not exist."
+            returnMessage="Back to course page"
+            returnLink="/courses"
+        />
+    );
 }

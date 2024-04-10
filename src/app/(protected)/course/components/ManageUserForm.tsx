@@ -27,6 +27,7 @@ import type {
 } from "@schema";
 import { capitalizeFirstLetter } from "@/app/utils/string";
 import { useSession } from "next-auth/react";
+import NoResultAlert from "@/app/errors/noResultAlert";
 
 export default function ManageUserForm({
     courseId,
@@ -292,19 +293,27 @@ export default function ManageUserForm({
                     className="flex flex-col gap-3 min-h-[10rem] max-h-80 overflow-auto mx-3 my-3"
                     sx={{ scrollbarWidth: "thin" }}
                 >
-                    {courseUsers?.map((user) => (
-                        <UserEntry
-                            key={user.id}
-                            name={user.username}
-                            roles={user.roles}
-                            showDeleteButton={
-                                session?.user?.name !== user.username
-                            }
-                            deleteFunction={() => handleRemoveStudent(user.id)}
-                            deleteConfirmBoxContent={`Are you sure you want to remove ${user.username} from this course?`}
-                            deleteRequireConfirm={true}
-                        />
-                    ))}
+                    {!courseUsers || courseUsers.length === 0 ? (
+                        <NoResultAlert />
+                    ) : (
+                        <>
+                            {courseUsers?.map((user) => (
+                                <UserEntry
+                                    key={user.id}
+                                    name={user.username}
+                                    roles={user.roles}
+                                    showDeleteButton={
+                                        session?.user?.name !== user.username
+                                    }
+                                    deleteFunction={() =>
+                                        handleRemoveStudent(user.id)
+                                    }
+                                    deleteConfirmBoxContent={`Are you sure you want to remove ${user.username} from this course?`}
+                                    deleteRequireConfirm={true}
+                                />
+                            ))}
+                        </>
+                    )}
                 </Box>
             )}
         </>
