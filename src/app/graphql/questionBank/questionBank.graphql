@@ -1,0 +1,19 @@
+query SearchPublicQuestions(
+    $searchPublicQuestionsInput: SearchPublicQuestionsInput!
+) {
+    searchPublicQuestions(
+        searchPublicQuestionsInput: $searchPublicQuestionsInput
+    ) {
+        id
+        title
+        description
+        language
+        assignment {
+            course {
+                code
+                name
+                year
+            }
+        }
+    }
+}
