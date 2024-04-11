@@ -35,6 +35,12 @@ query GetAssignmentBetween($startDate: String!, $endDate: String!) {
             code
         }
         completion
+        
+query GetCouseIdByAssignmentId($assignmentId: ID!) {
+    assignment(id: $assignmentId) {
+        course {
+            id
+        }
     }
 }
 

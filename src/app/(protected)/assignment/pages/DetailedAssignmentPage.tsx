@@ -17,9 +17,17 @@ export default function DetailedAssignmentPage({
 }: Readonly<{
     assignment: NonNullable<GetAssignmentQuery["assignment"]>;
 }>) {
-    const { title, description, type, dateClose, dateDue, course, questions } =
-        assignment;
-    const { id, code } = course;
+    const {
+        id,
+        title,
+        description,
+        type,
+        dateClose,
+        dateDue,
+        course,
+        questions,
+    } = assignment;
+    const { id: courseId, code } = course;
     const isCompleted = questions.every((question) =>
         question.attempts.some((attempt) => attempt.isSubmitted)
     );
@@ -75,10 +83,13 @@ export default function DetailedAssignmentPage({
                     <Typography>{description}</Typography>
                 </Box>
 
-                <QuestionList questions={questions} />
+                <QuestionList
+                    assignmentId={assignment.id}
+                    questions={questions}
+                />
 
                 <Box className="mt-7">
-                    <MUILink href={`course?id=${id}`} underline="hover">
+                    <MUILink href={`course?id=${courseId}`} underline="hover">
                         « Back to course page
                     </MUILink>
                 </Box>

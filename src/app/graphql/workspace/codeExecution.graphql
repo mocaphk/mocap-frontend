@@ -1,0 +1,100 @@
+query RunAttempt($attemptId: ID!) {
+    runAttempt(attemptId: $attemptId) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}
+
+mutation SubmitAttempt($attemptId: ID!) {
+    submitAttempt(attemptId: $attemptId) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}
+
+query RunTestcase($attemptId: ID!, $testcaseId: ID!) {
+    runTestcase(attemptId: $attemptId, testcaseId: $testcaseId) {
+        id
+        output {
+            payload
+            streamType
+        }
+        sampleOutput {
+            payload
+            streamType
+        }
+        isExecutionSuccess
+        isCorrect
+        isExceedTimeLimit
+    }
+}
+
+query runTestcaseWithCode($questionId: ID!, $testcaseId: ID!, $code: String!) {
+    runTestcaseWithCode(
+        questionId: $questionId
+        testcaseId: $testcaseId
+        code: $code
+    ) {
+        id
+        output {
+            payload
+            streamType
+        }
+        sampleOutput {
+            payload
+            streamType
+        }
+        isExecutionSuccess
+        isCorrect
+        isExceedTimeLimit
+    }
+}
+
+query runAllTestcasesWithCode($questionId: ID!, $code: String!) {
+    runAllTestcasesWithCode(questionId: $questionId, code: $code) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}
