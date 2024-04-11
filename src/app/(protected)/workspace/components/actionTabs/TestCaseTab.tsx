@@ -335,7 +335,7 @@ export default function TestcaseTab({
                               <Chip
                                   key={testcase.tempId}
                                   id={testcase.tempId}
-                                  label={`Testcase ${i + 1}`}
+                                  label={`Test Ccase ${i + 1}`}
                                   color={
                                       selectedTestcase?.tempId ===
                                       testcase.tempId
@@ -364,7 +364,7 @@ export default function TestcaseTab({
                               <Chip
                                   key={testcase.tempId}
                                   id={testcase.tempId}
-                                  label={`Testcase ${i + 1}`}
+                                  label={`Test Case ${i + 1}`}
                                   color={
                                       selectedTestcase?.tempId ===
                                       testcase.tempId
