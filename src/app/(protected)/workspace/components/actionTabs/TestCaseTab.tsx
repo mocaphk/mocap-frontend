@@ -75,9 +75,9 @@ export default function TestcaseTab({
             const updatedSampleTestcases = prev.filter(
                 (testcase: { tempId: string }) => testcase.tempId !== tempId
             );
-            setSelectedTestcase(
-                updatedSampleTestcases[0] ?? customTestcases[0] ?? undefined
-            );
+            if (selectedTestcase?.tempId === tempId) {
+                setSelectedTestcase(updatedSampleTestcases[0] ?? undefined);
+            }
             return updatedSampleTestcases;
         });
         if (id !== "" && id !== undefined) {
@@ -99,9 +99,13 @@ export default function TestcaseTab({
             const updatedCustomTestcases = prev.filter(
                 (testcase: { tempId: string }) => testcase.tempId !== tempId
             );
-            setSelectedTestcase(
-                sampleTestcases[0] ?? updatedCustomTestcases[0] ?? undefined
-            );
+            if (selectedTestcase?.tempId === tempId) {
+                const nonHiddenTestcases = [
+                    ...sampleTestcases,
+                    ...updatedCustomTestcases,
+                ].filter((testcase) => !(testcase as SampleTestcase).isHidden);
+                setSelectedTestcase(nonHiddenTestcases[0] ?? undefined);
+            }
             return updatedCustomTestcases;
         });
         if (id !== "" && id !== undefined) {
@@ -335,7 +339,7 @@ export default function TestcaseTab({
                               <Chip
                                   key={testcase.tempId}
                                   id={testcase.tempId}
-                                  label={`Test Ccase ${i + 1}`}
+                                  label={`Test Case ${i + 1}`}
                                   color={
                                       selectedTestcase?.tempId ===
                                       testcase.tempId
