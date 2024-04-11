@@ -22,7 +22,7 @@ import {
     useUpdateAttemptMutation,
 } from "../../graphql/workspace/attempt.graphql";
 import { CheckingMethod, UserRole } from "@schema";
-import type { ProgrammingLanguage } from "@schema";
+import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { CustomTestcase, SampleTestcase } from "./types/Testcase";
@@ -282,7 +282,9 @@ export default function WorkspacePage() {
         }
     }, [questionIdFromUrl, attemptsRes]);
 
-    // eslint-disable-next-line unused-imports/no-unused-vars
+    // Run / submit attempt
+    const [results, setResults] = React.useState<CodeExecutionResult[]>([]);
+
     const [runAttemptFunc, { loading: runAttemptLoading }] =
         useRunAttemptLazyQuery({
             fetchPolicy: "network-only",
@@ -291,6 +293,7 @@ export default function WorkspacePage() {
             },
             onCompleted: (res) => {
                 console.log("run attempt result:", res.runAttempt.results);
+                setResults(res.runAttempt.results);
                 refetchAttempts();
             },
             onError: (error) => {
@@ -308,6 +311,7 @@ export default function WorkspacePage() {
                     "Submit attempt result:",
                     res.submitAttempt.results
                 );
+                setResults(res.submitAttempt.results);
                 refetchAttempts();
             },
             onError: (error) => {
@@ -765,6 +769,7 @@ export default function WorkspacePage() {
                             runTestcaseWithSampleCodeFunc={
                                 runTestcaseWithSampleCodeFunc
                             }
+                            results={results}
                         />
                     </Allotment.Pane>
                 </Allotment>

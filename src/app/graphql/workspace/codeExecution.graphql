@@ -11,9 +11,14 @@ query RunAttempt($attemptId: ID!) {
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }
@@ -32,9 +37,14 @@ mutation SubmitAttempt($attemptId: ID!) {
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }
