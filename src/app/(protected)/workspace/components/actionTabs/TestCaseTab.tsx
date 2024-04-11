@@ -154,8 +154,10 @@ export default function TestcaseTab({
         setSelectedTestcase(newTestcase);
     };
 
-    const handleAddArgument = (tempId: string, isCustom: boolean) => {
-        const setState = isCustom ? setCustomTestcases : setSampleTestcases;
+    const handleAddArgument = (tempId: string) => {
+        const setState = isSelectedCustomTestcase
+            ? setCustomTestcases
+            : setSampleTestcases;
         setState((prev: any[]) => {
             return prev.map((testcase) => {
                 if (testcase.tempId === tempId) {
@@ -173,12 +175,10 @@ export default function TestcaseTab({
         });
     };
 
-    const handleRemoveArgument = (
-        tempId: string,
-        index: number,
-        isCustom: boolean
-    ) => {
-        const setState = isCustom ? setCustomTestcases : setSampleTestcases;
+    const handleRemoveArgument = (tempId: string, index: number) => {
+        const setState = isSelectedCustomTestcase
+            ? setCustomTestcases
+            : setSampleTestcases;
         setState((prev: any[]) => {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             const filterInput = (_: any, i: number) => i !== index;
@@ -214,7 +214,7 @@ export default function TestcaseTab({
 
     // eslint-disable-next-line unused-imports/no-unused-vars
 
-    const handleRunClick = async (isCustom: boolean) => {
+    const handleRunClick = async () => {
         let expectedOutput = selectedTestcase?.expectedOutput;
         let output = selectedTestcase?.output;
 
@@ -259,7 +259,9 @@ export default function TestcaseTab({
                 .join("\n");
         }
 
-        const setState = isCustom ? setCustomTestcases : setSampleTestcases;
+        const setState = isSelectedCustomTestcase
+            ? setCustomTestcases
+            : setSampleTestcases;
         setState((prev: any[]) => {
             return prev.map((testcase) => {
                 if (testcase.id === selectedTestcase?.id) {
@@ -278,19 +280,15 @@ export default function TestcaseTab({
         });
     };
 
-    const handleCheck = () => {
-        console.log("check is clicked");
-        console.log("selectedTestcase", selectedTestcase);
-    };
-
     const updateTestcaseInput = (
         tempId: string,
         index: number,
         key: keyof TestcaseInputEntry,
-        value: string,
-        isCustom: boolean
+        value: string
     ) => {
-        const setState = isCustom ? setCustomTestcases : setSampleTestcases;
+        const setState = isSelectedCustomTestcase
+            ? setCustomTestcases
+            : setSampleTestcases;
         setState((prev: any[]) => {
             return prev.map((testcase) => {
                 if (testcase.tempId === tempId) {
@@ -446,15 +444,7 @@ export default function TestcaseTab({
                                 )}
                                 <IconButton
                                     color="primary"
-                                    onClick={() =>
-                                        handleRunClick(
-                                            customTestcases.find(
-                                                (customTestcase) =>
-                                                    customTestcase.id ===
-                                                    selectedTestcase.id
-                                            ) !== undefined
-                                        )
-                                    }
+                                    onClick={() => handleRunClick()}
                                 >
                                     <PlayCircleOutlineIcon />
                                 </IconButton>
@@ -476,25 +466,14 @@ export default function TestcaseTab({
                                         InputProps={{
                                             readOnly:
                                                 !isEditing &&
-                                                sampleTestcases.find(
-                                                    (testcase: {
-                                                        id: string;
-                                                    }) =>
-                                                        testcase.id ===
-                                                        selectedTestcase.id
-                                                ) !== undefined,
+                                                isSelectedSampleTestcase,
                                         }}
                                         onChange={(e) => {
                                             updateTestcaseInput(
                                                 selectedTestcase.tempId,
                                                 index,
                                                 "name",
-                                                e.target.value,
-                                                customTestcases.find(
-                                                    (customTestcase) =>
-                                                        customTestcase.id ===
-                                                        selectedTestcase.id
-                                                ) !== undefined
+                                                e.target.value
                                             );
                                         }}
                                         autoComplete="off"
@@ -509,25 +488,14 @@ export default function TestcaseTab({
                                         InputProps={{
                                             readOnly:
                                                 !isEditing &&
-                                                sampleTestcases.find(
-                                                    (testcase: {
-                                                        id: string;
-                                                    }) =>
-                                                        testcase.id ===
-                                                        selectedTestcase.id
-                                                ) !== undefined,
+                                                isSelectedSampleTestcase,
                                         }}
                                         onChange={(e) => {
                                             updateTestcaseInput(
                                                 selectedTestcase.tempId,
                                                 index,
                                                 "value",
-                                                e.target.value,
-                                                customTestcases.find(
-                                                    (customTestcase) =>
-                                                        customTestcase.id ===
-                                                        selectedTestcase.id
-                                                ) !== undefined
+                                                e.target.value
                                             );
                                         }}
                                         autoComplete="off"
@@ -538,12 +506,7 @@ export default function TestcaseTab({
                                             onClick={() =>
                                                 handleRemoveArgument(
                                                     selectedTestcase.tempId,
-                                                    index,
-                                                    customTestcases.find(
-                                                        (customTestcase) =>
-                                                            customTestcase.id ===
-                                                            selectedTestcase.id
-                                                    ) !== undefined
+                                                    index
                                                 )
                                             }
                                         >
@@ -563,14 +526,7 @@ export default function TestcaseTab({
                                 color="primary"
                                 variant="contained"
                                 onClick={() =>
-                                    handleAddArgument(
-                                        selectedTestcase.tempId,
-                                        customTestcases.find(
-                                            (customTestcase) =>
-                                                customTestcase.id ===
-                                                selectedTestcase.id
-                                        ) !== undefined
-                                    )
+                                    handleAddArgument(selectedTestcase.tempId)
                                 }
                             >
                                 <AddIcon />
@@ -629,7 +585,6 @@ export default function TestcaseTab({
                     </Box>
                 </Box>
             )}
-            <Button onClick={handleCheck}>check</Button>
         </Box>
     );
 }

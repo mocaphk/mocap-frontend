@@ -13,6 +13,7 @@ export default function QuestionCard({
     question,
     isEditing,
     setIsEditing,
+    allowEditOrCreate,
     editedQuestion,
     setEditedQuestion,
     onDeleteQuestion,
@@ -25,6 +26,7 @@ export default function QuestionCard({
     question: Question;
     isEditing: boolean;
     setIsEditing: Function;
+    allowEditOrCreate: boolean;
     editedQuestion: Question;
     setEditedQuestion: Function;
     onDeleteQuestion: Function;
@@ -117,7 +119,7 @@ export default function QuestionCard({
                 >
                     « Back to assignment page
                 </MUILink>
-                {isEditing ? (
+                {allowEditOrCreate && isEditing ? (
                     <EditQuestionTab
                         editedQuestion={editedQuestion}
                         setEditedQuestion={setEditedQuestion}
@@ -127,6 +129,7 @@ export default function QuestionCard({
                     />
                 ) : (
                     <QuestionTab
+                        allowEditOrCreate={allowEditOrCreate}
                         question={question}
                         handleDeleteClick={handleDeleteClick}
                         handleEditClick={handleEditClick}

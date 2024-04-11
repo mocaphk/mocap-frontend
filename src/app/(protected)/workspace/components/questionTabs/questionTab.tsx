@@ -7,10 +7,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 
 export default function QuestionTab({
+    allowEditOrCreate,
     question,
     handleDeleteClick,
     handleEditClick,
 }: Readonly<{
+    allowEditOrCreate: boolean;
     question: Question;
     handleDeleteClick: Function;
     handleEditClick: Function;
@@ -20,17 +22,19 @@ export default function QuestionTab({
             title={question.title}
             Icon={LiveHelpIcon}
             actionButton={
-                <Box className="flex flex-row gap-2">
-                    <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick()}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleEditClick()}>
-                        <EditIcon />
-                    </IconButton>
-                </Box>
+                allowEditOrCreate && (
+                    <Box className="flex flex-row gap-2">
+                        <IconButton
+                            color="error"
+                            onClick={() => handleDeleteClick()}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleEditClick()}>
+                            <EditIcon />
+                        </IconButton>
+                    </Box>
+                )
             }
         >
             <Box>{question.description}</Box>

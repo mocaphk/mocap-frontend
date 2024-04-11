@@ -21,7 +21,7 @@ import {
     useGetAttemptsByQuestionIdQuery,
     useUpdateAttemptMutation,
 } from "../../graphql/workspace/attempt.graphql";
-import { CheckingMethod } from "@schema";
+import { CheckingMethod, UserRole } from "@schema";
 import type { ProgrammingLanguage } from "@schema";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -44,16 +44,52 @@ import {
     useRunTestcaseWithCodeLazyQuery,
     useSubmitAttemptMutation,
 } from "@/app/graphql/workspace/codeExecution.graphql";
+import { useGetCouseIdByAssignmentIdQuery } from "@/app/graphql/course/assignment.graphql";
+import type { GetCouseIdByAssignmentIdQuery } from "@/app/graphql/course/assignment.graphql";
+import { useGetCourseUserRolesLazyQuery } from "@/app/graphql/course/course.graphql";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function WorkspacePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const questionIdFromUrl = searchParams.get("questionId");
 
+    const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
+
     // Assignment related states
     const [assignmentId, setAssignmentId] = React.useState(
         searchParams.get("assignmentId") ?? ""
     );
+
+    // get courseId by assignmentId
+    const { refetch: refetchCourseId } = useGetCouseIdByAssignmentIdQuery({
+        variables: { assignmentId: assignmentId },
+        skip: assignmentId === "",
+        onCompleted: (data: GetCouseIdByAssignmentIdQuery) => {
+            getRolesDataFunc({
+                variables: { courseId: data.assignment?.course.id ?? "" },
+            });
+            console.log("Course Id from server:", data.assignment?.course.id);
+        },
+    });
+
+    const [getRolesDataFunc] = useGetCourseUserRolesLazyQuery({
+        fetchPolicy: "network-only",
+        onCompleted: (res) => {
+            console.log("Roles from server:", res.getCourseUserRoles);
+            const roles = res.getCourseUserRoles;
+            const isAdmin = roles?.includes(UserRole.Admin) ?? false;
+            const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
+            const isTutor = roles?.includes(UserRole.Tutor) ?? false;
+
+            const allowEditOrCreate = isAdmin || isLecturer || isTutor;
+            setAllowEditOrCreate(allowEditOrCreate);
+        },
+    });
+
+    React.useEffect(() => {
+        refetchCourseId();
+    }, [assignmentId, refetchCourseId]);
 
     // Question related states
     const [isNewQuestion, setIsNewQuestion] = React.useState(
@@ -271,6 +307,7 @@ export default function WorkspacePage() {
                     "Submit attempt result:",
                     res.submitAttempt.results
                 );
+                refetchAttempts();
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -659,6 +696,21 @@ export default function WorkspacePage() {
         }));
     };
 
+    // Error page
+    if (
+        (!allowEditOrCreate && isEditing) ||
+        (!allowEditOrCreate && isNewQuestion)
+    ) {
+        return (
+            <ErrorPage
+                title="No permission"
+                message="It appears that you do not have the necessary permissions to create or edit the question for this course."
+                returnMessage="Back to assignment page"
+                returnLink={`assignmnet?id=${assignmentId}`}
+            />
+        );
+    }
+
     return (
         <Box className="flex h-full">
             <Backdrop open={isLoading} style={{ zIndex: 9999, color: "#fff" }}>
@@ -672,6 +724,7 @@ export default function WorkspacePage() {
                             question={question}
                             isEditing={isEditing}
                             setIsEditing={setIsEditing}
+                            allowEditOrCreate={allowEditOrCreate}
                             editedQuestion={editedQuestion}
                             setEditedQuestion={setEditedQuestion}
                             onDeleteQuestion={deleteQuestion}

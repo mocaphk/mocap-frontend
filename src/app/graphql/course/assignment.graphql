@@ -26,6 +26,14 @@ query GetAssignment($assignmentId: ID!) {
     }
 }
 
+query GetCouseIdByAssignmentId($assignmentId: ID!) {
+    assignment(id: $assignmentId) {
+        course {
+            id
+        }
+    }
+}
+
 mutation CreateAssignment($assignmentInput: CreateAssignmentInput!) {
     createAssignment(assignmentInput: $assignmentInput) {
         id
