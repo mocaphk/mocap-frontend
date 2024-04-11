@@ -285,6 +285,7 @@ export default function WorkspacePage() {
     // eslint-disable-next-line unused-imports/no-unused-vars
     const [runAttemptFunc, { loading: runAttemptLoading }] =
         useRunAttemptLazyQuery({
+            fetchPolicy: "network-only",
             variables: {
                 attemptId: currentAttempt.id ?? "",
             },
