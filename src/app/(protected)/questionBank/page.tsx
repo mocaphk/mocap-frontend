@@ -44,7 +44,7 @@ export default function QuestionBankPage() {
         const formData = new FormData(event.target as HTMLFormElement);
         const formValues = Object.fromEntries(
             formData.entries()
-        ) as unknown as SearchPublicQuestionsInput;
+        ) as SearchPublicQuestionsInput;
 
         refreshQuestions({
             searchPublicQuestionsInput: formValues,
@@ -91,7 +91,7 @@ export default function QuestionBankPage() {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={12} md={7}>
-                                    <Box className="flex flex-row">
+                                    <Box className="flex flex-row items-center gap-2">
                                         <TextField
                                             id="keyword"
                                             name="keyword"
@@ -101,8 +101,8 @@ export default function QuestionBankPage() {
                                             autoComplete="off"
                                         />
                                         <IconButton
+                                            className="w-fit h-fit"
                                             color="info"
-                                            sx={{ m: 1 }}
                                             aria-label="search"
                                             type="submit"
                                         >
