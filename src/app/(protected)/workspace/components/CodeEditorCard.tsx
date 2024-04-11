@@ -11,6 +11,7 @@ import CardWrapper from "@/app/components/CardWrapper";
 export default function CodeEditorCard({
     question,
     isEditing,
+    allowEditOrCreate,
     updateSampleCode,
     codeOnEditor,
     setCodeOnEditor,
@@ -21,6 +22,7 @@ export default function CodeEditorCard({
 }: Readonly<{
     question: Question;
     isEditing: boolean;
+    allowEditOrCreate: boolean;
     updateSampleCode: Function;
     codeOnEditor: string;
     setCodeOnEditor: Function;
@@ -73,21 +75,6 @@ export default function CodeEditorCard({
         );
     };
 
-    const handleSaveClick = async () => {
-        if (codeOnEditor.trim()) {
-            await createOrUpdateAttempt(false);
-        } else {
-            let confirmMSG = confirm(
-                "The code is empty, are you sure to save it?"
-            );
-            if (confirmMSG) {
-                await createOrUpdateAttempt(false);
-            } else {
-                console.log("cancel save");
-            }
-        }
-    };
-
     const handleRunClick = async () => {
         if (codeOnEditor.trim()) {
             await runAttempt();
@@ -131,15 +118,6 @@ export default function CodeEditorCard({
                 </Box>
                 <Box className="flex w-full h-fit space-x-6 justify-end">
                     <Button
-                        className="h-fit w-36"
-                        color="primary"
-                        variant="contained"
-                        onClick={handleSaveClick}
-                    >
-                        <SaveIcon />
-                        <Typography className="p-2">Save</Typography>
-                    </Button>
-                    <Button
                         className="w-36"
                         color="primary"
                         variant="contained"
@@ -149,7 +127,7 @@ export default function CodeEditorCard({
                         <Typography className="p-2">Run</Typography>
                     </Button>
 
-                    {!isEditing && (
+                    {!isEditing && !allowEditOrCreate && (
                         <Button
                             className="w-36"
                             color="primary"

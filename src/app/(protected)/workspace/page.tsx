@@ -737,6 +737,7 @@ export default function WorkspacePage() {
                     <Allotment.Pane className="p-1" preferredSize="50%">
                         <ActionCard
                             isEditing={isEditing}
+                            allowEditOrCreate={allowEditOrCreate}
                             language={question.language}
                             attemptsList={attemptsList}
                             setCurrentAttempt={setCurrentAttempt}
@@ -770,6 +771,7 @@ export default function WorkspacePage() {
                     <CodeEditorCard
                         question={question}
                         isEditing={isEditing}
+                        allowEditOrCreate={allowEditOrCreate}
                         updateSampleCode={handleCodeChange}
                         codeOnEditor={codeOnEditor}
                         setCodeOnEditor={setCodeOnEditor}

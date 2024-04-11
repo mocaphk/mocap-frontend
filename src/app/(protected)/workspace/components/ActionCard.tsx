@@ -12,6 +12,7 @@ import type { CustomTestcase, SampleTestcase } from "../types/Testcase";
 
 export default function ActionCard({
     isEditing,
+    allowEditOrCreate,
     language,
     attemptsList,
     setCurrentAttempt,
@@ -34,6 +35,7 @@ export default function ActionCard({
     runTestcaseWithSampleCodeFunc,
 }: Readonly<{
     isEditing: boolean;
+    allowEditOrCreate: boolean;
     language: ProgrammingLanguage;
     attemptsList: Attempt[];
     setCurrentAttempt: Function;
@@ -97,12 +99,15 @@ export default function ActionCard({
                             icon={<ScienceIcon />}
                             iconPosition="start"
                         />
-                        <Tab
-                            label="Submission"
-                            value="submission"
-                            icon={<PublishIcon />}
-                            iconPosition="start"
-                        />
+                        {/* show submission only if the user is student*/}
+                        {!allowEditOrCreate && (
+                            <Tab
+                                label="Submission"
+                                value="submission"
+                                icon={<PublishIcon />}
+                                iconPosition="start"
+                            />
+                        )}
                     </TabList>
 
                     <Box className="flex-grow">
