@@ -2,7 +2,6 @@ import Button from "@mui/material/Button";
 import { Box, Typography } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PublishIcon from "@mui/icons-material/Publish";
-import SaveIcon from "@mui/icons-material/Save";
 import CodeEditor from "./CodeEditor";
 import type { Question } from "../types/Question";
 import React from "react";
