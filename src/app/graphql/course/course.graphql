@@ -80,6 +80,10 @@ query GetCourses {
     }
 }
 
+query GetCourseCodes {
+    courseCodes
+}
+
 query GetUsersNotInCourse($courseId: ID!) {
     usersNotInCourse(id: $courseId) {
         id
