@@ -84,6 +84,13 @@ query GetCourseCodes {
     courseCodes
 }
 
+query GetCoursesCompletion {
+    courses {
+        code
+        completion
+    }
+}
+
 query GetUsersNotInCourse($courseId: ID!) {
     usersNotInCourse(id: $courseId) {
         id
