@@ -1,6 +1,7 @@
 export interface AssignmentCardProps {
+    id: string;
     title: string;
     courseCode: string;
-    dueTime: string;
-    barColor: string;
+    dateDue: string;
+    completion: number;
 }

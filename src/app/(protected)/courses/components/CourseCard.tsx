@@ -29,7 +29,8 @@ export default function CourseCard({
                 <Typography
                     color="text.secondary"
                     fontSize="1rem"
-                    lineHeight="2rem"
+                    lineHeight="1.5rem"
+                    marginTop="0.3rem"
                 >
                     {description}
                 </Typography>

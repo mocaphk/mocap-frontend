@@ -30,33 +30,39 @@ export default function CourseCard({
             }}
             barColor={barColor}
         >
-            <Box className="flex flex-col w-full mt-1">
-                <Typography fontSize="1.1rem" lineHeight="1.3rem">
-                    {code} {name} ({year})
-                </Typography>
-                <Typography color="text.secondary" fontSize="0.8rem">
-                    {description}
-                </Typography>
-            </Box>
-            <Box flexGrow={1} />
-            <Box className="flex flex-col items-end">
-                <Typography
-                    marginBottom="0.4rem"
-                    color="primary"
-                    fontSize="0.9rem"
-                >
-                    {createdBy}
-                </Typography>
-                <Link href={`course?id=${id}`}>
-                    <Button
-                        size="small"
-                        variant="contained"
-                        startIcon={<KeyboardReturnIcon />}
-                        sx={{ fontSize: "0.9rem", textTransform: "none" }}
+            <Box className="flex flex-col h-full w-full justify-between">
+                <Box className="flex flex-col flex-shrink min-h-0 max-w-[173px] w-full mt-1 overflow-hidden">
+                    <Typography fontSize="1.1rem" lineHeight="1.3rem">
+                        {code} {name} ({year})
+                    </Typography>
+                    <Typography
+                        color="text.secondary"
+                        fontSize="0.8rem"
+                        textOverflow="ellipsis"
+                        sx={{ wordWrap: "break-word" }}
                     >
-                        Enter Course
-                    </Button>
-                </Link>
+                        {description}
+                    </Typography>
+                </Box>
+                <Box className="flex flex-col flex-shrink-0 justify-end items-end pt-2">
+                    <Typography
+                        marginBottom="0.4rem"
+                        color="primary"
+                        fontSize="0.9rem"
+                    >
+                        {createdBy}
+                    </Typography>
+                    <Link href={`course?id=${id}`}>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            startIcon={<KeyboardReturnIcon />}
+                            sx={{ fontSize: "0.9rem", textTransform: "none" }}
+                        >
+                            Enter Course
+                        </Button>
+                    </Link>
+                </Box>
             </Box>
         </ColoredBarCard>
     );
