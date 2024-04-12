@@ -7,6 +7,8 @@ import {
     TextField,
     InputLabel,
     Tooltip,
+    Checkbox,
+    FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,7 +22,7 @@ import type {
     TestcaseInputEntry,
 } from "../../types/Testcase";
 import { v4 as uuidv4 } from "uuid";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import ReactDiffViewer from "react-diff-viewer";
 
 export default function TestcaseTab({
     isEditing,
@@ -30,7 +32,6 @@ export default function TestcaseTab({
     setSampleTestcases,
     setCustomTestcases,
     setSelectedTestcase,
-    deleteSampleTestcaseFunc,
     deleteCustomTestcaseFunc,
     createAndUpdateSampleTestcasesFunc,
     createCustomTestcasesFunc,
@@ -48,7 +49,6 @@ export default function TestcaseTab({
     setSampleTestcases: Function;
     setCustomTestcases: Function;
     setSelectedTestcase: Function;
-    deleteSampleTestcaseFunc: Function;
     deleteCustomTestcaseFunc: Function;
     createAndUpdateSampleTestcasesFunc: Function;
     createCustomTestcasesFunc: Function;
@@ -577,32 +577,16 @@ export default function TestcaseTab({
                             label="Is Hidden"
                         />
                     )}
-                    <Box paddingBottom={1}>
-                        <InputLabel>Sample output:</InputLabel>
-                        <TextField
-                            className="w-full"
-                            id="expected-output"
-                            variant="outlined"
-                            value={selectedTestcase?.expectedOutput ?? ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            multiline
+                    {(selectedTestcase.expectedOutput ||
+                        selectedTestcase.output) && (
+                        <ReactDiffViewer
+                            leftTitle="Expected Output"
+                            rightTitle="Your Output"
+                            oldValue={selectedTestcase.expectedOutput}
+                            newValue={selectedTestcase.output}
+                            splitView={true}
                         />
-                    </Box>
-                    <Box>
-                        <InputLabel>Output:</InputLabel>
-                        <TextField
-                            className="w-full"
-                            id="output"
-                            variant="outlined"
-                            value={selectedTestcase?.output ?? ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            multiline
-                        />
-                    </Box>
+                    )}
                 </Box>
             )}
         </Box>
