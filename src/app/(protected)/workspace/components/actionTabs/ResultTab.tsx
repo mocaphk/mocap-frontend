@@ -60,9 +60,6 @@ function ResultBar({
         }
     }
 
-    console.log(`iscorrect: ${!!result.isCorrect}`);
-    console.log(`!iscorrect: ${!result.isCorrect}`);
-
     return (
         <Box className="">
             <Alert

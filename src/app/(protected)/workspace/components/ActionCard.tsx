@@ -4,12 +4,13 @@ import TestCaseTab from "./actionTabs/TestCaseTab";
 import SubmissionTab from "./actionTabs/SubmissionTab";
 import { useTheme } from "@mui/material/styles";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import ScienceIcon from "@mui/icons-material/Science";
-import PublishIcon from "@mui/icons-material/Publish";
 import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import type { Attempt } from "../types/Attempt";
 import type { CustomTestcase, SampleTestcase } from "../types/Testcase";
 import ResultTab from "./actionTabs/ResultTab";
+import ScienceIcon from "@mui/icons-material/Science";
+import PublishIcon from "@mui/icons-material/Publish";
+import RuleIcon from "@mui/icons-material/Rule";
 
 export default function ActionCard({
     isEditing,
@@ -107,14 +108,12 @@ export default function ActionCard({
                                 iconPosition="start"
                             />
                         )}
-                        {
-                            <Tab
-                                label="Result"
-                                value="result"
-                                icon={<PublishIcon />}
-                                iconPosition="start"
-                            />
-                        }
+                        <Tab
+                            label="Result"
+                            value="result"
+                            icon={<RuleIcon />}
+                            iconPosition="start"
+                        />
                     </TabList>
 
                     <Box className="flex-grow">
