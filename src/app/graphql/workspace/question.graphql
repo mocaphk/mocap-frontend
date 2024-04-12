@@ -15,6 +15,7 @@ query GetQuestion($questionId: ID) {
         assignment {
             id
         }
+        isPublic
     }
 }
 

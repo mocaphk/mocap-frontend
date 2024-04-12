@@ -80,7 +80,7 @@ export default function CodeEditorCard({
     };
 
     const handleRunClick = async () => {
-        if (codeOnEditor.trim()) {
+        if (codeOnEditor?.trim()) {
             await runAttempt();
         } else {
             let confirmMSG = confirm(
@@ -95,7 +95,7 @@ export default function CodeEditorCard({
     };
 
     const handleSubmitClick = async () => {
-        if (codeOnEditor.trim()) {
+        if (codeOnEditor?.trim()) {
             await submitAttempt();
         } else {
             let confirmMSG = confirm(

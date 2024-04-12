@@ -5,9 +5,12 @@ import {
     FormControl,
     IconButton,
     Autocomplete,
+    Checkbox,
+    FormControlLabel,
 } from "@mui/material";
 import ConfirmIconButton from "@/app/components/ConfirmIconButton";
-import { ProgrammingLanguage } from "@schema";
+import { ProgrammingLanguage} from "@schema";
+import type {Question} from "@schema"; 
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -21,7 +24,7 @@ export default function EditQuestionTab({
     handleDeleteClick,
     codingEnvironments,
 }: Readonly<{
-    editedQuestion: any;
+    editedQuestion: Question;
     setEditedQuestion: Function;
     handleSaveClick: Function;
     handleCancelClick: Function;
@@ -191,7 +194,21 @@ export default function EditQuestionTab({
                 }
                 fullWidth
             />
-            {/* ToDo: add is public */}
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={editedQuestion.isPublic ?? true}
+                        onChange={(e) =>
+                            setEditedQuestion({
+                                ...editedQuestion,
+                                isPublic: e.target.checked,
+                            })
+                        }
+                        color="primary"
+                    />
+                }
+                label="Public"
+            />
         </Box>
     );
 }

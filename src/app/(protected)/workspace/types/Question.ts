@@ -13,4 +13,5 @@ export interface Question {
     timeLimit: number;
     testcases: Array<SampleTestcase>;
     codingEnvironmentId: string | null | undefined;
+    isPublic: boolean;
 }

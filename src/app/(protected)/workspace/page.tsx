@@ -106,6 +106,8 @@ export default function WorkspacePage() {
     newQuestion.description = "";
     newQuestion.sampleCode = "";
     newQuestion.checkingMethod = CheckingMethod.Console;
+    newQuestion.isPublic = true;
+
     const [editedQuestion, setEditedQuestion] = React.useState<Question>(
         questionIdFromUrl == "" ? newQuestion : question
     );
@@ -136,6 +138,7 @@ export default function WorkspacePage() {
                 assignmentId: res.question?.assignment?.id!,
                 testcases: [],
                 codingEnvironmentId: res.question?.codingEnvironment?.id,
+                isPublic: res.question?.isPublic,
             });
             setAssignmentId(res.question?.assignment?.id!);
         }
@@ -184,6 +187,7 @@ export default function WorkspacePage() {
                     testcases: [],
                     codingEnvironmentId:
                         response.data.question?.codingEnvironment?.id,
+                    isPublic: response.data.question?.isPublic!,
                 });
             });
         },

@@ -91,6 +91,7 @@ export default function QuestionCard({
         editedQuestion.codingEnvironmentId = question.codingEnvironmentId;
         editedQuestion.execCommand = question.execCommand;
         editedQuestion.timeLimit = question.timeLimit;
+        editedQuestion.isPublic = question.isPublic;
         setIsEditing(true);
         setEditedQuestion(editedQuestion);
         updateSelectedTestcase(true);
