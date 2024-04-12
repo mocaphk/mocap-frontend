@@ -77,9 +77,6 @@ export default function TestcaseTab({
             }
             return updatedSampleTestcases;
         });
-        if (id !== "" && id !== undefined) {
-            deleteSampleTestcaseFunc({ variables: { testcaseId: id } });
-        }
     };
 
     const handleCustomChipClick = (tempId: string) => {
