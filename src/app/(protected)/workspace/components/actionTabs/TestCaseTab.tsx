@@ -231,14 +231,11 @@ export default function TestcaseTab({
         let output = selectedTestcase?.output;
 
         if (isEditing) {
-            console.log("Running testcases with sample code");
-            console.log("questionId", questionId);
-            console.log("testcaseId", selectedTestcase?.id);
-            console.log("code", codeOnEditor);
+            const testcaseInput = selectedTestcase?.input;
             const runRes = await runTestcaseWithSampleCodeFunc({
                 variables: {
                     questionId: questionId,
-                    testcaseId: selectedTestcase?.id,
+                    testcaseInput: testcaseInput,
                     code: codeOnEditor,
                 },
             });
@@ -249,16 +246,13 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcaseWithCode.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
-        } else if (
-            selectedTestcase?.id !== "" &&
-            selectedTestcase?.id !== undefined
-        ) {
+        } else{
             const createOrUpdateAttemptId = await createOrUpdateAttempt(false);
 
             const runRes = await runTestcaseFunc({
                 variables: {
                     attemptId: createOrUpdateAttemptId,
-                    testcaseId: selectedTestcase?.id,
+                    testcaseInput: selectedTestcase?.input,
                 },
             });
 

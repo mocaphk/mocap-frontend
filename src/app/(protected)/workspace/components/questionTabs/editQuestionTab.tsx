@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import ConfirmIconButton from "@/app/components/ConfirmIconButton";
 import { ProgrammingLanguage} from "@schema";
-import type {Question} from "@schema"; 
+import type {Question} from "../../types/Question"; 
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";

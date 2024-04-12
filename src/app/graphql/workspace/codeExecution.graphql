@@ -1,5 +1,5 @@
-query RunAttempt($attemptId: ID!) {
-    runAttempt(attemptId: $attemptId) {
+query RunAttempt($attemptId: ID!, $testcaseInputs: [[TestcaseInputEntryInput!]!]!) {
+    runAttempt(attemptId: $attemptId, testcaseInputs: $testcaseInputs) {
         id
         results {
             id
@@ -40,8 +40,8 @@ mutation SubmitAttempt($attemptId: ID!) {
     }
 }
 
-query RunTestcase($attemptId: ID!, $testcaseId: ID!) {
-    runTestcase(attemptId: $attemptId, testcaseId: $testcaseId) {
+query RunTestcase($attemptId: ID!, $testcaseInput: [TestcaseInputEntryInput!]!) {
+    runTestcase(attemptId: $attemptId, testcaseInput: $testcaseInput) {
         id
         output {
             payload
@@ -57,10 +57,10 @@ query RunTestcase($attemptId: ID!, $testcaseId: ID!) {
     }
 }
 
-query runTestcaseWithCode($questionId: ID!, $testcaseId: ID!, $code: String!) {
+query runTestcaseWithCode($questionId: ID!, $testcaseInput: [TestcaseInputEntryInput!]!, $code: String!) {
     runTestcaseWithCode(
         questionId: $questionId
-        testcaseId: $testcaseId
+        testcaseInput: $testcaseInput
         code: $code
     ) {
         id
@@ -78,8 +78,8 @@ query runTestcaseWithCode($questionId: ID!, $testcaseId: ID!, $code: String!) {
     }
 }
 
-query runAllTestcasesWithCode($questionId: ID!, $code: String!) {
-    runAllTestcasesWithCode(questionId: $questionId, code: $code) {
+query runAllTestcasesWithCode($questionId: ID!, $testcaseInputs: [[TestcaseInputEntryInput!]!]!, $code: String!) {
+    runAllTestcasesWithCode(questionId: $questionId, testcaseInputs: $testcaseInputs, code: $code) {
         id
         results {
             id

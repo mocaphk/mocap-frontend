@@ -290,9 +290,6 @@ export default function WorkspacePage() {
     const [runAttemptFunc, { loading: runAttemptLoading }] =
         useRunAttemptLazyQuery({
             fetchPolicy: "network-only",
-            variables: {
-                attemptId: currentAttempt.id ?? "",
-            },
             onCompleted: (res) => {
                 console.log("run attempt result:", res.runAttempt.results);
                 refetchAttempts();
@@ -408,6 +405,7 @@ export default function WorkspacePage() {
     // Fetching sample testcases
     const { loading: sampleTestcaseLoading, refetch: refetchSampleTestcase } =
         useGetTestcasesQuery({
+            notifyOnNetworkStatusChange: true,
             variables: { questionId: question.id },
             onCompleted: (res) => {
                 let sampleTestcases: SampleTestcase[] = [];
@@ -599,7 +597,7 @@ export default function WorkspacePage() {
         },
     });
 
-    const [runSampleCodeFunc, { loading: runSampleCodeLoading }] =
+    const [runSampleTestcasesFunc, { loading: runSampleTestcasesLoading }] =
         useRunAllTestcasesWithCodeLazyQuery({
             fetchPolicy: "network-only",
             onCompleted: (res) => {
@@ -609,7 +607,7 @@ export default function WorkspacePage() {
                 );
             },
             onError: (error) => {
-                console.error("runSampleCodeFunc error:", error);
+                console.error("runAllTestcasesFunc error:", error);
             },
         });
 
@@ -625,8 +623,8 @@ export default function WorkspacePage() {
             runTestcaseLoading ||
             runAttemptLoading ||
             submitAttemptLoading ||
-            runTestcaseWithSampleCodeLoading ||
-            runSampleCodeLoading;
+            runTestcaseWithSampleCodeLoading||
+            runSampleTestcasesLoading;
         setIsLoading(loading);
     }, [
         questionLoading,
@@ -636,7 +634,7 @@ export default function WorkspacePage() {
         runAttemptLoading,
         submitAttemptLoading,
         runTestcaseWithSampleCodeLoading,
-        runSampleCodeLoading,
+        runSampleTestcasesLoading,
     ]);
 
     // Handle code change
@@ -732,8 +730,10 @@ export default function WorkspacePage() {
                         setCodeOnEditor={setCodeOnEditor}
                         createOrUpdateAttempt={createOrUpdateAttempt}
                         runAttemptFunc={runAttemptFunc}
+                        runSampleTestcasesFunc={runSampleTestcasesFunc}
                         submitAttemptFunc={submitAttemptFunc}
-                        runSampleCodeFunc={runSampleCodeFunc}
+                        sampleTestcases={sampleTestcases}
+                        customTestcases={customTestcases}
                     />
                 </Allotment.Pane>
             </Allotment>

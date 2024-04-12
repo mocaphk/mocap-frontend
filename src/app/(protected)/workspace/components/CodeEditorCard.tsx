@@ -7,6 +7,8 @@ import type { Question } from "../types/Question";
 import React from "react";
 import CardWrapper from "@/app/components/CardWrapper";
 import useDebouncedResize from "@/app/utils/resizeHandler";
+import type { SampleTestcase } from "../types/Testcase";
+import type { CustomTestcase } from "../types/Testcase";
 
 export default function CodeEditorCard({
     question,
@@ -17,8 +19,10 @@ export default function CodeEditorCard({
     setCodeOnEditor,
     createOrUpdateAttempt,
     runAttemptFunc,
+    runSampleTestcasesFunc,
     submitAttemptFunc,
-    runSampleCodeFunc,
+    sampleTestcases,
+    customTestcases,
 }: Readonly<{
     question: Question;
     isEditing: boolean;
@@ -28,8 +32,10 @@ export default function CodeEditorCard({
     setCodeOnEditor: Function;
     createOrUpdateAttempt: Function;
     runAttemptFunc: Function;
+    runSampleTestcasesFunc: Function;
     submitAttemptFunc: Function;
-    runSampleCodeFunc: Function;
+    sampleTestcases: SampleTestcase[];
+    customTestcases: CustomTestcase[];
 }>) {
     // force code editor to re-render
     const [codeEditorKey, setCodeEditorKey] = React.useState(0);
@@ -44,24 +50,28 @@ export default function CodeEditorCard({
 
     const runAttempt = async () => {
         if (isEditing) {
-            await runSampleCodeFunc({
+            const inputs = sampleTestcases.map((testcase:SampleTestcase) => testcase.input);
+            await runSampleTestcasesFunc({
                 variables: {
                     questionId: question.id,
+                    testcaseInputs: inputs,
                     code: codeOnEditor,
                 },
             });
         } else {
             const currentAttemptId = await createOrUpdateAttempt(false);
 
-            const response = await runAttemptFunc({
+            const allTestcases = [
+                ...sampleTestcases,
+                ...customTestcases,
+            ];
+            const input = allTestcases.map((testcase) => testcase.input);
+            await runAttemptFunc({
                 variables: {
                     attemptId: currentAttemptId ?? "",
+                    testcaseInputs: input,
                 },
             });
-            console.log(
-                "Run attempt result:",
-                response.data?.runAttempt.results
-            );
         }
     };
 
