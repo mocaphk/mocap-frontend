@@ -1,0 +1,55 @@
+mutation CreateAttempt($attemptInput: CreateAttemptInput!) {
+    createAttempt(attemptInput: $attemptInput) {
+        id
+        code
+        createdAt
+        updatedAt
+        executedAt
+        isSubmitted
+    }
+}
+
+mutation UpdateAttempt($attemptId: ID!, $attemptInput: UpdateAttemptInput!) {
+    updateAttempt(attemptId: $attemptId, attemptInput: $attemptInput) {
+        id
+        user {
+            id
+        }
+        code
+        question {
+            id
+        }
+        createdAt
+        updatedAt
+        executedAt
+        isSubmitted
+    }
+}
+
+query GetAttemptById($attemptId: ID) {
+    attempt(attemptId: $attemptId) {
+        code
+    }
+}
+
+query GetAttemptsByQuestionId($questionId: ID!) {
+    attempts(questionId: $questionId) {
+        id
+        code
+        createdAt
+        updatedAt
+        executedAt
+        isSubmitted
+    }
+}
+
+query GetLatestUpdateByQuestionId($questionId: ID!) {
+    latestUpdate(questionId: $questionId) {
+        id
+        code
+        createdAt
+        updatedAt
+        executedAt
+        isSubmitted
+    }
+}

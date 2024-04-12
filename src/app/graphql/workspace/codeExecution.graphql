@@ -1,0 +1,118 @@
+query RunAttempt(
+    $attemptId: ID!
+    $testcaseInputs: [[TestcaseInputEntryInput!]!]!
+) {
+    runAttempt(attemptId: $attemptId, testcaseInputs: $testcaseInputs) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}
+
+mutation SubmitAttempt($attemptId: ID!) {
+    submitAttempt(attemptId: $attemptId) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}
+
+query RunTestcase(
+    $attemptId: ID!
+    $testcaseInput: [TestcaseInputEntryInput!]!
+) {
+    runTestcase(attemptId: $attemptId, testcaseInput: $testcaseInput) {
+        id
+        output {
+            payload
+            streamType
+        }
+        sampleOutput {
+            payload
+            streamType
+        }
+        isExecutionSuccess
+        isCorrect
+        isExceedTimeLimit
+    }
+}
+
+query runTestcaseWithCode(
+    $questionId: ID!
+    $testcaseInput: [TestcaseInputEntryInput!]!
+    $code: String!
+) {
+    runTestcaseWithCode(
+        questionId: $questionId
+        testcaseInput: $testcaseInput
+        code: $code
+    ) {
+        id
+        output {
+            payload
+            streamType
+        }
+        sampleOutput {
+            payload
+            streamType
+        }
+        isExecutionSuccess
+        isCorrect
+        isExceedTimeLimit
+    }
+}
+
+query runAllTestcasesWithCode(
+    $questionId: ID!
+    $testcaseInputs: [[TestcaseInputEntryInput!]!]!
+    $code: String!
+) {
+    runAllTestcasesWithCode(
+        questionId: $questionId
+        testcaseInputs: $testcaseInputs
+        code: $code
+    ) {
+        id
+        results {
+            id
+            input {
+                name
+                value
+            }
+            output {
+                payload
+                streamType
+            }
+            isExecutionSuccess
+            isCorrect
+            isExceedTimeLimit
+        }
+        createdAt
+    }
+}

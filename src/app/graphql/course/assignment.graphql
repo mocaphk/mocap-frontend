@@ -38,6 +38,14 @@ query GetAssignmentBetween($startDate: String!, $endDate: String!) {
     }
 }
 
+query GetCouseIdByAssignmentId($assignmentId: ID!) {
+    assignment(id: $assignmentId) {
+        course {
+            id
+        }
+    }
+}
+
 mutation CreateAssignment($assignmentInput: CreateAssignmentInput!) {
     createAssignment(assignmentInput: $assignmentInput) {
         id

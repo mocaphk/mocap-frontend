@@ -15,8 +15,10 @@ import type { GetAssignmentQuery } from "@/app/graphql/course/assignment.graphql
 import NoResultAlert from "@/app/errors/noResultAlert";
 
 export default function QuestionList({
+    assignmentId,
     questions,
 }: Readonly<{
+    assignmentId: string;
     questions: NonNullable<GetAssignmentQuery["assignment"]>["questions"];
 }>) {
     const [open, setOpen] = React.useState(false);
@@ -91,7 +93,7 @@ export default function QuestionList({
                                 Icon={PostAddIcon}
                                 title="New question"
                                 description=""
-                                link="workspace/edit?questionId="
+                                link={`workspace?questionId=&assignmentId=${assignmentId}`}
                             />
                         </Grid>
                         <Grid item xs={12}>

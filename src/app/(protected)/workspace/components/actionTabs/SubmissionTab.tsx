@@ -6,23 +6,22 @@ import HistoryIcon from "@mui/icons-material/History";
 import PreviewIcon from "@mui/icons-material/Preview";
 import SubmissionModal from "../SubmissionModal";
 import type { Attempt } from "../../types/Attempt";
-import { v4 as uuidv4 } from "uuid";
+import type { ProgrammingLanguage } from "../../../../../../.cache/__types__";
 
 function SliderLabel({
     attempt,
-    setSelectedAttempt,
+    setPreview,
 }: Readonly<{
     attempt: Attempt;
-    setSelectedAttempt: React.Dispatch<React.SetStateAction<Attempt | null>>;
+    setPreview: Function;
 }>) {
     return (
         <Box className="flex gap-1 justify-center items-center">
             <Typography>
-                {`Submitted on ${dayjs(attempt.createdAt).format(
-                    "DD MMM YYYY, HH:mm:ss"
-                )}`}
+                Submitted at{" "}
+                {dayjs(attempt.updatedAt).format("DD MMM YYYY, HH:mm:ss")}
             </Typography>
-            <IconButton onClick={() => setSelectedAttempt(attempt)}>
+            <IconButton onClick={() => setPreview(true)}>
                 <PreviewIcon />
             </IconButton>
         </Box>
@@ -31,73 +30,44 @@ function SliderLabel({
 
 export default function SubmissionTab({
     language,
-}: Readonly<{ language: string }>) {
+    attemptsList,
+    setCurrentAttempt,
+}: Readonly<{
+    language: ProgrammingLanguage;
+    attemptsList: Attempt[];
+    setCurrentAttempt: Function;
+}>) {
     const [selectedAttempt, setSelectedAttempt] =
-        React.useState<Attempt | null>(null);
+        React.useState<Attempt | null>(
+            attemptsList[attemptsList.length - 1] || null
+        );
 
-    const fakeAttempts: Attempt[] = [
-        {
-            id: uuidv4(),
-            userId: "1",
-            questionId: "1",
-            code: 'print("Hello 1")',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isSubmitted: true,
-        },
-        {
-            id: uuidv4(),
-            userId: "1",
-            questionId: "1",
-            code: 'print("Hello 2")',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isSubmitted: true,
-        },
-        {
-            id: uuidv4(),
-            userId: "1",
-            questionId: "1",
-            code: 'print("Hello 3")',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isSubmitted: true,
-        },
-        {
-            id: uuidv4(),
-            userId: "1",
-            questionId: "1",
-            code: 'print("Hello 4")',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isSubmitted: true,
-        },
-        {
-            id: uuidv4(),
-            userId: "1",
-            questionId: "1",
-            code: 'print("Hello 5")',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isSubmitted: true,
-        },
-    ];
+    const [preview, setPreview] = React.useState(false);
 
-    const marks: Mark[] = fakeAttempts.map((attempt, i) => {
+    const marks: Mark[] = attemptsList.map((attempt, i) => {
         return {
             value: i,
-            label: (
-                <SliderLabel
-                    attempt={attempt}
-                    setSelectedAttempt={setSelectedAttempt}
-                />
-            ),
+            label: <SliderLabel attempt={attempt} setPreview={setPreview} />,
         };
     });
 
+    const [sliderValue, setSliderValue] = React.useState(marks.length - 1);
+    React.useEffect(() => {
+        setSliderValue(attemptsList.length - 1);
+    }, [attemptsList]);
+
+    const handleRevert = () => {
+        console.log("revert clicked");
+        console.log("selected attempt: ", selectedAttempt);
+        if (selectedAttempt) {
+            console.log("reverting to: ", marks.values);
+            setCurrentAttempt(selectedAttempt);
+        }
+    };
+
     return (
         <Box className="flex h-full w-full justify-between py-2">
-            {fakeAttempts.length === 0 ? (
+            {attemptsList.length === 0 ? (
                 <Typography
                     variant="h6"
                     className="w-full flex justify-center items-center"
@@ -111,15 +81,26 @@ export default function SubmissionTab({
                             className="h-full"
                             max={marks.length - 1}
                             min={0}
-                            defaultValue={marks.length - 1}
+                            value={sliderValue}
                             orientation="vertical"
                             step={null}
                             marks={marks}
                             track={false}
+                            onChange={(event, value) => {
+                                setSliderValue(value as number);
+                                setSelectedAttempt(
+                                    attemptsList[value as number]
+                                );
+                            }}
                         />
                     </Box>
                     <Box className="flex flex-col h-full justify-end">
-                        <Button className="h-fit w-36" variant="contained">
+                        <Button
+                            className="h-fit w-36"
+                            color="primary"
+                            variant="contained"
+                            onClick={handleRevert}
+                        >
                             <HistoryIcon />
                             <Typography className="p-2">Revert</Typography>
                         </Button>
@@ -128,7 +109,8 @@ export default function SubmissionTab({
                         <SubmissionModal
                             language={language}
                             selectedAttempt={selectedAttempt}
-                            setSelectedAttempt={setSelectedAttempt}
+                            preview={preview}
+                            setPreview={setPreview}
                         />
                     )}
                 </>
