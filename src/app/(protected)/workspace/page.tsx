@@ -19,6 +19,7 @@ import {
 import {
     useCreateAttemptMutation,
     useGetAttemptsByQuestionIdQuery,
+    useGetLatestUpdateByQuestionIdQuery,
     useUpdateAttemptMutation,
 } from "../../graphql/workspace/attempt.graphql";
 import { CheckingMethod, UserRole } from "@schema";
@@ -267,6 +268,25 @@ export default function WorkspacePage() {
             skip: questionIdFromUrl === "",
         });
 
+    const { data: latestUpdateRes = {} } = useGetLatestUpdateByQuestionIdQuery({
+        variables: { questionId: questionIdFromUrl ?? "" },
+        skip: questionIdFromUrl === "",
+        onCompleted: (res: any) => {
+            if (res.latestUpdate) {
+                console.log("Latest update from server:", res.latestUpdate);
+                setCurrentAttempt({
+                    id: res.latestUpdate.id,
+                    isSubmitted: res.latestUpdate.isSubmitted,
+                    createdAt: new Date(res.latestUpdate.createdAt), // Convert string to Date
+                    updatedAt: new Date(res.latestUpdate.updatedAt),
+                    executedAt: null,
+                    code: res.latestUpdate.code ?? "",
+                    questionId: currentQuestionId,
+                });
+            }
+        },
+    });
+
     // Handle fetched attempts
     React.useEffect(() => {
         if (attemptsRes && (attemptsRes as { attempts: Attempt[] }).attempts) {
@@ -276,15 +296,6 @@ export default function WorkspacePage() {
             );
 
             setAttemptsList((attemptsRes as { attempts: Attempt[] }).attempts);
-
-            // Set the last object of the attemptsList as the current attempt
-            let lastAttempt = (attemptsRes as { attempts: Attempt[] }).attempts[
-                (attemptsRes as { attempts: Attempt[] }).attempts?.length - 1
-            ];
-            if (lastAttempt) {
-                setCurrentAttempt(lastAttempt);
-                console.log(lastAttempt);
-            }
         }
     }, [questionIdFromUrl, attemptsRes]);
 
@@ -386,7 +397,6 @@ export default function WorkspacePage() {
             updatedAt,
             executedAt,
             code: codeOnEditor,
-            userId: currentAttempt.userId,
             questionId: currentAttempt.questionId,
         });
         refetchAttempts();

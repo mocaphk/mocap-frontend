@@ -38,7 +38,9 @@ export default function SubmissionTab({
     setCurrentAttempt: Function;
 }>) {
     const [selectedAttempt, setSelectedAttempt] =
-        React.useState<Attempt | null>(null);
+        React.useState<Attempt | null>(
+            attemptsList[attemptsList.length - 1] || null
+        );
 
     const [preview, setPreview] = React.useState(false);
 
@@ -107,7 +109,6 @@ export default function SubmissionTab({
                         <SubmissionModal
                             language={language}
                             selectedAttempt={selectedAttempt}
-                            setSelectedAttempt={setSelectedAttempt}
                             preview={preview}
                             setPreview={setPreview}
                         />

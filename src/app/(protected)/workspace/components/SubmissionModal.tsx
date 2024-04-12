@@ -11,7 +11,6 @@ export default function SubmissionModal({
 }: Readonly<{
     language: ProgrammingLanguage;
     selectedAttempt: Attempt;
-    setSelectedAttempt: React.Dispatch<React.SetStateAction<Attempt | null>>;
     preview: boolean;
     setPreview: Function;
 }>) {
@@ -28,7 +27,6 @@ export default function SubmissionModal({
                 <CodeEditor
                     updateCode={null}
                     language={language}
-                    options={{ readOnly: true }}
                     codeOnEditor={selectedAttempt.code}
                     readOnly={true}
                 />

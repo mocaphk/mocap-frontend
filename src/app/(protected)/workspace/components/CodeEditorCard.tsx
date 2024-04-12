@@ -50,7 +50,9 @@ export default function CodeEditorCard({
 
     const runAttempt = async () => {
         if (isEditing) {
-            const inputs = sampleTestcases.map((testcase:SampleTestcase) => testcase.input);
+            const inputs = sampleTestcases.map(
+                (testcase: SampleTestcase) => testcase.input
+            );
             await runSampleTestcasesFunc({
                 variables: {
                     questionId: question.id,
@@ -61,10 +63,7 @@ export default function CodeEditorCard({
         } else {
             const currentAttemptId = await createOrUpdateAttempt(false);
 
-            const allTestcases = [
-                ...sampleTestcases,
-                ...customTestcases,
-            ];
+            const allTestcases = [...sampleTestcases, ...customTestcases];
             const input = allTestcases.map((testcase) => testcase.input);
             await runAttemptFunc({
                 variables: {

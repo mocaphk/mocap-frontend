@@ -246,7 +246,7 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcaseWithCode.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
-        } else{
+        } else {
             const createOrUpdateAttemptId = await createOrUpdateAttempt(false);
 
             const runRes = await runTestcaseFunc({

@@ -42,3 +42,14 @@ query GetAttemptsByQuestionId($questionId: ID!) {
         isSubmitted
     }
 }
+
+query GetLatestUpdateByQuestionId($questionId: ID!) {
+    latestUpdate(questionId: $questionId) {
+        id
+        code
+        createdAt
+        updatedAt
+        executedAt
+        isSubmitted
+    }
+}

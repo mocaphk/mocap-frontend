@@ -52,7 +52,11 @@ export default function QuestionCard({
         { id: number; name: string }[]
     >([]);
 
-    const { data, error, refetch: refetchEnv } = useGetCodingEnvironmentByAssignmentIdQuery({
+    const {
+        data,
+        error,
+        refetch: refetchEnv,
+    } = useGetCodingEnvironmentByAssignmentIdQuery({
         skip: !isEditing,
         variables: { assignmentId: assignmentId },
     });
