@@ -51,3 +51,7 @@ mutation CreateAssignment($assignmentInput: CreateAssignmentInput!) {
         id
     }
 }
+
+query GetAssignmentUserRoles($assignmentId: ID!) {
+    getAssignmentUserRoles(assignmentId: $assignmentId)
+}

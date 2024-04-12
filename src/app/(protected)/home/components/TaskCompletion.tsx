@@ -65,7 +65,7 @@ export default function TaskCompletion() {
                             mb: "-70px",
                         }}
                     />
-                ) : coursesCompletionData?.length === 0 ? (
+                ) : showErrorMessage || coursesCompletionData?.length === 0 ? (
                     <Box className="w-full h-[300px]">
                         <NoResult />
                     </Box>
