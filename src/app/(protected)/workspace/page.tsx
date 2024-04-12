@@ -23,7 +23,7 @@ import {
     useUpdateAttemptMutation,
 } from "../../graphql/workspace/attempt.graphql";
 import { CheckingMethod, UserRole } from "@schema";
-import type { ProgrammingLanguage } from "@schema";
+import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { CustomTestcase, SampleTestcase } from "./types/Testcase";
@@ -252,6 +252,9 @@ export default function WorkspacePage() {
         new Object() as Attempt
     );
 
+    // Run / submit attempt results
+    const [results, setResults] = React.useState<CodeExecutionResult[]>([]);
+
     React.useEffect(() => {
         if (isEditing) {
             setCodeOnEditor(editedQuestion.sampleCode);
@@ -306,6 +309,7 @@ export default function WorkspacePage() {
             onCompleted: (res) => {
                 console.log("run attempt result:", res.runAttempt.results);
                 refetchAttempts();
+                setResults(res.runAttempt.results);
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -323,6 +327,7 @@ export default function WorkspacePage() {
                     res.submitAttempt.results
                 );
                 refetchAttempts();
+                setResults(res.submitAttempt.results);
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -435,6 +440,7 @@ export default function WorkspacePage() {
                             expectedOutput: testcase.expectedOutput,
                             isHidden: testcase.isHidden,
                             output: "",
+                            isTimeout: false,
                         };
                     });
                     console.log("Testcases from server:", sampleTestcases);
@@ -475,6 +481,7 @@ export default function WorkspacePage() {
                         }),
                         expectedOutput: "",
                         output: "",
+                        isTimeout: false,
                     };
                 }
             );
@@ -617,6 +624,7 @@ export default function WorkspacePage() {
                     "Testcase output",
                     res.runAllTestcasesWithCode.results
                 );
+                setResults(res.runAllTestcasesWithCode.results);
             },
             onError: (error) => {
                 console.error("runAllTestcasesFunc error:", error);
@@ -714,7 +722,6 @@ export default function WorkspacePage() {
                             setSampleTestcases={setSampleTestcases}
                             setCustomTestcases={setCustomTestcases}
                             setSelectedTestcase={setSelectedTestcase}
-                            deleteSampleTestcaseFunc={deleteSampleTestcaseFunc}
                             deleteCustomTestcaseFunc={deleteCustomTestcaseFunc}
                             createAndUpdateSampleTestcasesFunc={
                                 createAndUpdateSampleTestcasesFunc
@@ -730,6 +737,7 @@ export default function WorkspacePage() {
                             runTestcaseWithSampleCodeFunc={
                                 runTestcaseWithSampleCodeFunc
                             }
+                            results={results}
                         />
                     </Allotment.Pane>
                 </Allotment>

@@ -7,6 +7,9 @@ import {
     TextField,
     InputLabel,
     Tooltip,
+    Checkbox,
+    FormControlLabel,
+    Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,7 +23,7 @@ import type {
     TestcaseInputEntry,
 } from "../../types/Testcase";
 import { v4 as uuidv4 } from "uuid";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import ReactDiffViewer from "react-diff-viewer-continued";
 
 export default function TestcaseTab({
     isEditing,
@@ -30,7 +33,6 @@ export default function TestcaseTab({
     setSampleTestcases,
     setCustomTestcases,
     setSelectedTestcase,
-    deleteSampleTestcaseFunc,
     deleteCustomTestcaseFunc,
     createAndUpdateSampleTestcasesFunc,
     createCustomTestcasesFunc,
@@ -48,7 +50,6 @@ export default function TestcaseTab({
     setSampleTestcases: Function;
     setCustomTestcases: Function;
     setSelectedTestcase: Function;
-    deleteSampleTestcaseFunc: Function;
     deleteCustomTestcaseFunc: Function;
     createAndUpdateSampleTestcasesFunc: Function;
     createCustomTestcasesFunc: Function;
@@ -121,6 +122,7 @@ export default function TestcaseTab({
             expectedOutput: "",
             isHidden: false,
             output: "",
+            isTimeout: false,
         };
 
         setSampleTestcases((prevTestcases: any) => [
@@ -143,6 +145,7 @@ export default function TestcaseTab({
             ],
             expectedOutput: "",
             output: "",
+            isTimeout: false,
         };
 
         setCustomTestcases((prevTestcases: any) => [
@@ -203,6 +206,7 @@ export default function TestcaseTab({
                 if (testcase.tempId) {
                     delete testcase.tempId;
                     delete testcase.output;
+                    delete testcase.isTimeout;
                 }
                 testcase.expectedOutput = "";
             });
@@ -212,12 +216,10 @@ export default function TestcaseTab({
                     testcaseInput: sampleTescasesCopy,
                 },
             });
+        } else if (selectedTestcase?.id === "") {
+            await createCustomTestcasesFunc();
         } else {
-            if (selectedTestcase?.id === "") {
-                await createCustomTestcasesFunc();
-            } else {
-                await updateCustomTestcaseFunc();
-            }
+            await updateCustomTestcaseFunc();
         }
     };
 
@@ -226,6 +228,7 @@ export default function TestcaseTab({
     const handleRunClick = async () => {
         let expectedOutput = selectedTestcase?.expectedOutput;
         let output = selectedTestcase?.output;
+        let isTimeout = selectedTestcase?.isTimeout;
 
         if (isEditing) {
             const testcaseInput = selectedTestcase?.input;
@@ -243,6 +246,8 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcaseWithCode.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
+
+            isTimeout = runRes.data?.runTestcaseWithCode.isExceedTimeLimit;
         } else {
             const createOrUpdateAttemptId = await createOrUpdateAttempt(false);
 
@@ -260,6 +265,8 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcase.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
+
+            isTimeout = runRes.data?.runTestcase.isExceedTimeLimit;
         }
 
         const setState = isSelectedCustomTestcase
@@ -275,6 +282,7 @@ export default function TestcaseTab({
 
                     newTestcaseCopy.expectedOutput = expectedOutput;
                     newTestcaseCopy.output = output;
+                    newTestcaseCopy.isTimeout = isTimeout;
                     setSelectedTestcase(newTestcaseCopy);
                     return newTestcaseCopy;
                 }
@@ -577,32 +585,48 @@ export default function TestcaseTab({
                             label="Is Hidden"
                         />
                     )}
-                    <Box paddingBottom={1}>
-                        <InputLabel>Sample output:</InputLabel>
-                        <TextField
-                            className="w-full"
-                            id="expected-output"
-                            variant="outlined"
-                            value={selectedTestcase?.expectedOutput ?? ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            multiline
-                        />
-                    </Box>
-                    <Box>
-                        <InputLabel>Output:</InputLabel>
-                        <TextField
-                            className="w-full"
-                            id="output"
-                            variant="outlined"
-                            value={selectedTestcase?.output ?? ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            multiline
-                        />
-                    </Box>
+                    {selectedTestcase.isTimeout && (
+                        <Alert severity="error">
+                            The program exceeded the expected time limit to run.
+                        </Alert>
+                    )}
+                    {(selectedTestcase.expectedOutput ||
+                        selectedTestcase.output) &&
+                        !selectedTestcase.isTimeout &&
+                        (isEditing ? (
+                            <Box className="flex flex-col gap-1">
+                                <InputLabel>Output: </InputLabel>
+                                <TextField
+                                    size="small"
+                                    defaultValue={
+                                        selectedTestcase.expectedOutput
+                                    }
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                    multiline
+                                ></TextField>
+                            </Box>
+                        ) : (
+                            <ReactDiffViewer
+                                styles={{
+                                    diffContainer: {
+                                        width: "100%",
+                                    },
+                                    titleBlock: {
+                                        width: "50%",
+                                    },
+                                    contentText: {
+                                        wordBreak: "break-all",
+                                    },
+                                }}
+                                leftTitle="Expected Output"
+                                rightTitle="Your Output"
+                                oldValue={selectedTestcase.expectedOutput}
+                                newValue={selectedTestcase.output}
+                                splitView={true}
+                                showDiffOnly={false}
+                            />
+                        ))}
                 </Box>
             )}
         </Box>

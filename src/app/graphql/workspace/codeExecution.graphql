@@ -14,9 +14,14 @@ query RunAttempt(
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }
@@ -35,9 +40,14 @@ mutation SubmitAttempt($attemptId: ID!) {
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }
@@ -109,9 +119,14 @@ query runAllTestcasesWithCode(
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }

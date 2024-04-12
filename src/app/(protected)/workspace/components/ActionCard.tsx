@@ -4,11 +4,13 @@ import TestCaseTab from "./actionTabs/TestCaseTab";
 import SubmissionTab from "./actionTabs/SubmissionTab";
 import { useTheme } from "@mui/material/styles";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import ScienceIcon from "@mui/icons-material/Science";
-import PublishIcon from "@mui/icons-material/Publish";
-import type { ProgrammingLanguage } from "@schema";
+import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import type { Attempt } from "../types/Attempt";
 import type { CustomTestcase, SampleTestcase } from "../types/Testcase";
+import ResultTab from "./actionTabs/ResultTab";
+import ScienceIcon from "@mui/icons-material/Science";
+import PublishIcon from "@mui/icons-material/Publish";
+import RuleIcon from "@mui/icons-material/Rule";
 
 export default function ActionCard({
     isEditing,
@@ -22,7 +24,6 @@ export default function ActionCard({
     setSampleTestcases,
     setCustomTestcases,
     setSelectedTestcase,
-    deleteSampleTestcaseFunc,
     deleteCustomTestcaseFunc,
     createAndUpdateSampleTestcasesFunc,
     createCustomTestcasesFunc,
@@ -32,6 +33,7 @@ export default function ActionCard({
     questionId,
     codeOnEditor,
     runTestcaseWithSampleCodeFunc,
+    results,
 }: Readonly<{
     isEditing: boolean;
     allowEditOrCreate: boolean;
@@ -44,7 +46,6 @@ export default function ActionCard({
     setSampleTestcases: Function;
     setCustomTestcases: Function;
     setSelectedTestcase: Function;
-    deleteSampleTestcaseFunc: Function;
     deleteCustomTestcaseFunc: Function;
     createAndUpdateSampleTestcasesFunc: Function;
     createCustomTestcasesFunc: Function;
@@ -54,6 +55,7 @@ export default function ActionCard({
     questionId: string;
     codeOnEditor: string;
     runTestcaseWithSampleCodeFunc: Function;
+    results: CodeExecutionResult[];
 }>) {
     const [activeTab, setActiveTab] = React.useState("testCase");
     const theme = useTheme();
@@ -106,6 +108,12 @@ export default function ActionCard({
                                 iconPosition="start"
                             />
                         )}
+                        <Tab
+                            label="Result"
+                            value="result"
+                            icon={<RuleIcon />}
+                            iconPosition="start"
+                        />
                     </TabList>
 
                     <Box className="flex-grow">
@@ -118,9 +126,6 @@ export default function ActionCard({
                                 setSampleTestcases={setSampleTestcases}
                                 setCustomTestcases={setCustomTestcases}
                                 setSelectedTestcase={setSelectedTestcase}
-                                deleteSampleTestcaseFunc={
-                                    deleteSampleTestcaseFunc
-                                }
                                 deleteCustomTestcaseFunc={
                                     deleteCustomTestcaseFunc
                                 }
@@ -147,6 +152,12 @@ export default function ActionCard({
                                 language={language}
                                 attemptsList={attemptsList}
                                 setCurrentAttempt={setCurrentAttempt}
+                            />
+                        </TabPanel>
+                        <TabPanel className="h-full" value="result">
+                            <ResultTab
+                                results={results}
+                                allowEditOrCreate={allowEditOrCreate}
                             />
                         </TabPanel>
                     </Box>
