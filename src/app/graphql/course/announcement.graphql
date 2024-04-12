@@ -19,6 +19,18 @@ query GetAnnouncement($id: ID!) {
     }
 }
 
+query GetAnnouncementsOfCurrentUser {
+    announcementsOfCurrentUser {
+        id
+        title
+        course {
+            code
+        }
+        updatedAt
+        isReadByCurrentUser
+    }
+}
+
 mutation CreateAnnouncement($announcementInput: CreateAnnouncementInput!) {
     createAnnouncement(announcementInput: $announcementInput) {
         id
@@ -38,4 +50,8 @@ mutation DeleteAnnouncement($id: ID!) {
     deleteAnnouncement(id: $id) {
         id
     }
+}
+
+mutation MarkAnnouncementAsRead($id: ID!) {
+    markAnnouncementAsRead(id: $id)
 }

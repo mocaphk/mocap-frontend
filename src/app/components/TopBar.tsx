@@ -23,6 +23,7 @@ import NotificationMenu from "./NotificationMenu";
 import useDebouncedResize from "../utils/resizeHandler";
 import type { NotificationProps } from "../types/NotificationProps";
 import { NotificationTypes } from "@/enums/notificationTypes";
+import { useGetAnnouncementsOfCurrentUserQuery } from "../graphql/course/announcement.graphql";
 
 function TopBar() {
     return (
@@ -136,85 +137,40 @@ function AuthedTopBar({
     };
 
     // fetch noti
-    const notiTemplate: Array<NotificationProps> = [
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 6 released",
-            createdAt: "2024-4-5 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 5 released",
-            createdAt: "2024-4-4 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 4 released",
-            createdAt: "2024-4-3 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 3 released",
-            createdAt: "2024-4-2 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 2 released",
-            createdAt: "2024-2-2 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Tutorial,
-            title: "Tutorial 1 released",
-            createdAt: "2024-1-2 10:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-        {
-            type: NotificationTypes.Announcement,
-            title: "Tutorial 1 released",
-            createdAt: "2024-1-2 11:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "announcement",
-        },
-        {
-            type: NotificationTypes.Assignment,
-            title: "Assignment 1 released",
-            createdAt: "2024-1-2 12:30pm",
-            courseCode: "COMP2396",
-            year: "2024",
-            itemId: "1",
-            link: "assignment",
-        },
-    ];
+    const {
+        loading,
+        error,
+        data: announcementData,
+        refetch: refetchNoti,
+    } = useGetAnnouncementsOfCurrentUserQuery();
+
+    const announcement = announcementData?.announcementsOfCurrentUser;
+
+    const showErrorMessage =
+        !loading &&
+        (announcementData === undefined ||
+            error ||
+            announcement === undefined ||
+            announcement === null);
+
+    const notiData: Array<NotificationProps> = (announcement ?? []).map(
+        (ann) => {
+            return {
+                type: NotificationTypes.Announcement,
+                id: ann.id,
+                title: ann.title,
+                date: ann.updatedAt,
+                courseCode: ann.course?.code ?? "",
+                link: `announcement?id=${ann.id}`,
+                isRead: ann.isReadByCurrentUser ?? false,
+            };
+        }
+    );
 
     // close all menu if window resized
     useDebouncedResize(handleAllMenuClose, 200);
 
-    const numOfNotifications = notiTemplate.length;
+    const numOfNotifications = notiData.filter((noti) => !noti.isRead).length;
 
     const menuId = "primary-search-account-menu";
     const renderMenu = (
@@ -351,9 +307,12 @@ function AuthedTopBar({
             {renderMobileMenu}
             {renderMenu}
             <NotificationMenu
+                loading={loading}
+                showErrorMessage={!!showErrorMessage}
                 anchorEl={anchorEl}
                 open={isNotiMenuOpen}
-                notifications={notiTemplate}
+                notifications={notiData}
+                refetchNoti={refetchNoti}
                 handleMenuClose={handleNotiMenuClose}
                 handleAllMenuCLose={handleAllMenuClose}
             />
