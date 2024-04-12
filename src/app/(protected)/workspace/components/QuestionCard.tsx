@@ -158,13 +158,15 @@ export default function QuestionCard({
     return (
         <CardWrapper className="h-full">
             <Box className="flex flex-col overflow-auto h-full">
-                <MUILink
-                    href={`assignment?id=${assignmentId}`}
-                    color="primary"
-                    underline="hover"
-                >
-                    « Back to assignment page
-                </MUILink>
+                <Box>
+                    <MUILink
+                        href={`assignment?id=${assignmentId}`}
+                        color="primary"
+                        underline="hover"
+                    >
+                        « Back to assignment page
+                    </MUILink>
+                </Box>
                 {allowEditOrCreate && isEditing ? (
                     <EditQuestionTab
                         courseId={courseId}
