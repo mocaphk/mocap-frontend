@@ -9,6 +9,7 @@ import QuestionTab from "./questionTabs/questionTab";
 import type { SampleTestcase, CustomTestcase } from "../types/Testcase";
 
 export default function QuestionCard({
+    courseId,
     assignmentId,
     question,
     isNewQuestion,
@@ -25,6 +26,7 @@ export default function QuestionCard({
     refetchSampleTestcases,
     createAndUpdateSampleTestcasesFunc,
 }: Readonly<{
+    courseId: string;
     assignmentId: string;
     question: Question;
     isNewQuestion: boolean;
@@ -50,9 +52,9 @@ export default function QuestionCard({
         { id: number; name: string }[]
     >([]);
 
-    const { data, error } = useGetCodingEnvironmentByAssignmentIdQuery({
-        variables: { assignmentId: assignmentId },
+    const { data, error, refetch: refetchEnv } = useGetCodingEnvironmentByAssignmentIdQuery({
         skip: !isEditing,
+        variables: { assignmentId: assignmentId },
     });
 
     // need to manually pass isEditing, as the state may not updated yet
@@ -161,12 +163,14 @@ export default function QuestionCard({
                 </MUILink>
                 {allowEditOrCreate && isEditing ? (
                     <EditQuestionTab
+                        courseId={courseId}
                         editedQuestion={editedQuestion}
                         setEditedQuestion={setEditedQuestion}
                         handleSaveClick={handleSaveClick}
                         handleCancelClick={handleCancelClick}
                         handleDeleteClick={handleDeleteClick}
                         codingEnvironments={codingEnvironments}
+                        refetchEnv={refetchEnv}
                     />
                 ) : (
                     <QuestionTab

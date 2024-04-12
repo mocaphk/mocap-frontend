@@ -59,12 +59,14 @@ export default function WorkspacePage() {
     const [assignmentId, setAssignmentId] = React.useState(
         searchParams.get("assignmentId") ?? ""
     );
+    const [courseId, setCourseId] = React.useState("");
 
     // get courseId by assignmentId
     const { refetch: refetchCourseId } = useGetCouseIdByAssignmentIdQuery({
         variables: { assignmentId: assignmentId },
         skip: assignmentId === "",
         onCompleted: (data: GetCouseIdByAssignmentIdQuery) => {
+            setCourseId(data.assignment?.course.id ?? "");
             getRolesDataFunc({
                 variables: { courseId: data.assignment?.course.id ?? "" },
             });
@@ -623,7 +625,7 @@ export default function WorkspacePage() {
             runTestcaseLoading ||
             runAttemptLoading ||
             submitAttemptLoading ||
-            runTestcaseWithSampleCodeLoading||
+            runTestcaseWithSampleCodeLoading ||
             runSampleTestcasesLoading;
         setIsLoading(loading);
     }, [
@@ -669,6 +671,7 @@ export default function WorkspacePage() {
                 <Allotment vertical separator={false} snap>
                     <Allotment.Pane className="p-1" preferredSize="50%">
                         <QuestionCard
+                            courseId={courseId}
                             assignmentId={assignmentId}
                             question={question}
                             isNewQuestion={isNewQuestion}

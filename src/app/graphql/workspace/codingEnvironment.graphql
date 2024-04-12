@@ -4,3 +4,17 @@ query getCodingEnvironmentByAssignmentId($assignmentId: ID!) {
         name
     }
 }
+
+mutation createCodingEnvironment(
+    $codingEnvironmentInput: CreateCodingEnvironmentInput!
+) {
+    createCodingEnvironment(codingEnvironmentInput: $codingEnvironmentInput) {
+        id
+    }
+}
+
+mutation buildCodingEnvironment($id: ID!) {
+    buildCodingEnvironment(id: $id) {
+        id
+    }
+}

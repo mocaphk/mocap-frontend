@@ -7,49 +7,60 @@ import {
     Autocomplete,
     Checkbox,
     FormControlLabel,
+    Dialog,
+    InputAdornment,
 } from "@mui/material";
 import ConfirmIconButton from "@/app/components/ConfirmIconButton";
-import { ProgrammingLanguage} from "@schema";
-import type {Question} from "../../types/Question"; 
+import { ProgrammingLanguage } from "@schema";
+import type { Question } from "../../types/Question";
 
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import NewEnvironmentForm from "../NewEnvironmentForm";
+import type { GetCodingEnvironmentByAssignmentIdQuery } from "@/app/graphql/workspace/codingEnvironment.graphql";
+import type { QueryResult } from "@apollo/client";
 
 export default function EditQuestionTab({
+    courseId,
     editedQuestion,
     setEditedQuestion,
     handleSaveClick,
     handleCancelClick,
     handleDeleteClick,
     codingEnvironments,
+    refetchEnv,
 }: Readonly<{
+    courseId: string;
     editedQuestion: Question;
     setEditedQuestion: Function;
     handleSaveClick: Function;
     handleCancelClick: Function;
     handleDeleteClick: Function;
     codingEnvironments: { id: number; name: string }[];
+    refetchEnv: QueryResult<GetCodingEnvironmentByAssignmentIdQuery>["refetch"];
 }>) {
     const confirmLeaveMsg = "Are you sure you want to discard your changes?";
     const confirmDeleteMsg = "Are you sure you want to delete this question?";
 
+    const [openNewEnvPopup, setOpenNewEnvPopup] = React.useState(false);
+
     const programmingLanguages = Object.values(ProgrammingLanguage);
     return (
-        <Box>
+        <Box className="flex flex-col gap-4 mt-4">
             <Box
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginTop: "1rem",
-                    marginBottom: "1rem",
                 }}
             >
                 <TextField
                     variant="outlined"
                     color="primary"
                     label="Title"
+                    sx={{ width: "70%" }}
                     value={editedQuestion.title}
                     onChange={(e) =>
                         setEditedQuestion({
@@ -83,9 +94,6 @@ export default function EditQuestionTab({
             <TextField
                 variant="outlined"
                 color="primary"
-                sx={{
-                    marginBottom: "1rem",
-                }}
                 label="Description"
                 value={editedQuestion.description}
                 onChange={(e) =>
@@ -100,12 +108,7 @@ export default function EditQuestionTab({
                 multiline
                 required
             />
-            <FormControl
-                sx={{
-                    marginBottom: "1rem",
-                }}
-                fullWidth
-            >
+            <FormControl fullWidth>
                 <Autocomplete
                     id="language-select"
                     options={programmingLanguages}
@@ -125,38 +128,43 @@ export default function EditQuestionTab({
                     )}
                 />
             </FormControl>
-            <FormControl
-                sx={{
-                    marginBottom: "1rem",
-                }}
-                fullWidth
-            >
-                <Autocomplete
-                    id="coding-environment-select"
-                    options={codingEnvironments}
-                    getOptionLabel={(option) => option.name}
-                    value={
-                        codingEnvironments.find(
-                            (env) =>
-                                env.id.toString() ===
-                                editedQuestion.codingEnvironmentId
-                        ) || null
-                    }
-                    onChange={(event, newValue) => {
-                        setEditedQuestion({
-                            ...editedQuestion,
-                            codingEnvironmentId: newValue ? newValue.id : "",
-                        });
-                    }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Coding Environment *"
-                            variant="outlined"
-                        />
-                    )}
-                />
-            </FormControl>
+            <Box className="flex flex-row gap-2 items-center">
+                <FormControl fullWidth>
+                    <Autocomplete
+                        id="coding-environment-select"
+                        options={codingEnvironments}
+                        getOptionLabel={(option) => option.name}
+                        value={
+                            codingEnvironments.find(
+                                (env) =>
+                                    env.id.toString() ===
+                                    editedQuestion.codingEnvironmentId
+                            ) || null
+                        }
+                        onChange={(event, newValue) => {
+                            setEditedQuestion({
+                                ...editedQuestion,
+                                codingEnvironmentId: newValue
+                                    ? newValue.id.toString()
+                                    : "",
+                            });
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Coding Environment *"
+                                variant="outlined"
+                            />
+                        )}
+                    />
+                </FormControl>
+                <IconButton
+                    className="w-fit h-fit"
+                    onClick={() => setOpenNewEnvPopup(true)}
+                >
+                    <UploadFileIcon />
+                </IconButton>
+            </Box>
             <TextField
                 color="primary"
                 sx={{
@@ -164,7 +172,6 @@ export default function EditQuestionTab({
                     "& .MuiInputLabel-outlined": {
                         color: "#2e2e2e",
                     },
-                    marginBottom: "1rem",
                 }}
                 label="Execute Command"
                 placeholder="Replace the file path with {mainFile}"
@@ -180,12 +187,14 @@ export default function EditQuestionTab({
             />
             <TextField
                 color="primary"
-                sx={{
-                    marginBottom: "1rem",
-                }}
                 label="Time Limit (in milliseconds)"
                 placeholder="1000"
                 value={editedQuestion.timeLimit}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">ms</InputAdornment>
+                    ),
+                }}
                 onChange={(e) =>
                     setEditedQuestion({
                         ...editedQuestion,
@@ -208,7 +217,19 @@ export default function EditQuestionTab({
                     />
                 }
                 label="Public"
+                sx={{ mt: -1 }}
             />
+            <Dialog
+                onClose={() => setOpenNewEnvPopup(false)}
+                open={openNewEnvPopup}
+                PaperProps={{ sx: { borderRadius: 3 } }}
+            >
+                <NewEnvironmentForm
+                    courseId={courseId}
+                    refetch={refetchEnv}
+                    closeForm={() => setOpenNewEnvPopup(false)}
+                />
+            </Dialog>
         </Box>
     );
 }
