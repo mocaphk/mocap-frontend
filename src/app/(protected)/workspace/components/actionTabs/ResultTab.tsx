@@ -2,33 +2,41 @@ import {
     Box,
     InputLabel,
     List,
-    ListItem,
-    ListItemText,
     TextField,
-    Typography,
+    Collapse,
+    Tooltip,
+    Alert,
 } from "@mui/material";
 import React from "react";
 import ReactDiffViewer from "react-diff-viewer";
-import type {
-    CodeExecutionOutput,
-    CodeExecutionResult,
-} from "../../../../../../.cache/__types__";
-import { green, red } from "@mui/material/colors";
-import { Collapse } from "@mui/material";
+import type { CodeExecutionOutput, CodeExecutionResult } from "@schema";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import NoResult from "@/app/errors/noResult";
 
-// ToDo: handle exceed time limit and execution fail
 function ResultBar({
+    isStart,
+    isEnd,
     result,
     index,
     allowEditOrCreate,
 }: Readonly<{
+    isStart: boolean;
+    isEnd: boolean;
     result: CodeExecutionResult;
     index: number;
     allowEditOrCreate: boolean;
 }>) {
     const [open, setOpen] = React.useState(false);
 
+    const disallowClick =
+        result.isCorrect || (!allowEditOrCreate && result.isHidden);
+
     const handleClick = () => {
+        // if correct or (not teacher and hidden testcase)
+        if (disallowClick) {
+            return;
+        }
+
         setOpen(!open);
     };
 
@@ -52,85 +60,119 @@ function ResultBar({
         }
     }
 
+    console.log(`iscorrect: ${!!result.isCorrect}`);
+    console.log(`!iscorrect: ${!result.isCorrect}`);
+
     return (
         <Box className="">
-            <ListItem
-                onClick={handleClick}
-                className={
-                    !result.isCorrect && !result.isHidden
-                        ? "rounded-lg w-full cursor-pointer"
-                        : " rounded-lg w-full"
-                }
-                style={{
-                    backgroundColor: result.isCorrect ? green[100] : red[100],
+            <Alert
+                sx={{
+                    ...(isStart
+                        ? {
+                              borderTopLeftRadius: "16px",
+                              borderTopRightRadius: "16px",
+                              borderBottomLeftRadius: "0px",
+                              borderBottomRightRadius: "0px",
+                          }
+                        : isEnd && !open
+                        ? {
+                              borderTopLeftRadius: "0px",
+                              borderTopRightRadius: "0px",
+                              borderBottomLeftRadius: "16px",
+                              borderBottomRightRadius: "16px",
+                          }
+                        : { borderRadius: "0px" }),
+                    ...(disallowClick
+                        ? {}
+                        : {
+                              cursor: "pointer",
+                              transition: "all 0.3s ease-in-out",
+                          }),
                 }}
-            >
-                <ListItemText
-                    primary={
-                        result.isHidden
-                            ? "Hidden Test Case"
-                            : `Test Case ${index + 1}${msg}`
-                    }
-                />
-            </ListItem>
-            <Collapse
-                in={
-                    allowEditOrCreate
-                        ? !result.isCorrect && open
-                        : !result.isHidden && !result.isCorrect && open
+                severity={
+                    result.isCorrect === null
+                        ? "success"
+                        : result.isCorrect
+                        ? "success"
+                        : "error"
                 }
-                timeout="auto"
-                unmountOnExit
+                onClick={handleClick}
             >
-                <Box className="flex flex-row items-center gap-1 p1">
-                    <InputLabel>Arguments:</InputLabel>
-                </Box>
-                {result.input.map((input, index) => (
-                    <Box
-                        key={index}
-                        className="flex flex-row w-full gap-3 items-center p-1"
-                    >
-                        <TextField
-                            className="w-full"
-                            color="primary"
-                            type="text"
-                            label="Name"
-                            value={input.name}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
-                        <TextField
-                            className="w-full"
-                            color="primary"
-                            type="text"
-                            label="value"
-                            value={input.value}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            autoComplete="off"
-                        />
+                {result.isHidden
+                    ? "Hidden Test Case"
+                    : `Test Case ${index + 1}${msg}`}
+            </Alert>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box className="flex flex-col gap-2 py-2 px-1">
+                    <Box className="flex flex-row items-center gap-1">
+                        <InputLabel>Arguments:</InputLabel>
+                        <Tooltip title="Input arguments will be passed to the program as standard input (stdin) in order.">
+                            <HelpOutlineIcon
+                                color="info"
+                                sx={{ width: 18, height: 18 }}
+                            />
+                        </Tooltip>
                     </Box>
-                ))}
-
-                <Box>
-                    {result.isCorrect!== null && (
+                    {result.input.map((input, index) => (
+                        <Box
+                            key={index}
+                            className="flex flex-row w-full gap-3 items-center p-1"
+                        >
+                            <TextField
+                                className="w-full"
+                                color="primary"
+                                type="text"
+                                label="Name"
+                                value={input.name}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            />
+                            <TextField
+                                className="w-full"
+                                color="primary"
+                                type="text"
+                                label="value"
+                                value={input.value}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                                autoComplete="off"
+                            />
+                        </Box>
+                    ))}
+                    {result.isCorrect === null ? (
+                        <Box className="flex flex-col gap-1">
+                            <InputLabel>Output: </InputLabel>
+                            <TextField
+                                size="small"
+                                defaultValue={expectedOutput}
+                                InputProps={{ readOnly: true }}
+                                fullWidth
+                                multiline
+                            ></TextField>
+                        </Box>
+                    ) : (
                         <ReactDiffViewer
+                            styles={{
+                                diffContainer: {
+                                    width: "100%",
+                                },
+                                titleBlock: {
+                                    width: "50%",
+                                },
+                                contentText: {
+                                    wordBreak: "break-all",
+                                },
+                            }}
                             leftTitle="Expected Output"
                             rightTitle="Your Output"
                             oldValue={expectedOutput}
                             newValue={output}
                             splitView={true}
+                            showDiffOnly={false}
                         />
-                    )}{
-                        result.isCorrect === null && (
-                            <Box>
-                                <Typography>Output:</Typography>
-                                <Typography>{expectedOutput}</Typography>
-                            </Box>
-                        )
-                    }
+                    )}
                 </Box>
             </Collapse>
         </Box>
@@ -144,7 +186,6 @@ export default function ResultTab({
     results: CodeExecutionResult[];
     allowEditOrCreate: boolean;
 }>) {
-
     const sortedResults = [...results].sort(
         (a, b) => Number(a.isHidden) - Number(b.isHidden)
     );
@@ -154,7 +195,7 @@ export default function ResultTab({
     if (results.length === 0) {
         return (
             <Box className="flex flex-col items-center justify-center w-full h-full">
-                <Typography>No results to show</Typography>
+                <NoResult />
             </Box>
         );
     }
@@ -165,6 +206,8 @@ export default function ResultTab({
                 ? filteredResults?.map((result, index) => (
                       <ResultBar
                           key={index}
+                          isStart={index === 0}
+                          isEnd={index === filteredResults.length - 1}
                           result={result}
                           index={index}
                           allowEditOrCreate={allowEditOrCreate}
@@ -173,6 +216,8 @@ export default function ResultTab({
                 : sortedResults?.map((result, index) => (
                       <ResultBar
                           key={index}
+                          isStart={index === 0}
+                          isEnd={index === filteredResults.length - 1}
                           result={result}
                           index={index}
                           allowEditOrCreate={allowEditOrCreate}

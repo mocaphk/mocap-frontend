@@ -216,12 +216,10 @@ export default function TestcaseTab({
                     testcaseInput: sampleTescasesCopy,
                 },
             });
+        } else if (selectedTestcase?.id === "") {
+            await createCustomTestcasesFunc();
         } else {
-            if (selectedTestcase?.id === "") {
-                await createCustomTestcasesFunc();
-            } else {
-                await updateCustomTestcaseFunc();
-            }
+            await updateCustomTestcaseFunc();
         }
     };
 
@@ -267,7 +265,7 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcase.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
-            
+
             isTimeout = runRes.data?.runTestcase.isExceedTimeLimit;
         }
 
@@ -588,20 +586,47 @@ export default function TestcaseTab({
                         />
                     )}
                     {selectedTestcase.isTimeout && (
-                        <Alert variant="filled" severity="error">
-                            Timeout! The program took too long to run.
+                        <Alert severity="error">
+                            The program exceeded the expected time limit to run.
                         </Alert>
                     )}
                     {(selectedTestcase.expectedOutput ||
-                        selectedTestcase.output) && (
-                        <ReactDiffViewer
-                            leftTitle="Expected Output"
-                            rightTitle="Your Output"
-                            oldValue={selectedTestcase.expectedOutput}
-                            newValue={selectedTestcase.output}
-                            splitView={true}
-                        />
-                    )}
+                        selectedTestcase.output) &&
+                        !selectedTestcase.isTimeout &&
+                        (isEditing ? (
+                            <Box className="flex flex-col gap-1">
+                                <InputLabel>Output: </InputLabel>
+                                <TextField
+                                    size="small"
+                                    defaultValue={
+                                        selectedTestcase.expectedOutput
+                                    }
+                                    InputProps={{ readOnly: true }}
+                                    fullWidth
+                                    multiline
+                                ></TextField>
+                            </Box>
+                        ) : (
+                            <ReactDiffViewer
+                                styles={{
+                                    diffContainer: {
+                                        width: "100%",
+                                    },
+                                    titleBlock: {
+                                        width: "50%",
+                                    },
+                                    contentText: {
+                                        wordBreak: "break-all",
+                                    },
+                                }}
+                                leftTitle="Expected Output"
+                                rightTitle="Your Output"
+                                oldValue={selectedTestcase.expectedOutput}
+                                newValue={selectedTestcase.output}
+                                splitView={true}
+                                showDiffOnly={false}
+                            />
+                        ))}
                 </Box>
             )}
         </Box>
