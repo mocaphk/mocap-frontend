@@ -119,9 +119,14 @@ query runAllTestcasesWithCode(
                 payload
                 streamType
             }
+            sampleOutput {
+                payload
+                streamType
+            }
             isExecutionSuccess
             isCorrect
             isExceedTimeLimit
+            isHidden
         }
         createdAt
     }

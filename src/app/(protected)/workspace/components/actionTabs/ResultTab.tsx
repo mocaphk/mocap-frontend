@@ -41,7 +41,8 @@ function ResultBar({
         .join("\n");
 
     let msg = "";
-    if (!result.isCorrect) {
+    // isCorrect is null when the testcases are run with sample code only
+    if (!result.isCorrect && result.isCorrect !== null) {
         if (result.isExceedTimeLimit) {
             msg = ": Exceed Time Limit";
         } else if (!result.isExecutionSuccess) {
@@ -114,13 +115,22 @@ function ResultBar({
                 ))}
 
                 <Box>
-                    <ReactDiffViewer
-                        leftTitle="Expected Output"
-                        rightTitle="Your Output"
-                        oldValue={expectedOutput}
-                        newValue={output}
-                        splitView={true}
-                    />
+                    {result.isCorrect!== null && (
+                        <ReactDiffViewer
+                            leftTitle="Expected Output"
+                            rightTitle="Your Output"
+                            oldValue={expectedOutput}
+                            newValue={output}
+                            splitView={true}
+                        />
+                    )}{
+                        result.isCorrect === null && (
+                            <Box>
+                                <Typography>Output:</Typography>
+                                <Typography>{expectedOutput}</Typography>
+                            </Box>
+                        )
+                    }
                 </Box>
             </Collapse>
         </Box>
@@ -134,35 +144,6 @@ export default function ResultTab({
     results: CodeExecutionResult[];
     allowEditOrCreate: boolean;
 }>) {
-    // const fakeResults: CodeExecutionResult[] = [
-    //     {
-    //         id: "1",
-    //         isCorrect: true,
-    //         input: [
-    //             { name: "name", value: "value" },
-    //             { name: "name2", value: "value2" },
-    //         ],
-    //         isExceedTimeLimit: false,
-    //         isExecutionSuccess: false,
-    //         isHidden: false,
-    //         output: [],
-    //         sampleOutput: [],
-    //     },
-    //     {
-    //         id: "2",
-    //         isCorrect: false,
-    //         input: [
-    //             { name: "name", value: "value" },
-    //             { name: "name2", value: "value2" },
-    //         ],
-    //         isExceedTimeLimit: false,
-    //         isExecutionSuccess: false,
-    //         isHidden: false,
-    //         output: [{ payload: "1234" }],
-    //         sampleOutput: [{ payload: "123" }],
-    //     },
-    //     // Add more fake results as needed...
-    // ];
 
     const sortedResults = [...results].sort(
         (a, b) => Number(a.isHidden) - Number(b.isHidden)

@@ -624,6 +624,7 @@ export default function WorkspacePage() {
                     "Testcase output",
                     res.runAllTestcasesWithCode.results
                 );
+                setResults(res.runAllTestcasesWithCode.results);
             },
             onError: (error) => {
                 console.error("runAllTestcasesFunc error:", error);
