@@ -9,6 +9,7 @@ import {
     Tooltip,
     Checkbox,
     FormControlLabel,
+    Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
@@ -121,6 +122,7 @@ export default function TestcaseTab({
             expectedOutput: "",
             isHidden: false,
             output: "",
+            isTimeout: false,
         };
 
         setSampleTestcases((prevTestcases: any) => [
@@ -143,6 +145,7 @@ export default function TestcaseTab({
             ],
             expectedOutput: "",
             output: "",
+            isTimeout: false,
         };
 
         setCustomTestcases((prevTestcases: any) => [
@@ -203,6 +206,7 @@ export default function TestcaseTab({
                 if (testcase.tempId) {
                     delete testcase.tempId;
                     delete testcase.output;
+                    delete testcase.isTimeout;
                 }
                 testcase.expectedOutput = "";
             });
@@ -226,6 +230,7 @@ export default function TestcaseTab({
     const handleRunClick = async () => {
         let expectedOutput = selectedTestcase?.expectedOutput;
         let output = selectedTestcase?.output;
+        let isTimeout = selectedTestcase?.isTimeout;
 
         if (isEditing) {
             const testcaseInput = selectedTestcase?.input;
@@ -243,6 +248,8 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcaseWithCode.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
+
+            isTimeout = runRes.data?.runTestcaseWithCode.isExceedTimeLimit;
         } else {
             const createOrUpdateAttemptId = await createOrUpdateAttempt(false);
 
@@ -260,6 +267,8 @@ export default function TestcaseTab({
             output = runRes.data?.runTestcase.output
                 .map((output: { payload: any }) => output.payload)
                 .join("\n");
+            
+            isTimeout = runRes.data?.runTestcase.isExceedTimeLimit;
         }
 
         const setState = isSelectedCustomTestcase
@@ -275,6 +284,7 @@ export default function TestcaseTab({
 
                     newTestcaseCopy.expectedOutput = expectedOutput;
                     newTestcaseCopy.output = output;
+                    newTestcaseCopy.isTimeout = isTimeout;
                     setSelectedTestcase(newTestcaseCopy);
                     return newTestcaseCopy;
                 }
@@ -576,6 +586,11 @@ export default function TestcaseTab({
                             }
                             label="Is Hidden"
                         />
+                    )}
+                    {selectedTestcase.isTimeout && (
+                        <Alert variant="filled" severity="error">
+                            Timeout! The program took too long to run.
+                        </Alert>
                     )}
                     {(selectedTestcase.expectedOutput ||
                         selectedTestcase.output) && (

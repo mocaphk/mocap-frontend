@@ -9,6 +9,7 @@ export interface CustomTestcase {
     input: TestcaseInputEntry[];
     expectedOutput: string;
     output: string;
+    isTimeout: boolean;
 }
 
 export interface SampleTestcase {
@@ -18,4 +19,5 @@ export interface SampleTestcase {
     expectedOutput: string;
     isHidden: boolean;
     output: string;
+    isTimeout: boolean;
 }

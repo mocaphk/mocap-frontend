@@ -440,6 +440,7 @@ export default function WorkspacePage() {
                             expectedOutput: testcase.expectedOutput,
                             isHidden: testcase.isHidden,
                             output: "",
+                            isTimeout: false,
                         };
                     });
                     console.log("Testcases from server:", sampleTestcases);
@@ -480,6 +481,7 @@ export default function WorkspacePage() {
                         }),
                         expectedOutput: "",
                         output: "",
+                        isTimeout: false,
                     };
                 }
             );
