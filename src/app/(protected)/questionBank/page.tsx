@@ -4,18 +4,37 @@ import React from "react";
 import CardWrapper from "@/app/components/CardWrapper";
 import ComponentWrapper from "@/app/components/ComponentWrapper";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import { Autocomplete, Box, Grid, IconButton, TextField } from "@mui/material";
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Grid,
+    IconButton,
+    Snackbar,
+    TextField,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Table from "@/app/components/Table";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGetCourseCodesQuery } from "@/app/graphql/course/course.graphql";
 import { useSearchPublicQuestionsQuery } from "@/app/graphql/questionBank/questionBank.graphql";
+import { UserRole } from "@schema";
 import type { SearchPublicQuestionsInput } from "@schema";
 import CustomSkeleton from "@/app/components/CustomSkeleton";
+import type { GridRowParams } from "@mui/x-data-grid";
+import { useCopyQuestionToAssignmentMutation } from "@/app/graphql/workspace/question.graphql";
+import { useGetAssignmentUserRolesQuery } from "@/app/graphql/course/assignment.graphql";
+import ErrorPage from "@/app/errors/errorPage";
 
 export default function QuestionBankPage() {
+    const searchParams = useSearchParams();
+    const assignmentId = searchParams.get("assignmentId") ?? "";
+
     const { push } = useRouter();
 
+    const [copyQuestionToAssignment, { error, loading }] =
+        useCopyQuestionToAssignmentMutation();
+    const [fetchError, setFetchError] = React.useState<boolean>(false);
     const [courseCode, setCourseCode] = React.useState<string | null>(null);
 
     const { loading: loadingCourseCodes, data: courseCodesData } =
@@ -51,6 +70,84 @@ export default function QuestionBankPage() {
         });
     };
 
+    // check perms
+    const { data: rolesData } = useGetAssignmentUserRolesQuery({
+        skip: !assignmentId,
+        variables: { assignmentId: assignmentId },
+    });
+
+    const roles = rolesData?.getAssignmentUserRoles;
+
+    const isAdmin = roles?.includes(UserRole.Admin) ?? false;
+    const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
+    const isTutor = roles?.includes(UserRole.Tutor) ?? false;
+
+    const allowCopyQuestion = isAdmin || isLecturer || isTutor;
+
+    const showErrorMessage =
+        !loading &&
+        (rolesData === undefined ||
+            error ||
+            roles === undefined ||
+            roles === null);
+
+    const onRowClick = (params: GridRowParams) => {
+        if (assignmentId) {
+            // doing copy assignment
+            onCopyQuestionToAssignment(params.row.questionId);
+            return;
+        }
+
+        push(`/workspace?questionId=${params.row.questionId}`);
+    };
+
+    const onCopyQuestionToAssignment = async (questionId: string) => {
+        const result = await copyQuestionToAssignment({
+            variables: {
+                questionId: questionId,
+                assignmentId: assignmentId,
+            },
+        });
+
+        const newQuestion = result?.data?.copyQuestionToAssignment;
+
+        const error =
+            result?.errors !== undefined ||
+            newQuestion === null ||
+            newQuestion === undefined;
+
+        setFetchError(error);
+        if (error) {
+            return;
+        }
+
+        // redirect back to assignment page
+        push(`assignment?id=${assignmentId}`);
+    };
+
+    if (assignmentId && showErrorMessage) {
+        // may such assignment do not exist
+        return (
+            <ErrorPage
+                title="Assignment not found"
+                message="It appears that the assignment you intended to link the question to does not exist."
+                returnLink="questionBank"
+                returnMessage="Back to question bank"
+            />
+        );
+    }
+
+    if (assignmentId && !allowCopyQuestion) {
+        return (
+            <ErrorPage
+                title="No permission"
+                message="It appears that you do not have the necessary permissions to create a question for this course."
+                returnMessage="Back to course page"
+                returnLink={`assignment?id=${assignmentId}`}
+            />
+        );
+    }
+
     return (
         <CardWrapper className="h-full">
             <ComponentWrapper
@@ -59,6 +156,19 @@ export default function QuestionBankPage() {
                 fullHeight
             >
                 <Box className="h-full flex flex-col mt-2">
+                    <Box className="flex flex-col gap-2 mb-2">
+                        {assignmentId && (
+                            <Alert severity="info">
+                                Please choose a question to copy for the
+                                assignment.
+                            </Alert>
+                        )}
+                        {(error || fetchError) && (
+                            <Alert severity="error">
+                                Failed to copy question. Please try again.
+                            </Alert>
+                        )}
+                    </Box>
                     {loadingCourseCodes ? (
                         <CustomSkeleton
                             sx={{ minWidth: "100%", minHeight: 100 }}
@@ -166,16 +276,17 @@ export default function QuestionBankPage() {
                                 },
                             ]}
                             getRowId={(row) => row.questionId}
-                            onRowClick={(params) => {
-                                push(
-                                    `/workspace?questionId=${params.row.questionId}`
-                                );
-                            }}
+                            onRowClick={onRowClick}
                             loading={loadingQuestions}
                         ></Table>
                     </Box>
                 </Box>
             </ComponentWrapper>
+            <Snackbar open={loading}>
+                <Alert severity="info" variant="filled" sx={{ width: "100%" }}>
+                    Copying question...
+                </Alert>
+            </Snackbar>
         </CardWrapper>
     );
 }

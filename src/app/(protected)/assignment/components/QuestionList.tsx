@@ -102,7 +102,7 @@ export default function QuestionList({
                                 Icon={AccountBalanceIcon}
                                 title="Choose from question bank"
                                 description=""
-                                link="questionBank"
+                                link={`questionBank?assignmentId=${assignmentId}`}
                             />
                         </Grid>
                     </Grid>

@@ -39,3 +39,12 @@ mutation DeleteQuestion($questionId: ID!) {
         id
     }
 }
+
+mutation CopyQuestionToAssignment($questionId: ID!, $assignmentId: ID!) {
+    copyQuestionToAssignment(
+        questionId: $questionId
+        assignmentId: $assignmentId
+    ) {
+        id
+    }
+}
