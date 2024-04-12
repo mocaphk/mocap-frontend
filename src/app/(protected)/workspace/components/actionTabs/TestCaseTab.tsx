@@ -23,7 +23,7 @@ import type {
     TestcaseInputEntry,
 } from "../../types/Testcase";
 import { v4 as uuidv4 } from "uuid";
-import ReactDiffViewer from "react-diff-viewer";
+import ReactDiffViewer from "react-diff-viewer-continued";
 
 export default function TestcaseTab({
     isEditing,

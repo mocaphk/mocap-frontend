@@ -8,7 +8,7 @@ import {
     Alert,
 } from "@mui/material";
 import React from "react";
-import ReactDiffViewer from "react-diff-viewer";
+import ReactDiffViewer from "react-diff-viewer-continued";
 import type { CodeExecutionOutput, CodeExecutionResult } from "@schema";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import NoResult from "@/app/errors/noResult";
