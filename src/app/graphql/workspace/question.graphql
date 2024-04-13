@@ -4,7 +4,6 @@ query GetQuestion($questionId: ID) {
         title
         description
         language
-        sampleCode
         checkingMethod
         codingEnvironment {
             id
@@ -16,6 +15,12 @@ query GetQuestion($questionId: ID) {
             id
         }
         isPublic
+    }
+}
+
+query GetSampleCode($questionId: ID) {
+    question(id: $questionId) {
+        sampleCode
     }
 }
 

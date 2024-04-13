@@ -70,7 +70,7 @@ export default function WorkspacePage() {
     // get courseId by assignmentId
     const { refetch: refetchCourseId } = useGetCouseIdByAssignmentIdQuery({
         variables: { assignmentId: assignmentId },
-        skip: assignmentId === "",
+        skip: assignmentId === "" || assignmentId === null,
         onCompleted: (data: GetCouseIdByAssignmentIdQuery) => {
             setCourseId(data.assignment?.course.id ?? "");
             getRolesDataFunc({
@@ -149,7 +149,7 @@ export default function WorkspacePage() {
                 title: questionData.title,
                 description: questionData.description,
                 language: questionData.language as ProgrammingLanguage,
-                sampleCode: questionData.sampleCode!,
+                sampleCode: "",
                 checkingMethod: questionData.checkingMethod!,
                 execCommand: questionData.execCommand!,
                 timeLimit: questionData.timeLimit,
@@ -197,7 +197,7 @@ export default function WorkspacePage() {
                     description: response.data.question?.description!,
                     language: response.data.question
                         ?.language as ProgrammingLanguage,
-                    sampleCode: response.data.question?.sampleCode!,
+                    sampleCode: "",
                     checkingMethod: response.data.question?.checkingMethod!,
                     execCommand: response.data.question?.execCommand!,
                     timeLimit: response.data.question?.timeLimit!,
