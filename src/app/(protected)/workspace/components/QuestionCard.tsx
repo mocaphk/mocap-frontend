@@ -7,6 +7,7 @@ import CardWrapper from "@/app/components/CardWrapper";
 import EditQuestionTab from "./questionTabs/editQuestionTab";
 import QuestionTab from "./questionTabs/questionTab";
 import type { SampleTestcase, CustomTestcase } from "../types/Testcase";
+import { useGetSampleCodeLazyQuery } from "@/app/graphql/workspace/question.graphql";
 
 export default function QuestionCard({
     courseId,
@@ -88,11 +89,16 @@ export default function QuestionCard({
         }
     }, [data, error]);
 
-    const handleEditClick = () => {
+    const [getSampleCode] = useGetSampleCodeLazyQuery({
+        variables: { questionId: question.id },
+    });
+
+    const handleEditClick = async () => {
+        const res = await getSampleCode();
         let editedQuestion: Question = new Object() as Question;
         editedQuestion.title = question.title;
         editedQuestion.description = question.description;
-        editedQuestion.sampleCode = question.sampleCode;
+        editedQuestion.sampleCode = res.data?.question?.sampleCode ?? "";
         editedQuestion.language = question.language;
         editedQuestion.codingEnvironmentId = question.codingEnvironmentId;
         editedQuestion.execCommand = question.execCommand;
