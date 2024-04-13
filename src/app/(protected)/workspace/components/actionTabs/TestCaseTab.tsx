@@ -241,12 +241,11 @@ export default function TestcaseTab({
             });
             expectedOutput = runRes.data?.runTestcaseWithCode.sampleOutput
                 .map((output: { payload: any }) => output.payload)
-                .join("\n");
+                .join("");
 
             output = runRes.data?.runTestcaseWithCode.output
                 .map((output: { payload: any }) => output.payload)
-                .join("\n");
-
+                .join("");
             isTimeout = runRes.data?.runTestcaseWithCode.isExceedTimeLimit;
         } else {
             const createOrUpdateAttemptId = await createOrUpdateAttempt(false);
@@ -260,11 +259,11 @@ export default function TestcaseTab({
 
             expectedOutput = runRes.data?.runTestcase.sampleOutput
                 .map((output: { payload: any }) => output.payload)
-                .join("\n");
+                .join("");
 
             output = runRes.data?.runTestcase.output
                 .map((output: { payload: any }) => output.payload)
-                .join("\n");
+                .join("");
 
             isTimeout = runRes.data?.runTestcase.isExceedTimeLimit;
         }
@@ -598,9 +597,7 @@ export default function TestcaseTab({
                                 <InputLabel>Output: </InputLabel>
                                 <TextField
                                     size="small"
-                                    defaultValue={
-                                        selectedTestcase.expectedOutput
-                                    }
+                                    value={selectedTestcase.expectedOutput}
                                     InputProps={{ readOnly: true }}
                                     fullWidth
                                     multiline
