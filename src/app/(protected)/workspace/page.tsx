@@ -9,7 +9,7 @@ import type { Question } from "./types/Question";
 import type { Attempt } from "./types/Attempt";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import {
     useGetQuestionQuery,
     useCreateQuestionMutation,
@@ -53,6 +53,16 @@ export default function WorkspacePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const questionIdFromUrl = searchParams.get("questionId");
+
+    // noti snackbar state
+    const [openSaveCustomTestcaseSuccess, setOpenSaveCustomTestcaseSuccess] =
+        React.useState<boolean>(false);
+    const [openSaveCustomTestcaseError, setOpenSaveCustomTestcaseError] =
+        React.useState<boolean>(false);
+    const [openSaveQuestionSuccess, setOpenSaveQuestionSuccess] =
+        React.useState<boolean>(false);
+    const [openSaveQuestionError, setOpenSaveQuestionError] =
+        React.useState<boolean>(false);
 
     // local storage store latest attempted question
     if (questionIdFromUrl) {
@@ -171,11 +181,17 @@ export default function WorkspacePage() {
         },
         onCompleted: async (res) => {
             console.log("Created question with id:", res.createQuestion.id);
-            router.push(`workspace?questionId=${res.createQuestion.id}`);
+            router.replace(`workspace?questionId=${res.createQuestion.id}`);
             setCurrentQuestionId(res.createQuestion.id);
+
+            // success noti
+            setOpenSaveQuestionSuccess(true);
         },
         onError: (error) => {
             console.error("createQuestionFunc error:", error);
+
+            // error noti
+            setOpenSaveQuestionError(true);
         },
     });
 
@@ -208,9 +224,15 @@ export default function WorkspacePage() {
                     isPublic: response.data.question?.isPublic!,
                 });
             });
+
+            // success noti
+            setOpenSaveQuestionSuccess(true);
         },
         onError: (error) => {
             console.error("updateQuestionFunc error:", error);
+
+            // error noti
+            setOpenSaveQuestionError(true);
         },
     });
 
@@ -578,9 +600,15 @@ export default function WorkspacePage() {
 
                 return updatedTestcases;
             });
+
+            // success noti
+            setOpenSaveCustomTestcaseSuccess(true);
         },
         onError: (error) => {
             console.error("createCustomTestcasesFunc error:", error);
+
+            // fail noti
+            setOpenSaveCustomTestcaseError(true);
         },
     });
 
@@ -593,9 +621,15 @@ export default function WorkspacePage() {
         },
         onCompleted: (res) => {
             console.log("Testcase Id", res.updateCustomTestcase.id);
+
+            // success noti
+            setOpenSaveCustomTestcaseSuccess(true);
         },
         onError: (error) => {
             console.error("updateCustomTestcaseFunc error:", error);
+
+            // fail noti
+            setOpenSaveCustomTestcaseError(true);
         },
     });
 
@@ -791,6 +825,62 @@ export default function WorkspacePage() {
                     />
                 </Allotment.Pane>
             </Allotment>
+            <Snackbar
+                open={openSaveCustomTestcaseSuccess}
+                autoHideDuration={3000}
+                onClose={() => setOpenSaveCustomTestcaseSuccess(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSaveCustomTestcaseSuccess(false)}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    Your custom test cases have been saved successfully.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSaveCustomTestcaseError}
+                autoHideDuration={3000}
+                onClose={() => setOpenSaveCustomTestcaseError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSaveCustomTestcaseError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred while saving your custom test case.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSaveQuestionSuccess}
+                autoHideDuration={3000}
+                onClose={() => setOpenSaveQuestionSuccess(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSaveQuestionSuccess(false)}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    Your question have been saved successfully.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSaveQuestionError}
+                autoHideDuration={3000}
+                onClose={() => setOpenSaveQuestionError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSaveQuestionError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred while saving your question.
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }
