@@ -8,16 +8,20 @@ import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import type { Attempt } from "../types/Attempt";
 import type { CustomTestcase, SampleTestcase } from "../types/Testcase";
 import ResultTab from "./actionTabs/ResultTab";
+import UserTab from "./actionTabs/UserTab";
+import { useGetSubmittedStudentsQuery } from "@/app/graphql/workspace/attempt.graphql";
 import ScienceIcon from "@mui/icons-material/Science";
 import PublishIcon from "@mui/icons-material/Publish";
 import RuleIcon from "@mui/icons-material/Rule";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 export default function ActionCard({
+    activeTab,
+    setActiveTab,
     isEditing,
     allowEditOrCreate,
     language,
     attemptsList,
-    setCurrentAttempt,
     sampleTestcases,
     customTestcases,
     selectedTestcase,
@@ -34,12 +38,14 @@ export default function ActionCard({
     codeOnEditor,
     runTestcaseWithSampleCodeFunc,
     results,
+    setCodeOnEditor,
 }: Readonly<{
+    activeTab: string;
+    setActiveTab: Function;
     isEditing: boolean;
     allowEditOrCreate: boolean;
     language: ProgrammingLanguage;
     attemptsList: Attempt[];
-    setCurrentAttempt: Function;
     sampleTestcases: SampleTestcase[];
     customTestcases: CustomTestcase[];
     selectedTestcase: SampleTestcase | CustomTestcase | undefined;
@@ -56,8 +62,8 @@ export default function ActionCard({
     codeOnEditor: string;
     runTestcaseWithSampleCodeFunc: Function;
     results: CodeExecutionResult[];
+    setCodeOnEditor: Function;
 }>) {
-    const [activeTab, setActiveTab] = React.useState("testCase");
     const theme = useTheme();
 
     const handleTabChange = (
@@ -66,6 +72,38 @@ export default function ActionCard({
     ) => {
         setActiveTab(newTab);
     };
+
+    // state for student submission
+    const [selectedStudent, setSelectedStudent] = React.useState<{
+        id: string;
+        username: string;
+    }>();
+
+    const [submittedStudents, setSubmittedStudents] = React.useState<
+        { id: string; username: string }[]
+    >([]);
+
+    const [studentSubmittedAt, setStudentSubmittedAt] =
+        React.useState<string>("");
+
+    const { data: studentsData } = useGetSubmittedStudentsQuery({
+        variables: { questionId: questionId },
+        onCompleted: (data) => {
+            console.log(data);
+            setSubmittedStudents(
+                data.submittedStudents?.map((user) => ({
+                    id: user.id,
+                    username: user.username,
+                })) ?? []
+            );
+            setSelectedStudent(
+                data.submittedStudents?.[0] ?? submittedStudents[0]
+            );
+        },
+        onError: (error) => {
+            console.log(error);
+        },
+    });
 
     return (
         <Card
@@ -114,6 +152,14 @@ export default function ActionCard({
                             icon={<RuleIcon />}
                             iconPosition="start"
                         />
+                        {allowEditOrCreate && (
+                            <Tab
+                                label="Student Submissions"
+                                value="user"
+                                icon={<GroupsIcon />}
+                                iconPosition="start"
+                            />
+                        )}
                     </TabList>
 
                     <Box className="flex-grow">
@@ -151,13 +197,24 @@ export default function ActionCard({
                             <SubmissionTab
                                 language={language}
                                 attemptsList={attemptsList}
-                                setCurrentAttempt={setCurrentAttempt}
+                                setCodeOnEditor={setCodeOnEditor}
                             />
                         </TabPanel>
                         <TabPanel className="h-full" value="result">
                             <ResultTab
                                 results={results}
                                 allowEditOrCreate={allowEditOrCreate}
+                            />
+                        </TabPanel>
+                        <TabPanel className="h-full" value="user">
+                            <UserTab
+                                questionId={questionId}
+                                submittedStudents={submittedStudents}
+                                selectedStudent={selectedStudent}
+                                setSelectedStudent={setSelectedStudent}
+                                studentSubmittedAt={studentSubmittedAt}
+                                setStudentSubmittedAt={setStudentSubmittedAt}
+                                setCodeOnEditor={setCodeOnEditor}
                             />
                         </TabPanel>
                     </Box>

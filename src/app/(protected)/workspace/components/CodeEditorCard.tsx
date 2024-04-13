@@ -1,12 +1,11 @@
+import React from "react";
 import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PublishIcon from "@mui/icons-material/Publish";
 import CodeEditor from "./CodeEditor";
 import type { Question } from "../types/Question";
-import React from "react";
 import CardWrapper from "@/app/components/CardWrapper";
-import useDebouncedResize from "@/app/utils/resizeHandler";
 import type { SampleTestcase } from "../types/Testcase";
 import type { CustomTestcase } from "../types/Testcase";
 
@@ -37,9 +36,10 @@ export default function CodeEditorCard({
     sampleTestcases: SampleTestcase[];
     customTestcases: CustomTestcase[];
 }>) {
-    // force code editor to re-render
-    const [codeEditorKey, setCodeEditorKey] = React.useState(0);
-    useDebouncedResize(() => setCodeEditorKey((key) => key + 1), 200);
+    const [openCodeEmptyError, setOpenCodeEmptyError] =
+        React.useState<boolean>(false);
+    const [openSubmissionSuccess, setOpenSubmissionSuccess] =
+        React.useState<boolean>(false);
 
     const updateCode = (code: React.SetStateAction<string>) => {
         setCodeOnEditor(code);
@@ -85,6 +85,9 @@ export default function CodeEditorCard({
                 attemptId: currentAttemptId ?? "",
             },
         });
+
+        setOpenSubmissionSuccess(true);
+
         console.log(
             "Submit attempt result:",
             response.data?.submitAttempt.results
@@ -95,14 +98,7 @@ export default function CodeEditorCard({
         if (codeOnEditor?.trim()) {
             await runAttempt();
         } else {
-            let confirmMSG = confirm(
-                "The code is empty, are you sure to run it?"
-            );
-            if (confirmMSG) {
-                await runAttempt();
-            } else {
-                console.log("cancel run");
-            }
+            setOpenCodeEmptyError(true);
         }
     };
 
@@ -110,23 +106,15 @@ export default function CodeEditorCard({
         if (codeOnEditor?.trim()) {
             await submitAttempt();
         } else {
-            let confirmMSG = confirm(
-                "The code is empty, are you sure to submit it?"
-            );
-            if (confirmMSG) {
-                await submitAttempt();
-            } else {
-                console.log("cancel submit");
-            }
+            setOpenCodeEmptyError(true);
         }
     };
 
     return (
         <CardWrapper className="h-full">
             <Box className="flex h-full flex-col gap-4">
-                <Box className="flex-grow rounded-2xl overflow-hidden">
+                <Box className="flex-1 rounded-2xl overflow-hidden">
                     <CodeEditor
-                        key={codeEditorKey}
                         codeOnEditor={codeOnEditor}
                         language={question.language}
                         updateCode={updateCode}
@@ -157,6 +145,34 @@ export default function CodeEditorCard({
                     )}
                 </Box>
             </Box>
+            <Snackbar
+                open={openCodeEmptyError}
+                autoHideDuration={3000}
+                onClose={() => setOpenCodeEmptyError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenCodeEmptyError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred due to the absence of code.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSubmissionSuccess}
+                autoHideDuration={3000}
+                onClose={() => setOpenSubmissionSuccess(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSubmissionSuccess(false)}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    Your submission has been successfully submitted.
+                </Alert>
+            </Snackbar>
         </CardWrapper>
     );
 }

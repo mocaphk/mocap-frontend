@@ -6,6 +6,7 @@ import {
     Collapse,
     Tooltip,
     Alert,
+    Typography,
 } from "@mui/material";
 import React from "react";
 import ReactDiffViewer from "react-diff-viewer-continued";
@@ -110,9 +111,9 @@ function ResultBar({
                             />
                         </Tooltip>
                     </Box>
-                    {result.input.map((input, index) => (
+                    {result.input.map((input, idx) => (
                         <Box
-                            key={index}
+                            key={idx}
                             className="flex flex-row w-full gap-3 items-center p-1"
                         >
                             <TextField
@@ -189,6 +190,14 @@ export default function ResultTab({
 
     const filteredResults = [...results].filter((result) => !result.isHidden);
 
+    const totalTestCasesLength = allowEditOrCreate
+        ? filteredResults.length
+        : sortedResults.length;
+
+    const passedTestCasesLength = (
+        allowEditOrCreate ? filteredResults : sortedResults
+    ).filter((results) => results.isCorrect).length;
+
     if (results.length === 0) {
         return (
             <Box className="flex flex-col items-center justify-center w-full h-full">
@@ -198,28 +207,33 @@ export default function ResultTab({
     }
 
     return (
-        <List className="w-full" aria-label="mailbox folders">
-            {allowEditOrCreate
-                ? filteredResults?.map((result, index) => (
-                      <ResultBar
-                          key={index}
-                          isStart={index === 0}
-                          isEnd={index === filteredResults.length - 1}
-                          result={result}
-                          index={index}
-                          allowEditOrCreate={allowEditOrCreate}
-                      />
-                  ))
-                : sortedResults?.map((result, index) => (
-                      <ResultBar
-                          key={index}
-                          isStart={index === 0}
-                          isEnd={index === sortedResults.length - 1}
-                          result={result}
-                          index={index}
-                          allowEditOrCreate={allowEditOrCreate}
-                      />
-                  ))}
-        </List>
+        <Box className="flex flex-col gap-1">
+            <Typography color="info.main" fontSize={18}>
+                {`Passed test cases: ${passedTestCasesLength} / ${totalTestCasesLength}`}
+            </Typography>
+            <List className="w-full">
+                {allowEditOrCreate
+                    ? filteredResults?.map((result, index) => (
+                          <ResultBar
+                              key={index}
+                              isStart={index === 0}
+                              isEnd={index === filteredResults.length - 1}
+                              result={result}
+                              index={index}
+                              allowEditOrCreate={allowEditOrCreate}
+                          />
+                      ))
+                    : sortedResults?.map((result, index) => (
+                          <ResultBar
+                              key={index}
+                              isStart={index === 0}
+                              isEnd={index === sortedResults.length - 1}
+                              result={result}
+                              index={index}
+                              allowEditOrCreate={allowEditOrCreate}
+                          />
+                      ))}
+            </List>
+        </Box>
     );
 }

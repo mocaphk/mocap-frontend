@@ -325,6 +325,7 @@ export default function WorkspacePage() {
                 console.log("run attempt result:", res.runAttempt.results);
                 refetchAttempts();
                 setResults(res.runAttempt.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -343,6 +344,7 @@ export default function WorkspacePage() {
                 );
                 refetchAttempts();
                 setResults(res.submitAttempt.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -640,11 +642,14 @@ export default function WorkspacePage() {
                     res.runAllTestcasesWithCode.results
                 );
                 setResults(res.runAllTestcasesWithCode.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("runAllTestcasesFunc error:", error);
             },
         });
+
+    const [activeTab, setActiveTab] = React.useState("testCase");
 
     // Loading state
     const [isLoading, setIsLoading] = React.useState(false);
@@ -695,7 +700,7 @@ export default function WorkspacePage() {
         );
     }
 
-    if (questionNotFound) {
+    if (!isNewQuestion && questionNotFound) {
         return (
             <ErrorPage
                 title="Question not found"
@@ -737,11 +742,12 @@ export default function WorkspacePage() {
                     </Allotment.Pane>
                     <Allotment.Pane className="p-1" preferredSize="50%">
                         <ActionCard
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
                             isEditing={isEditing}
                             allowEditOrCreate={allowEditOrCreate}
                             language={question.language}
                             attemptsList={attemptsList}
-                            setCurrentAttempt={setCurrentAttempt}
                             sampleTestcases={sampleTestcases}
                             customTestcases={customTestcases}
                             selectedTestcase={selectedTestcase}
@@ -758,12 +764,13 @@ export default function WorkspacePage() {
                             updateCustomTestcaseFunc={updateCustomTestcaseFunc}
                             runTestcaseFunc={runTestcaseFunc}
                             createOrUpdateAttempt={createOrUpdateAttempt}
-                            questionId={question.id}
+                            questionId={currentQuestionId}
                             codeOnEditor={codeOnEditor}
                             runTestcaseWithSampleCodeFunc={
                                 runTestcaseWithSampleCodeFunc
                             }
                             results={results}
+                            setCodeOnEditor={setCodeOnEditor}
                         />
                     </Allotment.Pane>
                 </Allotment>

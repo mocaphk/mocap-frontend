@@ -31,11 +31,11 @@ function SliderLabel({
 export default function SubmissionTab({
     language,
     attemptsList,
-    setCurrentAttempt,
+    setCodeOnEditor,
 }: Readonly<{
     language: ProgrammingLanguage;
     attemptsList: Attempt[];
-    setCurrentAttempt: Function;
+    setCodeOnEditor: Function;
 }>) {
     const [selectedAttempt, setSelectedAttempt] =
         React.useState<Attempt | null>(
@@ -60,8 +60,8 @@ export default function SubmissionTab({
         console.log("revert clicked");
         console.log("selected attempt: ", selectedAttempt);
         if (selectedAttempt) {
-            console.log("reverting to: ", selectedAttempt);
-            setCurrentAttempt(selectedAttempt);
+            console.log("reverting to: ", marks.values);
+            setCodeOnEditor(selectedAttempt.code);
         }
     };
 

@@ -24,12 +24,14 @@ export default function SubmissionModal({
                 className="bg-background p-4 h-full w-[50%]"
                 sx={{ borderRadius: 6 }}
             >
-                <CodeEditor
-                    updateCode={null}
-                    language={language}
-                    codeOnEditor={selectedAttempt.code}
-                    readOnly={true}
-                />
+                <Box className="h-full rounded-2xl overflow-hidden">
+                    <CodeEditor
+                        updateCode={null}
+                        language={language}
+                        codeOnEditor={selectedAttempt.code}
+                        readOnly={true}
+                    />
+                </Box>
             </Box>
         </Modal>
     );
