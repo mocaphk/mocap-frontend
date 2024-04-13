@@ -208,7 +208,7 @@ export default function WorkspacePage() {
         },
         onCompleted: (res) => {
             router.replace(`workspace?questionId=${res.updateQuestion.id}`);
-            
+
             // success noti
             setOpenSaveQuestionSuccess(true);
         },

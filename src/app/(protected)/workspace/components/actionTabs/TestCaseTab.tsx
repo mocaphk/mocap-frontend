@@ -17,6 +17,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import type {
     CustomTestcase,
     SampleTestcase,
@@ -325,9 +326,20 @@ export default function TestcaseTab({
                                   key={testcase.tempId}
                                   id={testcase.tempId}
                                   label={
-                                      (testcase as SampleTestcase).isHidden
-                                          ? `Test Case ${i + 1} (Hidden)`
-                                          : `Test Case ${i + 1}`
+                                      <Box className="flex flex-row items-center gap-2">
+                                          <p>Test Case {i + 1}</p>
+                                          {(testcase as SampleTestcase)
+                                              .isHidden && (
+                                              <Tooltip title="Hidden">
+                                                  <VisibilityOffIcon
+                                                      sx={{
+                                                          width: 18,
+                                                          height: 18,
+                                                      }}
+                                                  />
+                                              </Tooltip>
+                                          )}
+                                      </Box>
                                   }
                                   color={
                                       selectedTestcase?.tempId ===
@@ -354,9 +366,20 @@ export default function TestcaseTab({
                                   key={testcase.tempId}
                                   id={testcase.tempId}
                                   label={
-                                      (testcase as SampleTestcase).isHidden
-                                          ? `Test Case ${i + 1} (Hidden)`
-                                          : `Test Case ${i + 1}`
+                                      <Box className="flex flex-row items-center gap-2">
+                                          <p>Test Case {i + 1}</p>
+                                          {(testcase as SampleTestcase)
+                                              .isHidden && (
+                                              <Tooltip title="Hidden">
+                                                  <VisibilityOffIcon
+                                                      sx={{
+                                                          width: 18,
+                                                          height: 18,
+                                                      }}
+                                                  />
+                                              </Tooltip>
+                                          )}
+                                      </Box>
                                   }
                                   color={
                                       selectedTestcase?.tempId ===
