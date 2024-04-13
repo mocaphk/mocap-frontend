@@ -741,7 +741,6 @@ export default function WorkspacePage() {
                             allowEditOrCreate={allowEditOrCreate}
                             language={question.language}
                             attemptsList={attemptsList}
-                            setCurrentAttempt={setCurrentAttempt}
                             sampleTestcases={sampleTestcases}
                             customTestcases={customTestcases}
                             selectedTestcase={selectedTestcase}
@@ -764,6 +763,7 @@ export default function WorkspacePage() {
                                 runTestcaseWithSampleCodeFunc
                             }
                             results={results}
+                            setCodeOnEditor={setCodeOnEditor}
                         />
                     </Allotment.Pane>
                 </Allotment>
