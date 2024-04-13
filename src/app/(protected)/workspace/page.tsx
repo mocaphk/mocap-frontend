@@ -700,7 +700,7 @@ export default function WorkspacePage() {
         );
     }
 
-    if (questionNotFound) {
+    if (!isNewQuestion && questionNotFound) {
         return (
             <ErrorPage
                 title="Question not found"
@@ -764,7 +764,7 @@ export default function WorkspacePage() {
                             updateCustomTestcaseFunc={updateCustomTestcaseFunc}
                             runTestcaseFunc={runTestcaseFunc}
                             createOrUpdateAttempt={createOrUpdateAttempt}
-                            questionId={question.id}
+                            questionId={currentQuestionId}
                             codeOnEditor={codeOnEditor}
                             runTestcaseWithSampleCodeFunc={
                                 runTestcaseWithSampleCodeFunc
