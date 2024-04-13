@@ -17,9 +17,11 @@ import NoResultAlert from "@/app/errors/noResultAlert";
 export default function QuestionList({
     assignmentId,
     questions,
+    allowCreateQuestion,
 }: Readonly<{
     assignmentId: string;
     questions: NonNullable<GetAssignmentQuery["assignment"]>["questions"];
+    allowCreateQuestion: boolean;
 }>) {
     const [open, setOpen] = React.useState(false);
 
@@ -39,18 +41,20 @@ export default function QuestionList({
             Icon={QuizIcon}
             title="Questions"
             actionButton={
-                <Button
-                    variant="outlined"
-                    sx={{
-                        borderRadius: 5,
-                        textTransform: "none",
-                        fontSize: 16,
-                    }}
-                    startIcon={<AddIcon />}
-                    onClick={() => setOpen(true)}
-                >
-                    Add Question
-                </Button>
+                allowCreateQuestion && (
+                    <Button
+                        variant="outlined"
+                        sx={{
+                            borderRadius: 5,
+                            textTransform: "none",
+                            fontSize: 16,
+                        }}
+                        startIcon={<AddIcon />}
+                        onClick={() => setOpen(true)}
+                    >
+                        Add Question
+                    </Button>
+                )
             }
         >
             {questions.length === 0 ? (
