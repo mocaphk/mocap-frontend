@@ -6,7 +6,6 @@ import CodeEditor from "./CodeEditor";
 import type { Question } from "../types/Question";
 import React from "react";
 import CardWrapper from "@/app/components/CardWrapper";
-import useDebouncedResize from "@/app/utils/resizeHandler";
 import type { SampleTestcase } from "../types/Testcase";
 import type { CustomTestcase } from "../types/Testcase";
 
@@ -37,10 +36,6 @@ export default function CodeEditorCard({
     sampleTestcases: SampleTestcase[];
     customTestcases: CustomTestcase[];
 }>) {
-    // force code editor to re-render
-    const [codeEditorKey, setCodeEditorKey] = React.useState(0);
-    useDebouncedResize(() => setCodeEditorKey((key) => key + 1), 200);
-
     const updateCode = (code: React.SetStateAction<string>) => {
         setCodeOnEditor(code);
         if (isEditing) {
@@ -124,9 +119,8 @@ export default function CodeEditorCard({
     return (
         <CardWrapper className="h-full">
             <Box className="flex h-full flex-col gap-4">
-                <Box className="flex-grow rounded-2xl overflow-hidden">
+                <Box className="flex-1 rounded-2xl overflow-hidden">
                     <CodeEditor
-                        key={codeEditorKey}
                         codeOnEditor={codeOnEditor}
                         language={question.language}
                         updateCode={updateCode}

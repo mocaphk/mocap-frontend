@@ -56,7 +56,7 @@ export default function UserTab({
     }
 
     return (
-        <Box>
+        <Box className="flex flex-col h-full justify-between">
             <Autocomplete
                 className="w-full"
                 value={selectedStudent}
@@ -79,19 +79,23 @@ export default function UserTab({
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 autoHighlight
             />
-            {studentSubmittedAt !== "" && (
-                <Typography>Submission time: {studentSubmittedAt}</Typography>
-            )}
-            <Box className="flex flex-col h-full justify-end">
-                <Button
-                    className="h-fit w-36"
-                    color="primary"
-                    variant="contained"
-                    onClick={handleReview}
-                >
-                    <HistoryIcon />
-                    <Typography className="p-2">Review</Typography>
-                </Button>
+            <Box className="flex flex-col items-end">
+                <Box className="flex flex-col items-end gap-1">
+                    {studentSubmittedAt !== "" && (
+                        <Typography color="info.light" fontSize={15}>
+                            Submission time: {studentSubmittedAt}
+                        </Typography>
+                    )}
+                    <Button
+                        sx={{ px: 3 }}
+                        color="primary"
+                        variant="contained"
+                        startIcon={<HistoryIcon />}
+                        onClick={handleReview}
+                    >
+                        Review
+                    </Button>
+                </Box>
             </Box>
         </Box>
     );

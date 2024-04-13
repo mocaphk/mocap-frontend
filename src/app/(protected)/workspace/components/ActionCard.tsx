@@ -8,12 +8,12 @@ import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
 import type { Attempt } from "../types/Attempt";
 import type { CustomTestcase, SampleTestcase } from "../types/Testcase";
 import ResultTab from "./actionTabs/ResultTab";
+import UserTab from "./actionTabs/UserTab";
+import { useGetSubmittedStudentsQuery } from "@/app/graphql/workspace/attempt.graphql";
 import ScienceIcon from "@mui/icons-material/Science";
 import PublishIcon from "@mui/icons-material/Publish";
 import RuleIcon from "@mui/icons-material/Rule";
-import UserTab from "./actionTabs/UserTab";
-import AccessibleForwardIcon from "@mui/icons-material/AccessibleForward";
-import { useGetSubmittedStudentsQuery } from "@/app/graphql/workspace/attempt.graphql";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 export default function ActionCard({
     activeTab,
@@ -64,7 +64,6 @@ export default function ActionCard({
     results: CodeExecutionResult[];
     setCodeOnEditor: Function;
 }>) {
-
     const theme = useTheme();
 
     const handleTabChange = (
@@ -157,7 +156,7 @@ export default function ActionCard({
                             <Tab
                                 label="Student Submissions"
                                 value="user"
-                                icon={<AccessibleForwardIcon />}
+                                icon={<GroupsIcon />}
                                 iconPosition="start"
                             />
                         )}
