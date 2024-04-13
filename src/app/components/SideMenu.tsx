@@ -16,9 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
 import ComputerIcon from "@mui/icons-material/Computer";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import type SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -54,24 +52,10 @@ const mainMenuItems: Array<MenuItem> = [
         highlightForPath: "/course",
     },
     {
-        text: "Calendar",
-        icon: CalendarMonthIcon,
-        redirectPath: "/calendar",
-        highlightForPath: "/calendar",
-    },
-    {
         text: "Question Bank",
         icon: AccountBalanceIcon,
         redirectPath: "/questionBank",
         highlightForPath: "/questionBank",
-    },
-];
-
-const otherMenuItems: Array<MenuItem> = [
-    {
-        text: "Dashboard",
-        icon: DashboardIcon,
-        redirectPath: "/dashboard",
     },
 ];
 
@@ -229,16 +213,6 @@ export default function SideMenu() {
             >
                 <List>
                     {mainMenuItems.map((menuItem) => (
-                        <MenuListItem
-                            key={menuItem.text}
-                            open={open}
-                            menuItem={menuItem}
-                        />
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {otherMenuItems.map((menuItem) => (
                         <MenuListItem
                             key={menuItem.text}
                             open={open}

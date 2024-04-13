@@ -11,8 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import HelpIcon from "@mui/icons-material/Help";
-import SettingsIcon from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
@@ -192,8 +190,6 @@ function AuthedTopBar({
             <MenuItem disabled divider>
                 {username ?? "ERROR!"}
             </MenuItem>
-            <MenuItem onClick={handleAllMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleAllMenuClose}>My account</MenuItem>
             <MenuItem
                 onClick={() => {
                     handleAllMenuClose();
@@ -222,18 +218,6 @@ function AuthedTopBar({
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
-                <IconButton size="large" aria-label="help" color="inherit">
-                    <HelpIcon />
-                </IconButton>
-                <p>Help</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton size="large" aria-label="settings" color="inherit">
-                    <SettingsIcon />
-                </IconButton>
-                <p>Settings</p>
-            </MenuItem>
             <MenuItem onClick={handleNotiMenuOpen}>
                 <IconButton
                     size="large"
@@ -264,12 +248,6 @@ function AuthedTopBar({
     return (
         <>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-                <IconButton size="large" aria-label="help" color="inherit">
-                    <HelpIcon />
-                </IconButton>
-                <IconButton size="large" aria-label="settings" color="inherit">
-                    <SettingsIcon />
-                </IconButton>
                 <IconButton
                     size="large"
                     aria-label={`show ${numOfNotifications} new notifications`}
