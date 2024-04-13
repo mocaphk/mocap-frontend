@@ -16,6 +16,8 @@ import AccessibleForwardIcon from "@mui/icons-material/AccessibleForward";
 import { useGetSubmittedStudentsQuery } from "@/app/graphql/workspace/attempt.graphql";
 
 export default function ActionCard({
+    activeTab,
+    setActiveTab,
     isEditing,
     allowEditOrCreate,
     language,
@@ -38,6 +40,8 @@ export default function ActionCard({
     results,
     setCodeOnEditor,
 }: Readonly<{
+    activeTab: string;
+    setActiveTab: Function;
     isEditing: boolean;
     allowEditOrCreate: boolean;
     language: ProgrammingLanguage;
@@ -60,7 +64,7 @@ export default function ActionCard({
     results: CodeExecutionResult[];
     setCodeOnEditor: Function;
 }>) {
-    const [activeTab, setActiveTab] = React.useState("testCase");
+
     const theme = useTheme();
 
     const handleTabChange = (

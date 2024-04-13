@@ -325,6 +325,7 @@ export default function WorkspacePage() {
                 console.log("run attempt result:", res.runAttempt.results);
                 refetchAttempts();
                 setResults(res.runAttempt.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -343,6 +344,7 @@ export default function WorkspacePage() {
                 );
                 refetchAttempts();
                 setResults(res.submitAttempt.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
@@ -640,11 +642,14 @@ export default function WorkspacePage() {
                     res.runAllTestcasesWithCode.results
                 );
                 setResults(res.runAllTestcasesWithCode.results);
+                setActiveTab("result");
             },
             onError: (error) => {
                 console.error("runAllTestcasesFunc error:", error);
             },
         });
+
+    const [activeTab, setActiveTab] = React.useState("testCase");
 
     // Loading state
     const [isLoading, setIsLoading] = React.useState(false);
@@ -737,6 +742,8 @@ export default function WorkspacePage() {
                     </Allotment.Pane>
                     <Allotment.Pane className="p-1" preferredSize="50%">
                         <ActionCard
+                            activeTab={activeTab}
+                            setActiveTab={setActiveTab}
                             isEditing={isEditing}
                             allowEditOrCreate={allowEditOrCreate}
                             language={question.language}
