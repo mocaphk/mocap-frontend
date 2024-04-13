@@ -144,7 +144,7 @@ function ResultBar({
                             <InputLabel>Output: </InputLabel>
                             <TextField
                                 size="small"
-                                defaultValue={expectedOutput}
+                                value={expectedOutput}
                                 InputProps={{ readOnly: true }}
                                 fullWidth
                                 multiline
