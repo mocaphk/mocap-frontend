@@ -115,6 +115,7 @@ export default function QuestionCard({
             if (testcase.tempId) {
                 delete testcase.tempId;
                 delete testcase.output;
+                delete testcase.isTimeout
             }
             testcase.expectedOutput = "";
         });

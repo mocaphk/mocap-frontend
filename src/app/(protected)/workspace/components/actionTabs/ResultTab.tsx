@@ -6,6 +6,7 @@ import {
     Collapse,
     Tooltip,
     Alert,
+    Typography,
 } from "@mui/material";
 import React from "react";
 import ReactDiffViewer from "react-diff-viewer-continued";
@@ -189,6 +190,10 @@ export default function ResultTab({
 
     const filteredResults = [...results].filter((result) => !result.isHidden);
 
+    const totalTestCasesLength = allowEditOrCreate? filteredResults.length : sortedResults.length;
+
+    const passedTestCasesLength = (allowEditOrCreate? filteredResults : sortedResults).filter(results => results.isCorrect).length;
+
     if (results.length === 0) {
         return (
             <Box className="flex flex-col items-center justify-center w-full h-full">
@@ -198,6 +203,11 @@ export default function ResultTab({
     }
 
     return (
+        <Box className="w-full">
+
+        <Typography variant="h6">
+                {`Passed test cases: ${passedTestCasesLength} / ${totalTestCasesLength}`}
+        </Typography>
         <List className="w-full" aria-label="mailbox folders">
             {allowEditOrCreate
                 ? filteredResults?.map((result, index) => (
@@ -221,5 +231,6 @@ export default function ResultTab({
                       />
                   ))}
         </List>
+        </Box>
     );
 }
