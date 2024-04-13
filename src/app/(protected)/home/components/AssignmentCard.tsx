@@ -26,25 +26,17 @@ export default function AssignmentCard({
 
     return (
         <Link href={`assignment?id=${id}`}>
-            <button className="flex flex-row w-full items-center justify-between rounded-2xl mx-1 hover:bg-[#f1f5f9] active:bg-[#e2e8f0] focus:outline-none focus:ring">
+            <button className="flex flex-row rounded-xl mx-1 hover:bg-[#f1f5f9] active:bg-[#e2e8f0] focus:outline-none focus:ring">
                 <ColoredBarCard
-                    sx={[
-                        // {
-                        //     // eslint-disable-next-line @typescript-eslint/naming-convention
-                        //     "&:hover": {
-                        //         backgroundColor: "#f8fafc",
-                        //     },
-                        // },
-                        {
-                            width: 350,
-                            height: 60,
-                            padding: 1,
-                            borderRadius: 3,
-                            borderColor: "lightgray",
-                            borderWidth: 1,
-                            backgroundColor: "transparent",
-                        },
-                    ]}
+                    sx={{
+                        width: 350,
+                        height: 60,
+                        padding: 1,
+                        borderRadius: 3,
+                        borderColor: "lightgray",
+                        borderWidth: 1,
+                        backgroundColor: "transparent",
+                    }}
                     barColor={assignmentStatusColorMap}
                 >
                     <Box className="flex flex-col w-full items-start">
