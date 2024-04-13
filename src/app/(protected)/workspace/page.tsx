@@ -54,6 +54,11 @@ export default function WorkspacePage() {
     const searchParams = useSearchParams();
     const questionIdFromUrl = searchParams.get("questionId");
 
+    // local storage store latest attempted question
+    if (questionIdFromUrl) {
+        localStorage.setItem("latestAttemptedQuestion", questionIdFromUrl);
+    }
+
     const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
 
     // Assignment related states
@@ -117,35 +122,45 @@ export default function WorkspacePage() {
 
     // Fetching question
     const {
-        data: res = {},
-        refetch,
+        data: questionDataRes,
+        error: questionError,
         loading: questionLoading,
+        refetch,
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
         skip: currentQuestionId == "",
     });
 
+    const questionData = questionDataRes?.question;
+
+    const questionNotFound =
+        !questionLoading &&
+        (questionDataRes === undefined ||
+            questionError ||
+            questionData === undefined ||
+            questionData === null);
+
     // Handle fetched question
     React.useEffect(() => {
-        if (res?.question) {
-            console.log("Question from server:", res.question);
+        if (questionData) {
+            console.log("Question from server:", questionDataRes.question);
             setQuestion({
                 id: questionIdFromUrl ?? "",
-                title: res.question?.title,
-                description: res.question?.description,
-                language: res.question?.language as ProgrammingLanguage,
-                sampleCode: res.question?.sampleCode!,
-                checkingMethod: res.question?.checkingMethod!,
-                execCommand: res.question?.execCommand!,
-                timeLimit: res.question?.timeLimit,
-                assignmentId: res.question?.assignment?.id!,
+                title: questionData.title,
+                description: questionData.description,
+                language: questionData.language as ProgrammingLanguage,
+                sampleCode: questionData.sampleCode!,
+                checkingMethod: questionData.checkingMethod!,
+                execCommand: questionData.execCommand!,
+                timeLimit: questionData.timeLimit,
+                assignmentId: questionData.assignment?.id!,
                 testcases: [],
-                codingEnvironmentId: res.question?.codingEnvironment?.id,
-                isPublic: res.question?.isPublic,
+                codingEnvironmentId: questionData.codingEnvironment?.id,
+                isPublic: questionData.isPublic,
             });
-            setAssignmentId(res.question?.assignment?.id!);
+            setAssignmentId(questionDataRes.question?.assignment?.id!);
         }
-    }, [questionIdFromUrl, res]);
+    }, [questionIdFromUrl, questionDataRes]);
 
     // Handle question creation
     const [createQuestionFunc] = useCreateQuestionMutation({
@@ -675,7 +690,18 @@ export default function WorkspacePage() {
                 title="No permission"
                 message="It appears that you do not have the necessary permissions to create or edit the question for this course."
                 returnMessage="Back to assignment page"
-                returnLink={`assignmnet?id=${assignmentId}`}
+                returnLink={`assignment?id=${assignmentId}`}
+            />
+        );
+    }
+
+    if (questionNotFound) {
+        return (
+            <ErrorPage
+                title="Question not found"
+                message="Sorry, but the question you are searching for is not available."
+                returnLink="courses"
+                returnMessage="Back to course page"
             />
         );
     }

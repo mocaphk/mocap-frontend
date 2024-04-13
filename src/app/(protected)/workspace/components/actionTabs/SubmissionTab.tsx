@@ -60,7 +60,7 @@ export default function SubmissionTab({
         console.log("revert clicked");
         console.log("selected attempt: ", selectedAttempt);
         if (selectedAttempt) {
-            console.log("reverting to: ", marks.values);
+            console.log("reverting to: ", selectedAttempt);
             setCurrentAttempt(selectedAttempt);
         }
     };
@@ -96,13 +96,13 @@ export default function SubmissionTab({
                     </Box>
                     <Box className="flex flex-col h-full justify-end">
                         <Button
-                            className="h-fit w-36"
+                            sx={{ px: 3 }}
                             color="primary"
                             variant="contained"
+                            startIcon={<HistoryIcon />}
                             onClick={handleRevert}
                         >
-                            <HistoryIcon />
-                            <Typography className="p-2">Revert</Typography>
+                            Revert
                         </Button>
                     </Box>
                     {selectedAttempt && (

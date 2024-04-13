@@ -494,7 +494,7 @@ export default function TestcaseTab({
                                         className="w-full"
                                         color="primary"
                                         type="text"
-                                        label="value"
+                                        label="Value"
                                         value={input.value}
                                         InputProps={{
                                             readOnly:
