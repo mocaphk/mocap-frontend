@@ -13,8 +13,10 @@ import type { GetAssignmentQuery } from "@/app/graphql/course/assignment.graphql
 import dayjs from "dayjs";
 
 export default function DetailedAssignmentPage({
+    allowCreateQuestion,
     assignment,
 }: Readonly<{
+    allowCreateQuestion: boolean;
     assignment: NonNullable<GetAssignmentQuery["assignment"]>;
 }>) {
     const {
@@ -86,6 +88,7 @@ export default function DetailedAssignmentPage({
                 <QuestionList
                     assignmentId={assignment.id}
                     questions={questions}
+                    allowCreateQuestion={allowCreateQuestion}
                 />
 
                 <Box className="mt-7">

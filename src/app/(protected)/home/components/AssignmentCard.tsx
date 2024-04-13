@@ -26,34 +26,37 @@ export default function AssignmentCard({
 
     return (
         <Link href={`assignment?id=${id}`}>
-            <ColoredBarCard
-                sx={[
-                    {
-                        // eslint-disable-next-line @typescript-eslint/naming-convention
-                        "&:hover": {
-                            backgroundColor: "#f8fafc",
+            <button className="flex flex-row w-full items-center justify-between rounded-2xl mx-1 hover:bg-[#f1f5f9] active:bg-[#e2e8f0] focus:outline-none focus:ring">
+                <ColoredBarCard
+                    sx={[
+                        // {
+                        //     // eslint-disable-next-line @typescript-eslint/naming-convention
+                        //     "&:hover": {
+                        //         backgroundColor: "#f8fafc",
+                        //     },
+                        // },
+                        {
+                            width: 350,
+                            height: 60,
+                            padding: 1,
+                            borderRadius: 3,
+                            borderColor: "lightgray",
+                            borderWidth: 1,
+                            backgroundColor: "transparent",
                         },
-                    },
-                    {
-                        width: 350,
-                        height: 60,
-                        padding: 1,
-                        borderRadius: 3,
-                        borderColor: "lightgray",
-                        borderWidth: 1,
-                    },
-                ]}
-                barColor={assignmentStatusColorMap}
-            >
-                <Box className="flex flex-col w-full">
-                    <Typography fontSize={16} lineHeight="1.3rem">
-                        {title}
-                    </Typography>
-                    <Typography color="text.primary" fontSize={12}>
-                        {courseCode} · {dueTime}
-                    </Typography>
-                </Box>
-            </ColoredBarCard>
+                    ]}
+                    barColor={assignmentStatusColorMap}
+                >
+                    <Box className="flex flex-col w-full items-start">
+                        <Typography fontSize={16} lineHeight="1.3rem">
+                            {title}
+                        </Typography>
+                        <Typography color="text.primary" fontSize={12}>
+                            {courseCode} · {dueTime}
+                        </Typography>
+                    </Box>
+                </ColoredBarCard>
+            </button>
         </Link>
     );
 }

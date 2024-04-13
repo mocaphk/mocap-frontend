@@ -96,7 +96,7 @@ function ResultBar({
                 onClick={handleClick}
             >
                 {result.isHidden
-                    ? "Hidden Test Case"
+                    ? `Hidden Test Case${msg}`
                     : `Test Case ${index + 1}${msg}`}
             </Alert>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -129,7 +129,7 @@ function ResultBar({
                                 className="w-full"
                                 color="primary"
                                 type="text"
-                                label="value"
+                                label="Value"
                                 value={input.value}
                                 InputProps={{
                                     readOnly: true,
@@ -214,7 +214,7 @@ export default function ResultTab({
                       <ResultBar
                           key={index}
                           isStart={index === 0}
-                          isEnd={index === filteredResults.length - 1}
+                          isEnd={index === sortedResults.length - 1}
                           result={result}
                           index={index}
                           allowEditOrCreate={allowEditOrCreate}

@@ -145,6 +145,15 @@ function MenuListItem({
         if (menuItem.onClick) {
             menuItem.onClick();
         } else if (menuItem.redirectPath) {
+            if (menuItem.redirectPath === "/workspace") {
+                const latestAttemptedQuestion = localStorage.getItem(
+                    "latestAttemptedQuestion"
+                );
+                if (latestAttemptedQuestion) {
+                    push(`/workspace?questionId=${latestAttemptedQuestion}`);
+                    return;
+                }
+            }
             push(menuItem.redirectPath);
         }
     };
