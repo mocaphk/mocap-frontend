@@ -132,6 +132,7 @@ export default function WorkspacePage() {
         data: questionDataRes,
         error: questionError,
         loading: questionLoading,
+        refetch: refetchQuestion,
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
         skip: currentQuestionId == "",
@@ -208,6 +209,7 @@ export default function WorkspacePage() {
         },
         onCompleted: (res) => {
             router.replace(`workspace?questionId=${res.updateQuestion.id}`);
+            refetchQuestion();
 
             // success noti
             setOpenSaveQuestionSuccess(true);
