@@ -34,7 +34,6 @@ export default function TestcaseTab({
     setCustomTestcases,
     setSelectedTestcase,
     deleteCustomTestcaseFunc,
-    createAndUpdateSampleTestcasesFunc,
     createCustomTestcasesFunc,
     updateCustomTestcaseFunc,
     runTestcaseFunc,
@@ -51,7 +50,6 @@ export default function TestcaseTab({
     setCustomTestcases: Function;
     setSelectedTestcase: Function;
     deleteCustomTestcaseFunc: Function;
-    createAndUpdateSampleTestcasesFunc: Function;
     createCustomTestcasesFunc: Function;
     updateCustomTestcaseFunc: Function;
     runTestcaseFunc: Function;
@@ -95,11 +93,11 @@ export default function TestcaseTab({
                 (testcase: { tempId: string }) => testcase.tempId !== tempId
             );
             if (selectedTestcase?.tempId === tempId) {
-                const nonHiddenTestcases = [
+                const testcases = [
                     ...sampleTestcases,
                     ...updatedCustomTestcases,
-                ].filter((testcase) => !(testcase as SampleTestcase).isHidden);
-                setSelectedTestcase(nonHiddenTestcases[0] ?? undefined);
+                ];
+                setSelectedTestcase(testcases[0] ?? undefined);
             }
             return updatedCustomTestcases;
         });
@@ -197,26 +195,7 @@ export default function TestcaseTab({
     };
 
     const handleSaveClick = async () => {
-        console.log(selectedTestcase);
-        if (isEditing) {
-            let sampleTescasesCopy = JSON.parse(
-                JSON.stringify(sampleTestcases)
-            );
-            sampleTescasesCopy.forEach((testcase: any) => {
-                if (testcase.tempId) {
-                    delete testcase.tempId;
-                    delete testcase.output;
-                    delete testcase.isTimeout;
-                }
-                testcase.expectedOutput = "";
-            });
-            await createAndUpdateSampleTestcasesFunc({
-                variables: {
-                    questionId: questionId,
-                    testcaseInput: sampleTescasesCopy,
-                },
-            });
-        } else if (selectedTestcase?.id === "") {
+        if (selectedTestcase?.id === "") {
             await createCustomTestcasesFunc();
         } else {
             await updateCustomTestcaseFunc();
@@ -345,7 +324,11 @@ export default function TestcaseTab({
                               <Chip
                                   key={testcase.tempId}
                                   id={testcase.tempId}
-                                  label={`Test Case ${i + 1}`}
+                                  label={
+                                      (testcase as SampleTestcase).isHidden
+                                          ? `Test Case ${i + 1} (Hidden)`
+                                          : `Test Case ${i + 1}`
+                                  }
                                   color={
                                       selectedTestcase?.tempId ===
                                       testcase.tempId
@@ -365,16 +348,16 @@ export default function TestcaseTab({
                               />
                           )
                       )
-                    : [...sampleTestcases, ...customTestcases]
-                          .filter(
-                              (testcase) =>
-                                  !(testcase as SampleTestcase).isHidden
-                          )
-                          .map((testcase, i) => (
+                    : [...sampleTestcases, ...customTestcases].map(
+                          (testcase, i) => (
                               <Chip
                                   key={testcase.tempId}
                                   id={testcase.tempId}
-                                  label={`Test Case ${i + 1}`}
+                                  label={
+                                      (testcase as SampleTestcase).isHidden
+                                          ? `Test Case ${i + 1} (Hidden)`
+                                          : `Test Case ${i + 1}`
+                                  }
                                   color={
                                       selectedTestcase?.tempId ===
                                       testcase.tempId
@@ -419,7 +402,8 @@ export default function TestcaseTab({
                                       ) : undefined
                                   }
                               />
-                          ))}
+                          )
+                      )}
                 <IconButton
                     color="primary"
                     onClick={

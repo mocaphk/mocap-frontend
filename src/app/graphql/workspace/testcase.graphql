@@ -10,6 +10,18 @@ query GetTestcases($questionId: ID!) {
     }
 }
 
+query GetNonHiddenTestcases($questionId: ID!) {
+    nonHiddenTestcases(questionId: $questionId) {
+        id
+        input {
+            name
+            value
+        }
+        expectedOutput
+        isHidden
+    }
+}
+
 query GetCustomTestcases($questionId: ID!) {
     customTestcases(questionId: $questionId) {
         id

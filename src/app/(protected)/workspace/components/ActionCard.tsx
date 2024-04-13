@@ -29,7 +29,6 @@ export default function ActionCard({
     setCustomTestcases,
     setSelectedTestcase,
     deleteCustomTestcaseFunc,
-    createAndUpdateSampleTestcasesFunc,
     createCustomTestcasesFunc,
     updateCustomTestcaseFunc,
     runTestcaseFunc,
@@ -53,7 +52,6 @@ export default function ActionCard({
     setCustomTestcases: Function;
     setSelectedTestcase: Function;
     deleteCustomTestcaseFunc: Function;
-    createAndUpdateSampleTestcasesFunc: Function;
     createCustomTestcasesFunc: Function;
     updateCustomTestcaseFunc: Function;
     runTestcaseFunc: Function;
@@ -174,9 +172,6 @@ export default function ActionCard({
                                 setSelectedTestcase={setSelectedTestcase}
                                 deleteCustomTestcaseFunc={
                                     deleteCustomTestcaseFunc
-                                }
-                                createAndUpdateSampleTestcasesFunc={
-                                    createAndUpdateSampleTestcasesFunc
                                 }
                                 createCustomTestcasesFunc={
                                     createCustomTestcasesFunc

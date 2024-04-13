@@ -24,8 +24,9 @@ export default function QuestionCard({
     sampleTestcases,
     customTestcases,
     setSelectedTestcase,
-    refetchSampleTestcases,
+    getSampleTestcases,
     createAndUpdateSampleTestcasesFunc,
+    setCodeOnEditor,
 }: Readonly<{
     courseId: string;
     assignmentId: string;
@@ -41,8 +42,9 @@ export default function QuestionCard({
     sampleTestcases: SampleTestcase[];
     customTestcases: CustomTestcase[];
     setSelectedTestcase: Function;
-    refetchSampleTestcases: Function;
+    getSampleTestcases: Function;
     createAndUpdateSampleTestcasesFunc: Function;
+    setCodeOnEditor: Function;
 }>) {
     const router = useRouter();
 
@@ -67,11 +69,8 @@ export default function QuestionCard({
         if (isEditing) {
             setSelectedTestcase(sampleTestcases[0] ?? undefined);
         } else {
-            const nonHiddenTestcases = [
-                ...sampleTestcases,
-                ...customTestcases,
-            ].filter((testcase) => !(testcase as SampleTestcase).isHidden);
-            setSelectedTestcase(nonHiddenTestcases[0] ?? undefined);
+            const testcases = [...sampleTestcases, ...customTestcases];
+            setSelectedTestcase(testcases[0] ?? undefined);
         }
     };
 
@@ -90,6 +89,7 @@ export default function QuestionCard({
     }, [data, error]);
 
     const [getSampleCode] = useGetSampleCodeLazyQuery({
+        fetchPolicy: "network-only",
         variables: { questionId: question.id },
     });
 
@@ -107,6 +107,7 @@ export default function QuestionCard({
         setIsEditing(true);
         setEditedQuestion(editedQuestion);
         updateSelectedTestcase(true);
+        setCodeOnEditor(res.data?.question?.sampleCode);
     };
 
     const handleSaveClick = () => {
@@ -142,7 +143,7 @@ export default function QuestionCard({
             router.push(`assignment?id=${assignmentId}`);
             return;
         }
-        refetchSampleTestcases();
+        getSampleTestcases();
         setIsEditing(false);
         setEditedQuestion(question);
         updateSelectedTestcase(false);

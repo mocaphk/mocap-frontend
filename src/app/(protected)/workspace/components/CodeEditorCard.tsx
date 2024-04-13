@@ -61,11 +61,8 @@ export default function CodeEditorCard({
         } else {
             const currentAttemptId = await createOrUpdateAttempt(false);
 
-            const nonHiddenTestcases = [
-                ...sampleTestcases,
-                ...customTestcases,
-            ].filter((testcase) => !(testcase as SampleTestcase).isHidden);
-            const input = nonHiddenTestcases.map((testcase) => testcase.input);
+            const testcases = [...sampleTestcases, ...customTestcases];
+            const input = testcases.map((testcase) => testcase.input);
             await runAttemptFunc({
                 variables: {
                     attemptId: currentAttemptId ?? "",

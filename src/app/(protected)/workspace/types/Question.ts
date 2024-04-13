@@ -1,4 +1,3 @@
-import type { SampleTestcase } from "./Testcase";
 import type { CheckingMethod, ProgrammingLanguage } from "@schema";
 
 export interface Question {
@@ -11,7 +10,6 @@ export interface Question {
     checkingMethod: CheckingMethod;
     execCommand: string;
     timeLimit: number;
-    testcases: Array<SampleTestcase>;
     codingEnvironmentId: string | null | undefined;
     isPublic: boolean;
 }

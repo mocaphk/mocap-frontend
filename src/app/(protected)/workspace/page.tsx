@@ -31,10 +31,10 @@ import {
     useCreateCustomTestcasesMutation,
     useCreateAndUpdateTestcasesMutation,
     useDeleteCustomTestcaseMutation,
-    useDeleteTestcaseMutation,
     useGetCustomTestcasesQuery,
-    useGetTestcasesQuery,
     useUpdateCustomTestcaseMutation,
+    useGetTestcasesLazyQuery,
+    useGetNonHiddenTestcasesLazyQuery,
 } from "@/app/graphql/workspace/testcase.graphql";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -112,9 +112,7 @@ export default function WorkspacePage() {
         questionIdFromUrl === ""
     );
     const [isEditing, setIsEditing] = React.useState(questionIdFromUrl === "");
-    const [currentQuestionId, setCurrentQuestionId] = React.useState<string>(
-        questionIdFromUrl ?? ""
-    );
+    const currentQuestionId = questionIdFromUrl ?? "";
     const [question, setQuestion] = React.useState<Question>(
         new Object() as Question
     );
@@ -134,7 +132,6 @@ export default function WorkspacePage() {
         data: questionDataRes,
         error: questionError,
         loading: questionLoading,
-        refetch,
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
         skip: currentQuestionId == "",
@@ -172,7 +169,6 @@ export default function WorkspacePage() {
                 execCommand: questionData.execCommand!,
                 timeLimit: questionData.timeLimit,
                 assignmentId: questionData.assignment?.id!,
-                testcases: [],
                 codingEnvironmentId: questionData.codingEnvironment?.id,
                 isPublic: questionData.isPublic,
             });
@@ -190,7 +186,6 @@ export default function WorkspacePage() {
         onCompleted: async (res) => {
             console.log("Created question with id:", res.createQuestion.id);
             router.replace(`workspace?questionId=${res.createQuestion.id}`);
-            setCurrentQuestionId(res.createQuestion.id);
 
             // success noti
             setOpenSaveQuestionSuccess(true);
@@ -212,27 +207,8 @@ export default function WorkspacePage() {
             },
         },
         onCompleted: (res) => {
-            console.log("Updated question with id:", res.updateQuestion.id);
-            setCurrentQuestionId(res.updateQuestion.id);
-            refetch().then((response) => {
-                setQuestion({
-                    id: response.data.question?.id!,
-                    title: response.data.question?.title!,
-                    description: response.data.question?.description!,
-                    language: response.data.question
-                        ?.language as ProgrammingLanguage,
-                    sampleCode: "",
-                    checkingMethod: response.data.question?.checkingMethod!,
-                    execCommand: response.data.question?.execCommand!,
-                    timeLimit: response.data.question?.timeLimit!,
-                    assignmentId: response.data.question?.assignment?.id!,
-                    testcases: [],
-                    codingEnvironmentId:
-                        response.data.question?.codingEnvironment?.id,
-                    isPublic: response.data.question?.isPublic!,
-                });
-            });
-
+            router.replace(`workspace?questionId=${res.updateQuestion.id}`);
+            
             // success noti
             setOpenSaveQuestionSuccess(true);
         },
@@ -301,9 +277,7 @@ export default function WorkspacePage() {
     const [results, setResults] = React.useState<CodeExecutionResult[]>([]);
 
     React.useEffect(() => {
-        if (isEditing) {
-            setCodeOnEditor(editedQuestion.sampleCode);
-        } else {
+        if (!isEditing) {
             setCodeOnEditor(currentAttempt.code ?? "");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -471,9 +445,9 @@ export default function WorkspacePage() {
     >(sampleTestcases[0] ?? customTestcases[0] ?? undefined);
 
     // Fetching sample testcases
-    const { loading: sampleTestcaseLoading, refetch: refetchSampleTestcase } =
-        useGetTestcasesQuery({
-            notifyOnNetworkStatusChange: true,
+    const [getSampleTestcases, { loading: sampleTestcaseLoading }] =
+        useGetTestcasesLazyQuery({
+            fetchPolicy: "network-only",
             variables: { questionId: question.id },
             onCompleted: (res) => {
                 let sampleTestcases: SampleTestcase[] = [];
@@ -496,16 +470,55 @@ export default function WorkspacePage() {
                     });
                     console.log("Testcases from server:", sampleTestcases);
                     setSampleTestcases(sampleTestcases);
-                    const nonHiddenTestcases = [
-                        ...sampleTestcases,
-                        ...customTestcases,
-                    ].filter(
-                        (testcase) => !(testcase as SampleTestcase).isHidden
-                    );
-                    setSelectedTestcase(nonHiddenTestcases[0] ?? undefined);
+                    const testcases = [...sampleTestcases, ...customTestcases];
+                    setSelectedTestcase(testcases[0] ?? undefined);
                 }
             },
         });
+
+    const [
+        getNonHiddenSampleTestcases,
+        { loading: nonHiddenSampleTestcaseLoading },
+    ] = useGetNonHiddenTestcasesLazyQuery({
+        fetchPolicy: "network-only",
+        variables: { questionId: question.id },
+        onCompleted: (res) => {
+            let sampleTestcases: SampleTestcase[] = [];
+            if (res?.nonHiddenTestcases) {
+                sampleTestcases = res.nonHiddenTestcases.map(
+                    (testcase: any) => {
+                        return {
+                            tempId: uuidv4(),
+                            id: testcase.id,
+                            input: testcase.input.map((input: any) => {
+                                return {
+                                    name: input.name,
+                                    value: input.value,
+                                };
+                            }),
+                            expectedOutput: testcase.expectedOutput,
+                            isHidden: testcase.isHidden,
+                            output: "",
+                            isTimeout: false,
+                        };
+                    }
+                );
+                console.log("Testcases from server:", sampleTestcases);
+                setSampleTestcases(sampleTestcases);
+                const testcases = [...sampleTestcases, ...customTestcases];
+                setSelectedTestcase(testcases[0] ?? undefined);
+            }
+        },
+    });
+
+    // fetch sample testcases base on the permission
+    React.useEffect(() => {
+        if (allowEditOrCreate) {
+            getSampleTestcases();
+        } else {
+            getNonHiddenSampleTestcases();
+        }
+    }, [allowEditOrCreate, getNonHiddenSampleTestcases, getSampleTestcases]);
 
     // Fetching custom testcases
     const {
@@ -538,25 +551,11 @@ export default function WorkspacePage() {
             );
             console.log("Testcases from server:", customTestcases);
             setCustomTestcases(customTestcases);
-            const nonHiddenTestcases = [
-                ...sampleTestcases,
-                ...customTestcases,
-            ].filter((testcase) => !(testcase as SampleTestcase).isHidden);
-            setSelectedTestcase(nonHiddenTestcases[0] ?? undefined);
+            const testcases = [...sampleTestcases, ...customTestcases];
+            setSelectedTestcase(testcases[0] ?? undefined);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [customTestcasesRes]);
-
-    // handle delete sample testcases
-    const [deleteSampleTestcaseFunc] = useDeleteTestcaseMutation({
-        onCompleted: (res) => {
-            console.log("Testcase Id", res.deleteTestcase.id);
-            refetchSampleTestcase();
-        },
-        onError: (error) => {
-            console.error("deleteTestcaseFunc error:", error);
-        },
-    });
 
     // handle delete custom testcases
     const [deleteCustomTestcaseFunc] = useDeleteCustomTestcaseMutation({
@@ -573,7 +572,7 @@ export default function WorkspacePage() {
     const [createAndUpdateSampleTestcasesFunc] =
         useCreateAndUpdateTestcasesMutation({
             onCompleted: () => {
-                refetchSampleTestcase();
+                getSampleTestcases();
             },
             onError: (error) => {
                 console.error("createTestcasesFunc error:", error);
@@ -705,6 +704,7 @@ export default function WorkspacePage() {
         let loading =
             questionLoading ||
             sampleTestcaseLoading ||
+            nonHiddenSampleTestcaseLoading ||
             customTestcaseLoading ||
             runTestcaseLoading ||
             runAttemptLoading ||
@@ -715,6 +715,7 @@ export default function WorkspacePage() {
     }, [
         questionLoading,
         sampleTestcaseLoading,
+        nonHiddenSampleTestcaseLoading,
         customTestcaseLoading,
         runTestcaseLoading,
         runAttemptLoading,
@@ -780,10 +781,11 @@ export default function WorkspacePage() {
                             sampleTestcases={sampleTestcases}
                             customTestcases={customTestcases}
                             setSelectedTestcase={setSelectedTestcase}
-                            refetchSampleTestcases={refetchSampleTestcase}
+                            getSampleTestcases={getSampleTestcases}
                             createAndUpdateSampleTestcasesFunc={
                                 createAndUpdateSampleTestcasesFunc
                             }
+                            setCodeOnEditor={setCodeOnEditor}
                         />
                     </Allotment.Pane>
                     <Allotment.Pane className="p-1" preferredSize="50%">
@@ -801,9 +803,6 @@ export default function WorkspacePage() {
                             setCustomTestcases={setCustomTestcases}
                             setSelectedTestcase={setSelectedTestcase}
                             deleteCustomTestcaseFunc={deleteCustomTestcaseFunc}
-                            createAndUpdateSampleTestcasesFunc={
-                                createAndUpdateSampleTestcasesFunc
-                            }
                             createCustomTestcasesFunc={
                                 createCustomTestcasesFunc
                             }
