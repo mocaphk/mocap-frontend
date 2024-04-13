@@ -101,6 +101,7 @@ export default function WeekPicker({
                 onChange={(newValue) => setValue(newValue)}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
+                disableHighlightToday
                 slots={{ day: Day }}
                 slotProps={{
                     day: (ownerState) =>

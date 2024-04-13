@@ -63,11 +63,10 @@ export default function WorkspacePage() {
         React.useState<boolean>(false);
     const [openSaveQuestionError, setOpenSaveQuestionError] =
         React.useState<boolean>(false);
-
-    // local storage store latest attempted question
-    if (questionIdFromUrl) {
-        localStorage.setItem("latestAttemptedQuestion", questionIdFromUrl);
-    }
+    const [openSubmissionSuccess, setOpenSubmissionSuccess] =
+        React.useState<boolean>(false);
+    const [openSubmissionError, setOpenSubmissionError] =
+        React.useState<boolean>(false);
 
     const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
 
@@ -139,6 +138,15 @@ export default function WorkspacePage() {
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
         skip: currentQuestionId == "",
+        onCompleted: (res) => {
+            if (res.question?.id) {
+                // local storage store latest attempted question
+                localStorage.setItem(
+                    "latestAttemptedQuestion",
+                    res.question?.id
+                );
+            }
+        },
     });
 
     const questionData = questionDataRes?.question;
@@ -367,8 +375,12 @@ export default function WorkspacePage() {
                 refetchAttempts();
                 setResults(res.submitAttempt.results);
                 setActiveTab("result");
+
+                setOpenSubmissionSuccess(true);
             },
             onError: (error) => {
+                setOpenSubmissionError(true);
+
                 console.error("submitAttemptFunc error:", error);
             },
         });
@@ -879,6 +891,34 @@ export default function WorkspacePage() {
                     sx={{ width: "100%" }}
                 >
                     An error occurred while saving your question.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSubmissionSuccess}
+                autoHideDuration={3000}
+                onClose={() => setOpenSubmissionSuccess(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSubmissionSuccess(false)}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    Your submission has been successfully submitted.
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSubmissionError}
+                autoHideDuration={3000}
+                onClose={() => setOpenSubmissionError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSubmissionError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred while submitting your attempt
                 </Alert>
             </Snackbar>
         </Box>

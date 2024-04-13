@@ -38,8 +38,6 @@ export default function CodeEditorCard({
 }>) {
     const [openCodeEmptyError, setOpenCodeEmptyError] =
         React.useState<boolean>(false);
-    const [openSubmissionSuccess, setOpenSubmissionSuccess] =
-        React.useState<boolean>(false);
 
     const updateCode = (code: React.SetStateAction<string>) => {
         setCodeOnEditor(code);
@@ -85,8 +83,6 @@ export default function CodeEditorCard({
                 attemptId: currentAttemptId ?? "",
             },
         });
-
-        setOpenSubmissionSuccess(true);
 
         console.log(
             "Submit attempt result:",
@@ -157,20 +153,6 @@ export default function CodeEditorCard({
                     sx={{ width: "100%" }}
                 >
                     An error occurred due to the absence of code.
-                </Alert>
-            </Snackbar>
-            <Snackbar
-                open={openSubmissionSuccess}
-                autoHideDuration={3000}
-                onClose={() => setOpenSubmissionSuccess(false)}
-            >
-                <Alert
-                    onClose={() => setOpenSubmissionSuccess(false)}
-                    severity="success"
-                    variant="filled"
-                    sx={{ width: "100%" }}
-                >
-                    Your submission has been successfully submitted.
                 </Alert>
             </Snackbar>
         </CardWrapper>

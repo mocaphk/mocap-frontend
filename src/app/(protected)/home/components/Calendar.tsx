@@ -70,7 +70,7 @@ export default function Calendar() {
         <CardWrapper>
             <ComponentWrapper Icon={CalendarMonthIcon} title="Calendar">
                 {/* min height following fixed size of calendar */}
-                <Box className="flex flex-row flex-wrap gap-12 min-h-[280px]">
+                <Box className="flex flex-row flex-wrap gap-12 min-h-[280px] justify-center">
                     <WeekPicker
                         value={value}
                         setValue={setValue}
