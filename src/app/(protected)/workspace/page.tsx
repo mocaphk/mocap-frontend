@@ -304,6 +304,10 @@ export default function WorkspacePage() {
     const [results, setResults] = React.useState<CodeExecutionResult[]>([]);
 
     React.useEffect(() => {
+        setResults([]);
+    }, [isEditing]);
+
+    React.useEffect(() => {
         if (!isEditing) {
             setCodeOnEditor(currentAttempt.code ?? "");
         }
