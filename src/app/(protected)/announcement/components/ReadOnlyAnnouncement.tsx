@@ -55,7 +55,9 @@ export default function ReadOnlyAnnouncement({
             </Box>
 
             <Box className="mt-4 mb-7">
-                <Typography style={{ wordWrap: "break-word" }}>
+                <Typography
+                    style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
+                >
                     {content}
                 </Typography>
             </Box>
