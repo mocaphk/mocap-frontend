@@ -696,10 +696,9 @@ export default function WorkspacePage() {
     };
 
     // Error page
-    if (
-        (!allowEditOrCreate && isEditing) ||
-        (!allowEditOrCreate && isNewQuestion)
-    ) {
+    const showNoPermPage =
+        !userRolesLoading && !allowEditOrCreate && (isEditing || isNewQuestion);
+    if (showNoPermPage) {
         return (
             <ErrorPage
                 title="No permission"
