@@ -67,6 +67,10 @@ export default function WorkspacePage() {
         React.useState<boolean>(false);
     const [openSubmissionError, setOpenSubmissionError] =
         React.useState<boolean>(false);
+    const [openRunTestCaseError, setOpenRunTestCaseError] =
+        React.useState<boolean>(false);
+    const [openSubmitAttemptError, setOpenSubmitAttemptError] =
+        React.useState<boolean>(false);
 
     const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
 
@@ -335,6 +339,7 @@ export default function WorkspacePage() {
             },
             onError: (error) => {
                 console.error("submitAttemptFunc error:", error);
+                setOpenSubmitAttemptError(true);
             },
         });
 
@@ -659,6 +664,7 @@ export default function WorkspacePage() {
             },
             onError: (error) => {
                 console.error("runTestcaseFunc error:", error);
+                setOpenRunTestCaseError(true);
             },
         });
 
@@ -915,6 +921,34 @@ export default function WorkspacePage() {
             >
                 <Alert
                     onClose={() => setOpenSubmissionError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred while submitting your attempt
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openRunTestCaseError}
+                autoHideDuration={3000}
+                onClose={() => setOpenRunTestCaseError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenRunTestCaseError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred while running test case
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSubmitAttemptError}
+                autoHideDuration={3000}
+                onClose={() => setOpenSubmitAttemptError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSubmitAttemptError(false)}
                     severity="error"
                     variant="filled"
                     sx={{ width: "100%" }}
