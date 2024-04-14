@@ -38,6 +38,7 @@ export default function ActionCard({
     runTestcaseWithSampleCodeFunc,
     results,
     setCodeOnEditor,
+    setOpenCodeEmptyError,
 }: Readonly<{
     activeTab: string;
     setActiveTab: Function;
@@ -61,6 +62,7 @@ export default function ActionCard({
     runTestcaseWithSampleCodeFunc: Function;
     results: CodeExecutionResult[];
     setCodeOnEditor: Function;
+    setOpenCodeEmptyError: React.Dispatch<React.SetStateAction<boolean>>;
 }>) {
     const theme = useTheme();
 
@@ -186,6 +188,7 @@ export default function ActionCard({
                                 runTestcaseWithSampleCodeFunc={
                                     runTestcaseWithSampleCodeFunc
                                 }
+                                setOpenCodeEmptyError={setOpenCodeEmptyError}
                             />
                         </TabPanel>
                         <TabPanel className="h-full" value="submission">

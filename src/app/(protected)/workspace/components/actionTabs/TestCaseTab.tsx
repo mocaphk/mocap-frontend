@@ -42,6 +42,7 @@ export default function TestcaseTab({
     questionId,
     codeOnEditor,
     runTestcaseWithSampleCodeFunc,
+    setOpenCodeEmptyError,
 }: Readonly<{
     isEditing: boolean;
     sampleTestcases: SampleTestcase[];
@@ -58,6 +59,7 @@ export default function TestcaseTab({
     questionId: string;
     codeOnEditor: string;
     runTestcaseWithSampleCodeFunc: Function;
+    setOpenCodeEmptyError: React.Dispatch<React.SetStateAction<boolean>>;
 }>) {
     const handleSampleChipClick = (tempId: string) => {
         const testcase = sampleTestcases.find(
@@ -209,6 +211,11 @@ export default function TestcaseTab({
         let expectedOutput = selectedTestcase?.expectedOutput;
         let output = selectedTestcase?.output;
         let isTimeout = selectedTestcase?.isTimeout;
+
+        if (!codeOnEditor) {
+            setOpenCodeEmptyError(true);
+            return;
+        }
 
         if (isEditing) {
             const testcaseInput = selectedTestcase?.input;

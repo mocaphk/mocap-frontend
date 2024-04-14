@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PublishIcon from "@mui/icons-material/Publish";
 import CodeEditor from "./CodeEditor";
@@ -22,6 +22,7 @@ export default function CodeEditorCard({
     submitAttemptFunc,
     sampleTestcases,
     customTestcases,
+    setOpenCodeEmptyError,
 }: Readonly<{
     question: Question;
     isEditing: boolean;
@@ -35,10 +36,8 @@ export default function CodeEditorCard({
     submitAttemptFunc: Function;
     sampleTestcases: SampleTestcase[];
     customTestcases: CustomTestcase[];
+    setOpenCodeEmptyError: React.Dispatch<React.SetStateAction<boolean>>;
 }>) {
-    const [openCodeEmptyError, setOpenCodeEmptyError] =
-        React.useState<boolean>(false);
-
     const updateCode = (code: React.SetStateAction<string>) => {
         setCodeOnEditor(code);
         if (isEditing) {
@@ -138,20 +137,6 @@ export default function CodeEditorCard({
                     )}
                 </Box>
             </Box>
-            <Snackbar
-                open={openCodeEmptyError}
-                autoHideDuration={3000}
-                onClose={() => setOpenCodeEmptyError(false)}
-            >
-                <Alert
-                    onClose={() => setOpenCodeEmptyError(false)}
-                    severity="error"
-                    variant="filled"
-                    sx={{ width: "100%" }}
-                >
-                    An error occurred due to the absence of code.
-                </Alert>
-            </Snackbar>
         </CardWrapper>
     );
 }
