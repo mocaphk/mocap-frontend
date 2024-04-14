@@ -197,6 +197,7 @@ export default function ActionCard({
                         </TabPanel>
                         <TabPanel className="h-full" value="result">
                             <ResultTab
+                                isEditing={isEditing}
                                 results={results}
                                 allowEditOrCreate={allowEditOrCreate}
                             />

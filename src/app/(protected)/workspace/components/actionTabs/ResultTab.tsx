@@ -190,9 +190,11 @@ function ResultBar({
 }
 
 export default function ResultTab({
+    isEditing,
     results,
     allowEditOrCreate,
 }: Readonly<{
+    isEditing: boolean;
     results: CodeExecutionResult[];
     allowEditOrCreate: boolean;
 }>) {
@@ -220,9 +222,12 @@ export default function ResultTab({
 
     return (
         <Box className="flex flex-col gap-1">
-            <Typography color="info.main" fontSize={18}>
-                {`Passed test cases: ${passedTestCasesLength} / ${totalTestCasesLength}`}
-            </Typography>
+            {!isEditing && (
+                <Typography color="info.main" fontSize={18}>
+                    {`Passed test cases: ${passedTestCasesLength} / ${totalTestCasesLength}`}
+                </Typography>
+            )}
+
             <List className="w-full">
                 {allowEditOrCreate
                     ? filteredResults?.map((result, index) => (
