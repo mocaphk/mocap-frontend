@@ -10,43 +10,37 @@
 
 // See https://www.apollographql.com/docs/react/data/suspense/ for useSuspenseQuery()
 
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { HttpLink, from } from "@apollo/client";
 import {
     NextSSRApolloClient,
     NextSSRInMemoryCache,
-    SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import type { Session } from "next-auth";
+import { setContext } from "@apollo/client/link/context";
+import { getSession } from "next-auth/react";
 
-export default function makeClient(
-    accessTokenType?: Session["accessTokenType"],
-    accessToken?: Session["accessToken"]
-) {
+export default function makeClient() {
     const httpLink = new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_URL,
-        credentials: "include",
         // TODO: properly handle cache
         fetchOptions: { cache: "no-store" },
-        headers: {
-            authorization:
-                accessTokenType && accessToken
-                    ? `${accessTokenType} ${accessToken}`
+    });
+
+    const authLink = setContext(async (operation, { headers }) => {
+        const session = await getSession();
+        return {
+            credentials: "include",
+            headers: {
+                ...headers,
+                authorization: session?.accessToken
+                    ? `Bearer ${session.accessToken}`
                     : "",
-        },
+            },
+        };
     });
 
     return new NextSSRApolloClient({
         ssrMode: true,
-
         cache: new NextSSRInMemoryCache(),
-        link:
-            typeof window === "undefined"
-                ? ApolloLink.from([
-                      new SSRMultipartLink({
-                          stripDefer: true,
-                      }),
-                      httpLink,
-                  ])
-                : httpLink,
+        link: from([authLink, httpLink]),
     });
 }

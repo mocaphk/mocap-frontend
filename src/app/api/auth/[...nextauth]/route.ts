@@ -1,11 +1,14 @@
 import type { AxiosError } from "axios";
 import axios from "axios";
 import moment from "moment";
-import NextAuth, { type AuthOptions, type TokenSet } from "next-auth";
+import NextAuth, { type AuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import jwt_decode from "jwt-decode";
-import type { KeycloakAccessTokenPayload } from "@/types/keycloak";
+import type {
+    KeycloakAccessTokenPayload,
+    KeycloakRefreshTokenResponse,
+} from "@/types/keycloak";
 
 async function refreshAccessToken(refreshToken: JWT["refreshToken"]) {
     if (!refreshToken) {
@@ -24,7 +27,7 @@ async function refreshAccessToken(refreshToken: JWT["refreshToken"]) {
             params
         );
 
-        return token.data as TokenSet;
+        return token.data as KeycloakRefreshTokenResponse;
     } catch (error) {
         throw new Error("RefreshAccessTokenError");
     }
@@ -100,13 +103,25 @@ export const authOptions: AuthOptions = {
             // If the access token has expired, try to refresh it
             try {
                 const newToken = await refreshAccessToken(token.refreshToken);
-                return {
-                    ...token,
-                    accessToken: newToken.access_token,
-                    accessTokenType: newToken.token_type,
-                    expiresAt: newToken.expires_at,
-                    refreshToken: newToken.refresh_token ?? token.refresh_token,
-                } as JWT;
+                if (newToken) {
+                    const expiredAt = moment()
+                        .add(newToken.expires_in, "second")
+                        .format("X")
+                        .toString();
+                    return {
+                        ...token,
+                        accessToken: newToken.access_token,
+                        accessTokenType: newToken.token_type,
+                        expiresAt: expiredAt,
+                        refreshToken:
+                            newToken.refresh_token ?? token.refresh_token,
+                    } as unknown as JWT;
+                } else {
+                    return {
+                        ...token,
+                        error: "RefreshAccessTokenError" as const,
+                    } as JWT;
+                }
             } catch (err) {
                 return {
                     ...token,
