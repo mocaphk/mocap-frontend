@@ -46,7 +46,6 @@ import {
     useSubmitAttemptMutation,
 } from "@/app/graphql/workspace/codeExecution.graphql";
 import { useGetCouseIdByAssignmentIdQuery } from "@/app/graphql/course/assignment.graphql";
-import type { GetCouseIdByAssignmentIdQuery } from "@/app/graphql/course/assignment.graphql";
 import { useGetCourseUserRolesLazyQuery } from "@/app/graphql/course/course.graphql";
 import ErrorPage from "@/app/errors/errorPage";
 
@@ -54,6 +53,7 @@ export default function WorkspacePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const questionIdFromUrl = searchParams.get("questionId");
+    const [isEditing, setIsEditing] = React.useState(questionIdFromUrl === "");
 
     // noti snackbar state
     const [openSaveCustomTestcaseSuccess, setOpenSaveCustomTestcaseSuccess] =
@@ -75,7 +75,10 @@ export default function WorkspacePage() {
     const [openCodeEmptyError, setOpenCodeEmptyError] =
         React.useState<boolean>(false);
 
-    const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
+    const [allowEditOrCreate, setAllowEditOrCreate] =
+        React.useState<boolean>(false);
+    const [userRolesLoading, setUserRolesLoading] =
+        React.useState<boolean>(true);
 
     // Assignment related states
     const [assignmentId, setAssignmentId] = React.useState(
@@ -83,11 +86,11 @@ export default function WorkspacePage() {
     );
     const [courseId, setCourseId] = React.useState("");
 
-    // get courseId by assignmentId
+    // get courseId by assignmentId when questionId is empty
     const { refetch: refetchCourseId } = useGetCouseIdByAssignmentIdQuery({
         variables: { assignmentId: assignmentId },
-        skip: assignmentId === "" || assignmentId === null,
-        onCompleted: (data: GetCouseIdByAssignmentIdQuery) => {
+        skip: !isEditing || assignmentId === "" || questionIdFromUrl !== "",
+        onCompleted: (data) => {
             setCourseId(data.assignment?.course.id ?? "");
             getRolesDataFunc({
                 variables: { courseId: data.assignment?.course.id ?? "" },
@@ -98,6 +101,7 @@ export default function WorkspacePage() {
     const [getRolesDataFunc] = useGetCourseUserRolesLazyQuery({
         fetchPolicy: "network-only",
         onCompleted: (res) => {
+            setUserRolesLoading(false);
             const roles = res.getCourseUserRoles;
             const isAdmin = roles?.includes(UserRole.Admin) ?? false;
             const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
@@ -105,6 +109,9 @@ export default function WorkspacePage() {
 
             const allowEditOrCreate = isAdmin || isLecturer || isTutor;
             setAllowEditOrCreate(allowEditOrCreate);
+        },
+        onError: () => {
+            setUserRolesLoading(false);
         },
     });
 
@@ -116,7 +123,6 @@ export default function WorkspacePage() {
     const [isNewQuestion, setIsNewQuestion] = React.useState(
         questionIdFromUrl === ""
     );
-    const [isEditing, setIsEditing] = React.useState(questionIdFromUrl === "");
     const currentQuestionId = questionIdFromUrl ?? "";
     const [question, setQuestion] = React.useState<Question>(
         new Object() as Question
@@ -145,7 +151,7 @@ export default function WorkspacePage() {
         refetch: refetchQuestion,
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
-        skip: currentQuestionId == "",
+        skip: questionIdFromUrl == "",
         onCompleted: (res) => {
             if (res.question?.id) {
                 // local storage store latest attempted question
@@ -153,7 +159,29 @@ export default function WorkspacePage() {
                     "latestAttemptedQuestion",
                     res.question?.id
                 );
+                setCourseId(res.question?.assignment?.course?.id ?? "");
+                getRolesDataFunc({
+                    variables: {
+                        courseId: res.question?.assignment?.course?.id ?? "",
+                    },
+                });
             }
+            const questionData = res?.question;
+            let question: Question = {
+                id: questionIdFromUrl ?? "",
+                title: questionData?.title ?? "",
+                description: questionData?.description ?? "",
+                language: questionData?.language as ProgrammingLanguage,
+                sampleCode: "",
+                checkingMethod: CheckingMethod.Console,
+                execCommand: questionData?.execCommand!,
+                timeLimit: questionData?.timeLimit ?? 1000,
+                assignmentId: questionData?.assignment?.id!,
+                codingEnvironmentId: questionData?.codingEnvironment?.id,
+                isPublic: questionData?.isPublic ?? true,
+            };
+            setAssignmentId(questionData?.assignment?.id ?? "");
+            setQuestion(question);
         },
     });
 
@@ -161,30 +189,11 @@ export default function WorkspacePage() {
 
     const questionNotFound =
         !questionLoading &&
+        !userRolesLoading &&
         (questionDataRes === undefined ||
             questionError ||
             questionData === undefined ||
             questionData === null);
-
-    // Handle fetched question
-    React.useEffect(() => {
-        if (questionData) {
-            setQuestion({
-                id: questionIdFromUrl ?? "",
-                title: questionData.title,
-                description: questionData.description,
-                language: questionData.language as ProgrammingLanguage,
-                sampleCode: "",
-                checkingMethod: questionData.checkingMethod!,
-                execCommand: questionData.execCommand!,
-                timeLimit: questionData.timeLimit,
-                assignmentId: questionData.assignment?.id!,
-                codingEnvironmentId: questionData.codingEnvironment?.id,
-                isPublic: questionData.isPublic,
-            });
-            setAssignmentId(questionDataRes.question?.assignment?.id!);
-        }
-    }, [questionIdFromUrl, questionDataRes]);
 
     // Handle question creation
     const [createQuestionFunc] = useCreateQuestionMutation({
@@ -211,6 +220,7 @@ export default function WorkspacePage() {
                     testcaseInput: sampleTescasesCopy,
                 },
             });
+            setIsNewQuestion(false);
             router.replace(`workspace?questionId=${res.createQuestion.id}`);
 
             // success noti
@@ -500,12 +510,20 @@ export default function WorkspacePage() {
 
     // fetch sample testcases base on the permission
     React.useEffect(() => {
+        if (userRolesLoading) {
+            return;
+        }
         if (allowEditOrCreate) {
             getSampleTestcases();
         } else {
             getNonHiddenSampleTestcases();
         }
-    }, [allowEditOrCreate, getNonHiddenSampleTestcases, getSampleTestcases]);
+    }, [
+        allowEditOrCreate,
+        userRolesLoading,
+        getNonHiddenSampleTestcases,
+        getSampleTestcases,
+    ]);
 
     // Fetching custom testcases
     const {
@@ -678,10 +696,9 @@ export default function WorkspacePage() {
     };
 
     // Error page
-    if (
-        (!allowEditOrCreate && isEditing) ||
-        (!allowEditOrCreate && isNewQuestion)
-    ) {
+    const showNoPermPage =
+        !userRolesLoading && !allowEditOrCreate && (isEditing || isNewQuestion);
+    if (showNoPermPage) {
         return (
             <ErrorPage
                 title="No permission"

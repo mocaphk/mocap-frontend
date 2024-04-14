@@ -13,6 +13,9 @@ query GetQuestion($questionId: ID) {
         timeLimit
         assignment {
             id
+            course {
+                id
+            }
         }
         isPublic
     }
