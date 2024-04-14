@@ -88,6 +88,7 @@ export default function ActionCard({
 
     const { data: studentsData } = useGetSubmittedStudentsQuery({
         variables: { questionId: questionId },
+        skip: !allowEditOrCreate || questionId === "",
         onCompleted: (data) => {
             setSubmittedStudents(
                 data.submittedStudents?.map((user) => ({
