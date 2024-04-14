@@ -23,7 +23,8 @@ import {
     useUpdateAttemptMutation,
 } from "../../graphql/workspace/attempt.graphql";
 import { CheckingMethod, UserRole } from "@schema";
-import type { CodeExecutionResult, ProgrammingLanguage } from "@schema";
+import { ProgrammingLanguage } from "@schema";
+import type { CodeExecutionResult } from "@schema";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { CustomTestcase, SampleTestcase } from "./types/Testcase";
@@ -124,9 +125,15 @@ export default function WorkspacePage() {
     );
     let newQuestion: Question = new Object() as Question;
     newQuestion.assignmentId = assignmentId ?? "";
+    newQuestion.id = "";
+    newQuestion.title = "";
     newQuestion.description = "";
+    newQuestion.language = ProgrammingLanguage.Python;
     newQuestion.sampleCode = "";
     newQuestion.checkingMethod = CheckingMethod.Console;
+    newQuestion.execCommand = "";
+    newQuestion.timeLimit = 1000;
+    newQuestion.codingEnvironmentId = null;
     newQuestion.isPublic = true;
 
     const [editedQuestion, setEditedQuestion] = React.useState<Question>(
