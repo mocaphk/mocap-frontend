@@ -39,8 +39,14 @@ export default function AssignmentCard({
                     }}
                     barColor={assignmentStatusColorMap}
                 >
-                    <Box className="flex flex-col w-full items-start">
-                        <Typography fontSize={16} lineHeight="1.3rem">
+                    <Box className="flex flex-col w-[90%] items-start overflow-hidden">
+                        <Typography
+                            fontSize={16}
+                            lineHeight="1.3rem"
+                            whiteSpace="nowrap"
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                        >
                             {title}
                         </Typography>
                         <Typography color="text.primary" fontSize={12}>

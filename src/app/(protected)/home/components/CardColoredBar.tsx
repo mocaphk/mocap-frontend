@@ -8,6 +8,7 @@ function CardColoredBar({ barColor }: Readonly<{ barColor: string }>) {
 
     return (
         <Box
+            flex="1 0 auto"
             sx={{
                 width: 8,
                 marginRight: theme.spacing(2),
