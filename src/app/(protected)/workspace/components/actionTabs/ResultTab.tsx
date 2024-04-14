@@ -65,7 +65,14 @@ function ResultBar({
         <Box className="">
             <Alert
                 sx={{
-                    ...(isStart
+                    ...(isStart && isEnd && !open
+                        ? {
+                              borderTopLeftRadius: "16px",
+                              borderTopRightRadius: "16px",
+                              borderBottomLeftRadius: "16px",
+                              borderBottomRightRadius: "16px",
+                          }
+                        : isStart
                         ? {
                               borderTopLeftRadius: "16px",
                               borderTopRightRadius: "16px",

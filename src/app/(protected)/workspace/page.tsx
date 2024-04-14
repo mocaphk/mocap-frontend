@@ -71,6 +71,8 @@ export default function WorkspacePage() {
         React.useState<boolean>(false);
     const [openSubmitAttemptError, setOpenSubmitAttemptError] =
         React.useState<boolean>(false);
+    const [openCodeEmptyError, setOpenCodeEmptyError] =
+        React.useState<boolean>(false);
 
     const [allowEditOrCreate, setAllowEditOrCreate] = React.useState(false);
 
@@ -824,6 +826,7 @@ export default function WorkspacePage() {
                             }
                             results={results}
                             setCodeOnEditor={setCodeOnEditor}
+                            setOpenCodeEmptyError={setOpenCodeEmptyError}
                         />
                     </Allotment.Pane>
                 </Allotment>
@@ -841,6 +844,7 @@ export default function WorkspacePage() {
                         submitAttemptFunc={submitAttemptFunc}
                         sampleTestcases={sampleTestcases}
                         customTestcases={customTestcases}
+                        setOpenCodeEmptyError={setOpenCodeEmptyError}
                     />
                 </Allotment.Pane>
             </Allotment>
@@ -954,6 +958,20 @@ export default function WorkspacePage() {
                     sx={{ width: "100%" }}
                 >
                     An error occurred while submitting your attempt
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openCodeEmptyError}
+                autoHideDuration={3000}
+                onClose={() => setOpenCodeEmptyError(false)}
+            >
+                <Alert
+                    onClose={() => setOpenCodeEmptyError(false)}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    An error occurred due to the absence of code.
                 </Alert>
             </Snackbar>
         </Box>
