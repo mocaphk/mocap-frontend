@@ -74,16 +74,11 @@ export default function CodeEditorCard({
     const submitAttempt = async () => {
         const currentAttemptId = await createOrUpdateAttempt(true);
 
-        const response = await submitAttemptFunc({
+        await submitAttemptFunc({
             variables: {
                 attemptId: currentAttemptId ?? "",
             },
         });
-
-        console.log(
-            "Submit attempt result:",
-            response.data?.submitAttempt.results
-        );
     };
 
     const handleRunClick = async () => {

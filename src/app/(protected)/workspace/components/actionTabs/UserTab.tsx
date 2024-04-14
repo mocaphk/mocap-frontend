@@ -30,7 +30,6 @@ export default function UserTab({
     const [getLatestSubmissionFunc, { data: attemptData }] =
         useGetLatestSubmissionByQuestionIdAndUserIdLazyQuery({
             onCompleted: (data) => {
-                console.log(data);
                 setCodeOnEditor(data.latestSubmission?.code);
                 setStudentSubmittedAt(data.latestSubmission?.updatedAt ?? "");
             },
@@ -63,7 +62,6 @@ export default function UserTab({
                 onChange={(event, newValue) => {
                     setSelectedStudent(newValue || selectedStudent);
                     setStudentSubmittedAt("");
-                    console.log("selected user: ", newValue);
                 }}
                 autoFocus={true}
                 renderInput={(params) => (

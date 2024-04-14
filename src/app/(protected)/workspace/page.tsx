@@ -91,14 +91,12 @@ export default function WorkspacePage() {
             getRolesDataFunc({
                 variables: { courseId: data.assignment?.course.id ?? "" },
             });
-            console.log("Course Id from server:", data.assignment?.course.id);
         },
     });
 
     const [getRolesDataFunc] = useGetCourseUserRolesLazyQuery({
         fetchPolicy: "network-only",
         onCompleted: (res) => {
-            console.log("Roles from server:", res.getCourseUserRoles);
             const roles = res.getCourseUserRoles;
             const isAdmin = roles?.includes(UserRole.Admin) ?? false;
             const isLecturer = roles?.includes(UserRole.Lecturer) ?? false;
@@ -165,7 +163,6 @@ export default function WorkspacePage() {
     // Handle fetched question
     React.useEffect(() => {
         if (questionData) {
-            console.log("Question from server:", questionDataRes.question);
             setQuestion({
                 id: questionIdFromUrl ?? "",
                 title: questionData.title,
@@ -190,16 +187,30 @@ export default function WorkspacePage() {
                 ...editedQuestion,
             },
         },
-        onCompleted: async (res) => {
-            console.log("Created question with id:", res.createQuestion.id);
+        onCompleted: (res) => {
+            let sampleTescasesCopy = JSON.parse(
+                JSON.stringify(sampleTestcases)
+            );
+            sampleTescasesCopy.forEach((testcase: any) => {
+                if (testcase.tempId) {
+                    delete testcase.tempId;
+                    delete testcase.output;
+                    delete testcase.isTimeout;
+                }
+                testcase.expectedOutput = "";
+            });
+            createAndUpdateSampleTestcasesFunc({
+                variables: {
+                    questionId: res.createQuestion.id,
+                    testcaseInput: sampleTescasesCopy,
+                },
+            });
             router.replace(`workspace?questionId=${res.createQuestion.id}`);
 
             // success noti
             setOpenSaveQuestionSuccess(true);
         },
         onError: (error) => {
-            console.error("createQuestionFunc error:", error);
-
             // error noti
             setOpenSaveQuestionError(true);
         },
@@ -214,6 +225,24 @@ export default function WorkspacePage() {
             },
         },
         onCompleted: (res) => {
+            let sampleTescasesCopy = JSON.parse(
+                JSON.stringify(sampleTestcases)
+            );
+            sampleTescasesCopy.forEach((testcase: any) => {
+                if (testcase.tempId) {
+                    delete testcase.tempId;
+                    delete testcase.output;
+                    delete testcase.isTimeout;
+                }
+                testcase.expectedOutput = "";
+            });
+            createAndUpdateSampleTestcasesFunc({
+                variables: {
+                    questionId: res.updateQuestion.id,
+                    testcaseInput: sampleTescasesCopy,
+                },
+            });
+
             router.replace(`workspace?questionId=${res.updateQuestion.id}`);
             refetchQuestion();
 
@@ -221,8 +250,6 @@ export default function WorkspacePage() {
             setOpenSaveQuestionSuccess(true);
         },
         onError: (error) => {
-            console.error("updateQuestionFunc error:", error);
-
             // error noti
             setOpenSaveQuestionError(true);
         },
@@ -231,20 +258,9 @@ export default function WorkspacePage() {
     // Handle question save
     const saveQuestion = async () => {
         if (isNewQuestion) {
-            try {
-                await createQuestionFunc();
-                setIsNewQuestion(false);
-                console.log("Created question");
-            } catch (error) {
-                console.error("Error creating:", error);
-            }
+            createQuestionFunc();
         } else {
-            try {
-                await updateQuestionFunc();
-                console.log("Updated question");
-            } catch (error) {
-                console.error("Error updating:", error);
-            }
+            updateQuestionFunc();
         }
     };
 
@@ -254,22 +270,9 @@ export default function WorkspacePage() {
             questionId: question.id,
         },
         onCompleted: (res) => {
-            console.log("Question Id", res.deleteQuestion.id);
             router.push(`assignment?id=${assignmentId}`);
         },
-        onError: (error) => {
-            console.error("deleteQuestionFunc error:", error);
-        },
     });
-
-    const deleteQuestion = async () => {
-        try {
-            await deleteQuestionFunc();
-            console.log("Deleted question");
-        } catch (error) {
-            console.error("Error deleting:", error);
-        }
-    };
 
     // Attempts related states
     const [codeOnEditor, setCodeOnEditor] = React.useState("");
@@ -303,7 +306,6 @@ export default function WorkspacePage() {
         skip: questionIdFromUrl === "",
         onCompleted: (res: any) => {
             if (res.latestUpdate) {
-                console.log("Latest update from server:", res.latestUpdate);
                 setCurrentAttempt({
                     id: res.latestUpdate.id,
                     isSubmitted: res.latestUpdate.isSubmitted,
@@ -320,11 +322,6 @@ export default function WorkspacePage() {
     // Handle fetched attempts
     React.useEffect(() => {
         if (attemptsRes && (attemptsRes as { attempts: Attempt[] }).attempts) {
-            console.log(
-                "Attempts from server:",
-                (attemptsRes as { attempts: Attempt[] }).attempts
-            );
-
             setAttemptsList((attemptsRes as { attempts: Attempt[] }).attempts);
         }
     }, [questionIdFromUrl, attemptsRes]);
@@ -334,13 +331,11 @@ export default function WorkspacePage() {
         useRunAttemptLazyQuery({
             fetchPolicy: "network-only",
             onCompleted: (res) => {
-                console.log("run attempt result:", res.runAttempt.results);
                 refetchAttempts();
                 setResults(res.runAttempt.results);
                 setActiveTab("result");
             },
             onError: (error) => {
-                console.error("submitAttemptFunc error:", error);
                 setOpenSubmitAttemptError(true);
             },
         });
@@ -351,10 +346,6 @@ export default function WorkspacePage() {
                 attemptId: currentAttempt.id ?? "",
             },
             onCompleted: (res) => {
-                console.log(
-                    "Submit attempt result:",
-                    res.submitAttempt.results
-                );
                 refetchAttempts();
                 setResults(res.submitAttempt.results);
                 setActiveTab("result");
@@ -363,8 +354,6 @@ export default function WorkspacePage() {
             },
             onError: (error) => {
                 setOpenSubmissionError(true);
-
-                console.error("submitAttemptFunc error:", error);
             },
         });
 
@@ -375,12 +364,6 @@ export default function WorkspacePage() {
                 code: codeOnEditor,
             },
         },
-        onCompleted: (res) => {
-            console.log("Attempt Id", res.createAttempt.id);
-        },
-        onError: (error) => {
-            console.error("createAttemptFunc error:", error);
-        },
     });
 
     const [updateAttemptFunc] = useUpdateAttemptMutation({
@@ -389,12 +372,6 @@ export default function WorkspacePage() {
             attemptInput: {
                 code: codeOnEditor,
             },
-        },
-        onCompleted: (res) => {
-            console.log("Attempt Id", res.updateAttempt.id);
-        },
-        onError: (error) => {
-            console.error("updateAttemptFunc error:", error);
         },
     });
 
@@ -477,7 +454,6 @@ export default function WorkspacePage() {
                             isTimeout: false,
                         };
                     });
-                    console.log("Testcases from server:", sampleTestcases);
                     setSampleTestcases(sampleTestcases);
                     const testcases = [...sampleTestcases, ...customTestcases];
                     setSelectedTestcase(testcases[0] ?? undefined);
@@ -512,7 +488,6 @@ export default function WorkspacePage() {
                         };
                     }
                 );
-                console.log("Testcases from server:", sampleTestcases);
                 setSampleTestcases(sampleTestcases);
                 const testcases = [...sampleTestcases, ...customTestcases];
                 setSelectedTestcase(testcases[0] ?? undefined);
@@ -558,7 +533,6 @@ export default function WorkspacePage() {
                     };
                 }
             );
-            console.log("Testcases from server:", customTestcases);
             setCustomTestcases(customTestcases);
             const testcases = [...sampleTestcases, ...customTestcases];
             setSelectedTestcase(testcases[0] ?? undefined);
@@ -569,11 +543,7 @@ export default function WorkspacePage() {
     // handle delete custom testcases
     const [deleteCustomTestcaseFunc] = useDeleteCustomTestcaseMutation({
         onCompleted: (res) => {
-            console.log("Testcase Id", res.deleteCustomTestcase.id);
             refetchCustomTestcase();
-        },
-        onError: (error) => {
-            console.error("deleteCustomTestcaseFunc error:", error);
         },
     });
 
@@ -582,9 +552,6 @@ export default function WorkspacePage() {
         useCreateAndUpdateTestcasesMutation({
             onCompleted: () => {
                 getSampleTestcases();
-            },
-            onError: (error) => {
-                console.error("createTestcasesFunc error:", error);
             },
         });
 
@@ -596,7 +563,6 @@ export default function WorkspacePage() {
             },
         },
         onCompleted: (res) => {
-            console.log("Testcase Id", res.createCustomTestcases[0].id);
             let newTestcaseCopy = JSON.parse(
                 JSON.stringify(selectedTestcase as SampleTestcase)
             );
@@ -625,8 +591,6 @@ export default function WorkspacePage() {
             setOpenSaveCustomTestcaseSuccess(true);
         },
         onError: (error) => {
-            console.error("createCustomTestcasesFunc error:", error);
-
             // fail noti
             setOpenSaveCustomTestcaseError(true);
         },
@@ -640,14 +604,10 @@ export default function WorkspacePage() {
             },
         },
         onCompleted: (res) => {
-            console.log("Testcase Id", res.updateCustomTestcase.id);
-
             // success noti
             setOpenSaveCustomTestcaseSuccess(true);
         },
         onError: (error) => {
-            console.error("updateCustomTestcaseFunc error:", error);
-
             // fail noti
             setOpenSaveCustomTestcaseError(true);
         },
@@ -657,17 +617,6 @@ export default function WorkspacePage() {
     const [runTestcaseFunc, { loading: runTestcaseLoading }] =
         useRunTestcaseLazyQuery({
             fetchPolicy: "network-only",
-            onCompleted: (res) => {
-                console.log("Testcase output", res.runTestcase.output);
-                console.log(
-                    "Testcase sample output",
-                    res.runTestcase.sampleOutput
-                );
-            },
-            onError: (error) => {
-                console.error("runTestcaseFunc error:", error);
-                setOpenRunTestCaseError(true);
-            },
         });
 
     // Run sample code
@@ -676,31 +625,14 @@ export default function WorkspacePage() {
         { loading: runTestcaseWithSampleCodeLoading },
     ] = useRunTestcaseWithCodeLazyQuery({
         fetchPolicy: "network-only",
-        onCompleted: (res) => {
-            console.log("Testcase output", res.runTestcaseWithCode.output);
-            console.log(
-                "Testcase sample output",
-                res.runTestcaseWithCode.sampleOutput
-            );
-        },
-        onError: (error) => {
-            console.error("runTestcaseWithSampleCodeFunc error:", error);
-        },
     });
 
     const [runSampleTestcasesFunc, { loading: runSampleTestcasesLoading }] =
         useRunAllTestcasesWithCodeLazyQuery({
             fetchPolicy: "network-only",
             onCompleted: (res) => {
-                console.log(
-                    "Testcase output",
-                    res.runAllTestcasesWithCode.results
-                );
                 setResults(res.runAllTestcasesWithCode.results);
                 setActiveTab("result");
-            },
-            onError: (error) => {
-                console.error("runAllTestcasesFunc error:", error);
             },
         });
 
@@ -786,7 +718,7 @@ export default function WorkspacePage() {
                             allowEditOrCreate={allowEditOrCreate}
                             editedQuestion={editedQuestion}
                             setEditedQuestion={setEditedQuestion}
-                            onDeleteQuestion={deleteQuestion}
+                            onDeleteQuestion={deleteQuestionFunc}
                             onSaveQuestion={saveQuestion}
                             sampleTestcases={sampleTestcases}
                             customTestcases={customTestcases}

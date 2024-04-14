@@ -89,7 +89,6 @@ export default function ActionCard({
     const { data: studentsData } = useGetSubmittedStudentsQuery({
         variables: { questionId: questionId },
         onCompleted: (data) => {
-            console.log(data);
             setSubmittedStudents(
                 data.submittedStudents?.map((user) => ({
                     id: user.id,
@@ -99,9 +98,6 @@ export default function ActionCard({
             setSelectedStudent(
                 data.submittedStudents?.[0] ?? submittedStudents[0]
             );
-        },
-        onError: (error) => {
-            console.log(error);
         },
     });
 

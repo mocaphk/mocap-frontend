@@ -57,10 +57,7 @@ export default function SubmissionTab({
     }, [attemptsList]);
 
     const handleRevert = () => {
-        console.log("revert clicked");
-        console.log("selected attempt: ", selectedAttempt);
         if (selectedAttempt) {
-            console.log("reverting to: ", marks.values);
             setCodeOnEditor(selectedAttempt.code);
         }
     };

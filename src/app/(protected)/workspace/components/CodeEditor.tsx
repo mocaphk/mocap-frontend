@@ -43,15 +43,6 @@ export default function CodeEditor({
                         )
                     ) {
                         registerPythonLanguage(monaco);
-                        console.log("register python language");
-                    }
-                } else if (language === ProgrammingLanguage.C) {
-                    if (
-                        !isLanguageRegistered(
-                            "mocap_" + getLanguageString(language)
-                        )
-                    ) {
-                        console.log("register c language");
                     }
                 }
             }
