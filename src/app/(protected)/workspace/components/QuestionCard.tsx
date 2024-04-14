@@ -83,10 +83,7 @@ export default function QuestionCard({
                 }))
             );
         }
-        if (error) {
-            console.error("Error fetching coding environments:", error);
-        }
-    }, [data, error]);
+    }, [data]);
 
     const [getSampleCode] = useGetSampleCodeLazyQuery({
         fetchPolicy: "network-only",
@@ -117,24 +114,8 @@ export default function QuestionCard({
             setOpenEditQuestionInvalid(true);
             return;
         }
-        let sampleTescasesCopy = JSON.parse(JSON.stringify(sampleTestcases));
-        sampleTescasesCopy.forEach((testcase: any) => {
-            if (testcase.tempId) {
-                delete testcase.tempId;
-                delete testcase.output;
-                delete testcase.isTimeout;
-            }
-            testcase.expectedOutput = "";
-        });
-
         onSaveQuestion();
         setIsEditing(false);
-        createAndUpdateSampleTestcasesFunc({
-            variables: {
-                questionId: question.id,
-                testcaseInput: sampleTescasesCopy,
-            },
-        });
         updateSelectedTestcase(false);
     };
 

@@ -82,11 +82,9 @@ export default function TestcaseTab({
     };
 
     const handleCustomChipClick = (tempId: string) => {
-        console.log(tempId);
         const testcase = customTestcases.find(
             (testcase) => testcase.tempId === tempId
         );
-        console.log("Selected Testcase", testcase);
         setSelectedTestcase(testcase);
     };
 
