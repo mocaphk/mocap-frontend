@@ -43,11 +43,11 @@ function ResultBar({
 
     const expectedOutput = result?.sampleOutput
         ?.map((output: CodeExecutionOutput) => output.payload)
-        .join("\n");
+        .join("");
 
     const output = result?.output
         ?.map((output: CodeExecutionOutput) => output.payload)
-        .join("\n");
+        .join("");
 
     let msg = "";
     // isCorrect is null when the testcases are run with sample code only
