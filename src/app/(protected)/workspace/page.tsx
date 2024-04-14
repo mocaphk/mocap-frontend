@@ -335,9 +335,6 @@ export default function WorkspacePage() {
                 setResults(res.runAttempt.results);
                 setActiveTab("result");
             },
-            onError: (error) => {
-                setOpenSubmitAttemptError(true);
-            },
         });
 
     const [submitAttemptFunc, { loading: submitAttemptLoading }] =
