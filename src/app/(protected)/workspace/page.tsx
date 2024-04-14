@@ -125,7 +125,6 @@ export default function WorkspacePage() {
     );
     let newQuestion: Question = new Object() as Question;
     newQuestion.assignmentId = assignmentId ?? "";
-    newQuestion.id = "";
     newQuestion.title = "";
     newQuestion.description = "";
     newQuestion.language = ProgrammingLanguage.Python;
