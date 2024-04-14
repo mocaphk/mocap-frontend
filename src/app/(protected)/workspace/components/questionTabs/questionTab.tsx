@@ -27,7 +27,9 @@ export default function QuestionTab({
                     )
                 }
             >
-                <Box className="break-words">{question.description}</Box>
+                <Box className="whitespace-pre break-words">
+                    {question.description}
+                </Box>
             </ComponentWrapper>
         </Box>
     );

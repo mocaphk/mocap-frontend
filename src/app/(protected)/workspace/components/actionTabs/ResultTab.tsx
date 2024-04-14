@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Box,
     InputLabel,
@@ -8,7 +9,6 @@ import {
     Alert,
     Typography,
 } from "@mui/material";
-import React from "react";
 import ReactDiffViewer from "react-diff-viewer-continued";
 import type { CodeExecutionOutput, CodeExecutionResult } from "@schema";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -28,6 +28,11 @@ function ResultBar({
     allowEditOrCreate: boolean;
 }>) {
     const [open, setOpen] = React.useState(false);
+
+    // close the result bar once result change
+    React.useEffect(() => {
+        setOpen(false);
+    }, [result]);
 
     const disallowClick =
         result.isCorrect || (!allowEditOrCreate && result.isHidden);

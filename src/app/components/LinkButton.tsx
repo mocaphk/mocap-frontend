@@ -18,7 +18,7 @@ export default function LinkButton({
                 className="flex flex-row w-full items-center justify-between rounded-2xl px-6 py-3 bg-[#f8fafc] hover:bg-[#f1f5f9] active:bg-[#e2e8f0] focus:outline-none focus:ring"
                 onClick={onClick}
             >
-                <Box className="flex flex-row items-center w-11/12">
+                <Box className="flex flex-row items-center w-11/12 overflow-hidden">
                     <Icon
                         sx={{ height: "1.2rem", width: "1.2rem" }}
                         color="info"
@@ -30,6 +30,7 @@ export default function LinkButton({
                         fontWeight="medium"
                         color="info.main"
                         whiteSpace="nowrap"
+                        textOverflow="ellipsis"
                     >
                         {title}
                     </Typography>
