@@ -152,6 +152,7 @@ export default function WorkspacePage() {
     } = useGetQuestionQuery({
         variables: { questionId: currentQuestionId },
         skip: questionIdFromUrl == "",
+        fetchPolicy: "network-only",
         onCompleted: (res) => {
             if (res.question?.id) {
                 // local storage store latest attempted question
@@ -240,7 +241,7 @@ export default function WorkspacePage() {
                 ...editedQuestion,
             },
         },
-        onCompleted: (res) => {
+        onCompleted: async (res) => {
             let sampleTescasesCopy = JSON.parse(
                 JSON.stringify(sampleTestcases)
             );
@@ -252,15 +253,26 @@ export default function WorkspacePage() {
                 }
                 testcase.expectedOutput = "";
             });
-            createAndUpdateSampleTestcasesFunc({
-                variables: {
-                    questionId: res.updateQuestion.id,
-                    testcaseInput: sampleTescasesCopy,
-                },
-            });
-
             router.replace(`workspace?questionId=${res.updateQuestion.id}`);
-            refetchQuestion();
+
+            const refetchedQuestion = await refetchQuestion();
+            const { data } = refetchedQuestion;
+            const questionData = data?.question;
+            let question: Question = {
+                id: questionIdFromUrl ?? "",
+                title: questionData?.title ?? "",
+                description: questionData?.description ?? "",
+                language: questionData?.language as ProgrammingLanguage,
+                sampleCode: "",
+                checkingMethod: CheckingMethod.Console,
+                execCommand: questionData?.execCommand!,
+                timeLimit: questionData?.timeLimit ?? 1000,
+                assignmentId: questionData?.assignment?.id!,
+                codingEnvironmentId: questionData?.codingEnvironment?.id,
+                isPublic: questionData?.isPublic ?? true,
+            };
+            setAssignmentId(questionData?.assignment?.id ?? "");
+            setQuestion(question);
 
             // success noti
             setOpenSaveQuestionSuccess(true);

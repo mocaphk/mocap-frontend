@@ -258,7 +258,7 @@ export default function TestcaseTab({
             : setSampleTestcases;
         setState((prev: any[]) => {
             return prev.map((testcase) => {
-                if (testcase.id === selectedTestcase?.id) {
+                if (testcase.tempId === selectedTestcase?.tempId) {
                     const newTestcase = { ...testcase };
                     let newTestcaseCopy = JSON.parse(
                         JSON.stringify(newTestcase)
@@ -307,7 +307,8 @@ export default function TestcaseTab({
     const isSelectedSampleTestcase =
         selectedTestcase &&
         sampleTestcases.find(
-            (testcase: { id: string }) => testcase.id === selectedTestcase.id
+            (testcase: { tempId: string }) =>
+                testcase.tempId === selectedTestcase.tempId
         ) !== undefined;
     const isSelectedCustomTestcase =
         selectedTestcase && !isSelectedSampleTestcase;
