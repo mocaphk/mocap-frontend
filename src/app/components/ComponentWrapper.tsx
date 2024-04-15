@@ -20,7 +20,7 @@ export default function ComponentWrapper({
     return (
         <Box className={`flex flex-col w-full ${fullHeight ? "h-full" : ""}`}>
             <Box className="flex flex-row w-full items-center justify-between mb-3">
-                <Box className="flex flex-row h-full items-center">
+                <Box className="flex flex-row h-full items-center overflow-hidden">
                     <Icon
                         sx={{ height: "1.5rem", width: "1.5rem" }}
                         color="info"
@@ -30,6 +30,7 @@ export default function ComponentWrapper({
                         fontSize="1.3rem"
                         fontWeight="medium"
                         color="info.main"
+                        whiteSpace="nowrap"
                     >
                         {title}
                     </Typography>
