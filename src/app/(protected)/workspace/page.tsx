@@ -253,6 +253,12 @@ export default function WorkspacePage() {
                 }
                 testcase.expectedOutput = "";
             });
+            createAndUpdateSampleTestcasesFunc({
+                variables: {
+                    questionId: res.updateQuestion.id,
+                    testcaseInput: sampleTescasesCopy,
+                },
+            });
             router.replace(`workspace?questionId=${res.updateQuestion.id}`);
 
             const refetchedQuestion = await refetchQuestion();

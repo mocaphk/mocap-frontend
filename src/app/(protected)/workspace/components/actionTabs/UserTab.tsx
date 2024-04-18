@@ -8,7 +8,7 @@ import {
     Typography,
 } from "@mui/material";
 import React from "react";
-import HistoryIcon from "@mui/icons-material/History";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 
 export default function UserTab({
     questionId,
@@ -88,7 +88,7 @@ export default function UserTab({
                         sx={{ px: 3 }}
                         color="primary"
                         variant="contained"
-                        startIcon={<HistoryIcon />}
+                        startIcon={<RateReviewIcon />}
                         onClick={handleReview}
                     >
                         Review
