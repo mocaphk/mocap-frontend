@@ -52,6 +52,7 @@ import ErrorPage from "@/app/errors/errorPage";
 export default function WorkspacePage() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const hasQuestionIdFromUrl = searchParams.has("questionId");
     const questionIdFromUrl = searchParams.get("questionId");
     const [isEditing, setIsEditing] = React.useState(questionIdFromUrl === "");
 
@@ -190,7 +191,6 @@ export default function WorkspacePage() {
 
     const questionNotFound =
         !questionLoading &&
-        !userRolesLoading &&
         (questionDataRes === undefined ||
             questionError ||
             questionData === undefined ||
@@ -718,6 +718,17 @@ export default function WorkspacePage() {
     };
 
     // Error page
+    if (!hasQuestionIdFromUrl) {
+        return (
+            <ErrorPage
+                title="Missing Question ID"
+                message="It appears that the URL is missing the question ID. Please ensure you have visited a question before using the shortcut."
+                returnLink="courses"
+                returnMessage="Back to course page"
+            />
+        );
+    }
+
     const showNoPermPage =
         !userRolesLoading && !allowEditOrCreate && (isEditing || isNewQuestion);
     if (showNoPermPage) {
